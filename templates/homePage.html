@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pascal Converter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #000;
+            color: #ddd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out forwards;
+            min-height: 100vh; /* Ensure body takes up the full height */
+            padding-bottom: 50px; /* Add padding at the bottom to prevent overlap */
+        }
+
+        /* Header Styles */
+        header {
+            width: 80%; /* Cover 80% of the top */
+            padding: 30px 20px; /* Thinner header */
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.7); /* Slightly lighter than the background */
+            color: #fff;
+            border-radius: 15px;
+            position: relative;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.1); /* Very subtle outline */
+            margin-bottom: 50px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out 0.5s forwards; /* Delay added */
+        }
+
+        /* Left side text */
+        .left-text {
+            font-size: 2.2em;
+            font-weight: 600;
+            color: #9b4dca;
+            text-shadow: 0 0 20px #9b4dca, 0 0 30px #9b4dca;
+            position: absolute;
+            left: 3%;
+            top: 7%;
+        }
+
+        /* Header buttons */
+        .header-buttons {
+            margin-top: 0px;
+            display: flex;
+            justify-content: flex-start;
+            gap: 40px;
+            position: absolute;
+            right: 5%; /* Move buttons to the right */
+            top: 50%;
+            transform: translateY(-50%); /* Center buttons vertically */
+        }
+
+        .header-btn {
+            padding: 8px 16px; /* Smaller padding */
+            font-size: 0.9em; /* Smaller font size */
+            border: 2px solid white;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 10px;
+            text-transform: uppercase;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .header-btn:hover {
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.7);
+            transform: scale(1.05);
+        }
+
+        /* Main text outside header */
+        .main-text {
+            text-align: center;
+            color: #fff;
+            margin-top: 20px;
+            font-size: 4em; /* Larger text */
+            font-weight: bold;
+            text-shadow: 0 0 20px #fff, 0 0 30px #fff;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out 1s forwards; /* Delay added */
+        }
+
+        .sub-text {
+            font-size: 1.2em;
+            color: #bbb;
+            margin-top: 10px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out 1.5s forwards; /* Delay added */
+        }
+
+        /* Purple Button */
+        .btn-purple {
+            display: inline-block;
+            padding: 12px 30px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #9900ff, #5e2ca5);
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 10px;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(156, 0, 255, 0.4);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out 2s forwards; /* Delay added */
+        }
+
+        .btn-purple:hover {
+            box-shadow: 0 0 25px rgba(156, 0, 255, 0.8);
+            transform: scale(1.05);
+        }
+
+        /* Gray Button */
+        .btn-gray {
+            display: inline-block;
+            padding: 12px 30px;
+            margin-top: 20px;
+            border: 2px solid white;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 10px;
+            text-transform: uppercase;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out 2.5s forwards; /* Delay added */
+        }
+
+        .btn-gray:hover {
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.7);
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            color: #555;
+            font-size: 0.9em;
+            opacity: 0;
+            animation: fadeInFromBottom 1.5s ease-out 3s forwards; /* Fade in from the bottom */
+        }
+
+        footer a {
+            color: #9900ff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeInFromBottom {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="left-text">
+            Pascal
+        </div>
+        <div class="header-buttons">
+            <a href="#" class="header-btn">Random 1</a>
+            <a href="#" class="header-btn">Random 2</a>
+            <a href="#" class="header-btn">Random 3</a>
+        </div>
+    </header>
+
+    <div class="main-text">
+        Introducing the New GPT
+    </div>
+    <div class="sub-text">
+        The new-best GPT model out there.
+    </div>
+
+    <!-- The "Get Started" button now correctly links to index.html -->
+    <a href="templates/index.html" class="btn-purple">Get Started</a>
+    <a href="#" class="btn-gray">Button</a>
+
+    <footer>
+        <p>Built by <a href="https://www.example.com" target="_blank">Pascal</a></p>
+    </footer>
+</body>
+</html>
