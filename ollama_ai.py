@@ -1,30 +1,41 @@
 import ollama
 
+# Memory storage for interaction history
+interaction_history = []
+
 # Function to interact with Ollama's AI model
 def get_ai_response(prompt: str):
     try:
-        # Send a request to the Ollama model and get the response
-        response = ollama.chat(model="qwen2.5-coder:7b", messages=[{"role": "user", "content": prompt}])
+        # Only include a short context or recent interactions to reduce overhead
+        context_window = 3  # Adjust based on desired history depth
+        messages = [{"role": "system", "content": "You are a helpful AI."}]
+        for interaction in interaction_history[-context_window:]:
+            messages.append({"role": "user", "content": interaction["user"]})
+            messages.append({"role": "assistant", "content": interaction["ai"]})
+        
+        # Add the current prompt
+        messages.append({"role": "user", "content": prompt})
 
-        # Log the full response for debugging
-        print("Full response:", response)
+        # Send a request to the Ollama model and fetch the response
+        response = ollama.chat(model="mistral-nemo:12b", messages=messages)
 
-        # Check if the 'message' field is present and contains 'content'
-        if "message" in response and "content" in response["message"]:
-            ai_reply = response["message"]["content"]
-        else:
-            # If 'content' is missing, print the whole response for debugging
-            ai_reply = f"Error: Missing 'content' field in response. Full response: {response}"
+        # Extract and validate the AI's reply
+        ai_reply = response.get("message", {}).get("content", "Error: No valid response received.")
+        
+        # Update the interaction history
+        interaction_history.append({"user": prompt, "ai": ai_reply})
         
         return ai_reply
 
     except Exception as e:
-        # Handle any unexpected errors
         print(f"An error occurred: {e}")
         return f"An error occurred: {e}"
 
 # Example usage
 if __name__ == "__main__":
-    prompt = input("Enter a prompt for the AI: ")
-    response = get_ai_response(prompt)
-    print(f"AI Response: {response}")
+    while True:
+        prompt = input("Enter a prompt for the AI (or 'exit' to quit): ")
+        if prompt.lower() == "exit":
+            break
+        response = get_ai_response(prompt)
+        print(f"AI Response: {response}")
