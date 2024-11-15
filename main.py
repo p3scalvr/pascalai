@@ -7,7 +7,7 @@ app = Flask(__name__)
 def get_ai_response(prompt: str):
     try:
         # Send a request to the Ollama model and get the response
-        response = ollama.chat(model="qwen2.5-coder:7b", messages=[{"role": "user", "content": prompt}])
+        response = ollama.chat(model="llama3.2:3b", messages=[{"role": "user", "content": prompt}])
 
         # Log the full response for debugging
         print("Full response:", response)
