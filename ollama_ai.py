@@ -1,4 +1,9 @@
 import ollama
+import torch  # PyTorch library, if Ollama internally uses PyTorch/TensorFlow
+
+# Check if GPU is available and set device
+device = "cuda" if torch.cuda.is_available() else "cpu"
+print(f"Using device: {device}")  # Prints "cuda" if GPU is available
 
 # Memory storage for interaction history
 interaction_history = []
@@ -9,16 +14,20 @@ def get_ai_response(prompt: str):
         # Only include a short context or recent interactions to reduce overhead
         context_window = 2  # Adjust based on desired history depth
         messages = [{"role": "system", "content": "You are a helpful AI."}]
+        
+        # Add past interactions to the context
         for interaction in interaction_history[-context_window:]:
             messages.append({"role": "user", "content": interaction["user"]})
             messages.append({"role": "assistant", "content": interaction["ai"]})
         
         messages.append({"role": "user", "content": prompt})
 
-        response = ollama.chat(model="qwen2.5-coder:7b", messages=messages)
+        # Send the request to Ollama for the AI response (assuming it uses GPU if available)
+        response = ollama.chat(model="llama3.2", messages=messages)
 
         ai_reply = response.get("message", {}).get("content", "Error: No valid response received.")
         
+        # Store interaction history
         interaction_history.append({"user": prompt, "ai": ai_reply})
         
         return ai_reply
