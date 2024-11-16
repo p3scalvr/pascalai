@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <title>AI Chat</title>
     <!-- Importing Google Font 'Roboto' for a modern look -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&family=Poppins:wght@600&display=swap" rel="stylesheet">
@@ -31,7 +31,7 @@
             background-color: #000000;
             padding: 30px;
             text-align: center;
-            font-size: 40px;
+            font-size: 35px;
             font-weight: 600;
             color: #9900ff;
             text-shadow: 0 0 20px #9b4dca;
@@ -288,6 +288,25 @@
         font-size: 12px;
     }
 }
+
+@media (max-width: 480px) {
+    header {
+        font-size: 1.5em;
+    }
+    .user-message, .ai-message {
+        font-size: 12px;
+        max-width: 90%;
+    }
+    #send-btn {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+    #user-input {
+        font-size: 14px; /* Adjusted font size */
+        padding: 12px;   /* Adjusted padding */
+        width: 80%; /* Adjust input field width */
+    }
+}
     </style>
 </head>
 <body>
@@ -314,15 +333,22 @@
 
         function sendMessage() {
             const inputField = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-btn');
             const message = inputField.value.trim();
-
+        
+            // If the message is not empty, proceed to send it
             if (message !== '') {
+                // Disable input and send button while waiting for the response
+                inputField.disabled = true;
+                sendButton.disabled = true;
+        
                 displayUserMessage(message);
                 inputField.value = '';
                 lastUserMessage = message;
                 lastAiMessage = "PascalGPT is Thinking...";
+        
                 displayThinkingIndicator(lastAiMessage);
-                simulateAiResponse(message);
+                simulateAiResponse(message, inputField, sendButton);
             }
         }
 
@@ -400,30 +426,38 @@ function formatMessage(text) {
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        function simulateAiResponse(userMessage) {
-    fetch("/chat", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ prompt: userMessage })
-    })
-    .then(response => response.json())
-    .then(data => {
-        const aiResponse = data.response || "Sorry, I couldn't process your request.";
-        displayAiMessage(aiResponse);
-
-        // Remove the "Thinking..." indicator
-        const thinkingDiv = document.querySelector('.thinking');
-        if (thinkingDiv) {
-            thinkingDiv.remove();
+        function simulateAiResponse(userMessage, inputField, sendButton) {
+            fetch("/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ prompt: userMessage })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const aiResponse = data.response || "Sorry, I couldn't process your request.";
+                displayAiMessage(aiResponse);
+        
+                // Remove the "Thinking..." indicator
+                const thinkingDiv = document.querySelector('.thinking');
+                if (thinkingDiv) {
+                    thinkingDiv.remove();
+                }
+        
+                // Re-enable the input and send button
+                inputField.disabled = false;
+                sendButton.disabled = false;
+            })
+            .catch(error => {
+                console.error("Error fetching AI response:", error);
+                displayAiMessage("An error occurred while communicating with the AI.");
+        
+                // Re-enable the input and send button even if there's an error
+                inputField.disabled = false;
+                sendButton.disabled = false;
+            });
         }
-    })
-    .catch(error => {
-        console.error("Error fetching AI response:", error);
-        displayAiMessage("An error occurred while communicating with the AI.");
-    });
-}
 
         function checkEnter(event) {
             if (event.key === 'Enter') {
