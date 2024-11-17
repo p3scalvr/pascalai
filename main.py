@@ -1,16 +1,13 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
 import ollama
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 # Function to interact with Ollama's AI model
 def get_ai_response(prompt: str):
     try:
         # Send a request to the Ollama model and get the response
         response = ollama.chat(model="llama3.2", messages=[{"role": "user", "content": prompt}])
-
-        # Log the full response for debugging
-        print("Full response:", response)
 
         # Check if the 'message' field is present and contains 'content'
         if "message" in response and "content" in response["message"]:
@@ -27,24 +24,28 @@ def get_ai_response(prompt: str):
 
 @app.route("/")
 def home():
-    return render_template("index.html")  
+    # Serves the homepage (homePage.html)
+    return render_template("homePage.html")  
 
 @app.route('/static/<path:path>')
 def send_static(path):
+    # Serve static files
     return send_from_directory('static', path)
-
-@app.route("/templates")
-def templates():
-    return render_template("index.html")
 
 @app.route("/chat", methods=["POST"])
 def chat():
+    # Endpoint for AI chat interaction
     user_input = request.json.get("prompt")
     if user_input:
         ai_response = get_ai_response(user_input)
         return jsonify({"response": ai_response})
     else:
         return jsonify({"response": "No prompt received."})
+
+@app.route("/chat-page")
+def chat_page():
+    # Serves the AI chat page (index.html)
+    return render_template("index.html")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

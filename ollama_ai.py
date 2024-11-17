@@ -8,18 +8,34 @@ print(f"Using device: {device}")  # Prints "cuda" if GPU is available
 # Memory storage for interaction history
 interaction_history = []
 
+# Load external knowledge base from a text file
+def load_knowledge_base(file_path: str):
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            return file.read()
+    except FileNotFoundError:
+        print(f"Knowledge base file '{file_path}' not found.")
+        return ""
+
+# Initialize knowledge base
+knowledge_base = load_knowledge_base("knowledge_base.txt")
+
 # Function to interact with Ollama's AI model
 def get_ai_response(prompt: str):
     try:
         # Only include a short context or recent interactions to reduce overhead
         context_window = 2  # Adjust based on desired history depth
         messages = [{"role": "system", "content": "You are a helpful AI."}]
-        
+
+        # Add knowledge base content if available
+        if knowledge_base:
+            messages.append({"role": "system", "content": f"Reference information: {knowledge_base}"})
+
         # Add past interactions to the context
         for interaction in interaction_history[-context_window:]:
             messages.append({"role": "user", "content": interaction["user"]})
             messages.append({"role": "assistant", "content": interaction["ai"]})
-        
+
         messages.append({"role": "user", "content": prompt})
 
         # Send the request to Ollama for the AI response (assuming it uses GPU if available)
