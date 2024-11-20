@@ -1,36 +1,15 @@
 import ollama
-import torch
+import torch  # PyTorch library, if Ollama internally uses PyTorch/TensorFlow
 import json
-import os
-import asyncio
 
 # Check if GPU is available and set device
 device = "cuda" if torch.cuda.is_available() else "cpu"
-print(f"Using device: {device}")
+print(f"Using device: {device}")  # Prints "cuda" if GPU is available
 
-# Path to save interaction history
-history_file_path = "interaction_history.json"
+# Memory storage for interaction history
+interaction_history = []
 
-# Load interaction history from a file
-def load_interaction_history():
-    if os.path.exists(history_file_path):
-        try:
-            with open(history_file_path, "r", encoding="utf-8") as file:
-                return json.load(file)
-        except json.JSONDecodeError:
-            print("Error decoding the history file. Starting fresh.")
-            return []
-    return []
-
-# Save interaction history to a file
-def save_interaction_history(history):
-    with open(history_file_path, "w", encoding="utf-8") as file:
-        json.dump(history, file, indent=4)
-
-# Load history into memory
-interaction_history = load_interaction_history()
-
-# Load and cache the knowledge base
+# Load external knowledge base from a text file
 def load_knowledge_base(file_path: str):
     try:
         with open(file_path, "r", encoding="utf-8") as file:
@@ -39,32 +18,32 @@ def load_knowledge_base(file_path: str):
         print(f"Knowledge base file '{file_path}' not found.")
         return ""
 
+# Initialize knowledge base
 knowledge_base = load_knowledge_base("knowledge_base.txt")
 
 # Function to interact with Ollama's AI model
-async def get_ai_response(prompt: str):
+def get_ai_response(prompt: str):
     try:
-        # Include past interactions and knowledge base
-        context_window = 5  # Number of past interactions to include
-        messages = [{"role": "system", "content": "You are PascalGPT, a helpful and conversational AI."}]
+        # Only include a short context or recent interactions to reduce overhead
+        context_window = 2  # Adjust based on desired history depth
+        messages = [{"role": "system", "content": "You are a helpful AI."}]
 
-        # Add knowledge base if available
+        # Add knowledge base content if available
         if knowledge_base:
             messages.append({"role": "system", "content": f"Reference information: {knowledge_base}"})
 
-        # Add recent interaction history
+        # Add past interactions to the context
         for interaction in interaction_history[-context_window:]:
             messages.append({"role": "user", "content": interaction["user"]})
             messages.append({"role": "assistant", "content": interaction["ai"]})
 
-        # Add the new user input
         messages.append({"role": "user", "content": prompt})
 
-        # Send request to Ollama asynchronously
-        loop = asyncio.get_event_loop()
-        response = await loop.run_in_executor(
-            None, lambda: ollama.chat(model="llama3.2", messages=messages, device=device)
-        )
+        # Log the payload being sent
+        print("Request Payload:", json.dumps(messages, indent=2))
+
+        # Send the request to Ollama for the AI response
+        response = ollama.chat(model="llama3.2", messages=messages)
 
         # Validate the response
         if response.get("message") and response["message"].get("content"):
@@ -72,12 +51,8 @@ async def get_ai_response(prompt: str):
         else:
             ai_reply = "Error: No valid response content received."
 
-        # Store the new interaction in memory
+        # Store interaction history
         interaction_history.append({"user": prompt, "ai": ai_reply})
-
-        # Save the updated history to the file
-        save_interaction_history(interaction_history)
-
         return ai_reply
 
     except json.JSONDecodeError as e:
@@ -87,16 +62,11 @@ async def get_ai_response(prompt: str):
         print(f"An error occurred: {e}")
         return f"Error: {e}"
 
-# Main interactive loop
-async def main():
-    print("Welcome to PascalGPT! Your conversations will be remembered.")
+# Example usage
+if __name__ == "__main__":
     while True:
         prompt = input("Enter a prompt for the AI (or 'exit' to quit): ")
         if prompt.lower() == "exit":
-            print("Goodbye!")
             break
-        response = await get_ai_response(prompt)
-        print(f"PascalGPT: {response}")
-
-if __name__ == "__main__":
-    asyncio.run(main())
+        response = get_ai_response(prompt)
+        print(f"AI Response: {response}")
