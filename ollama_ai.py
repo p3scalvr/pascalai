@@ -7,6 +7,11 @@ import time  # For measuring processing time
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {device}")  # Prints "cuda" if GPU is available
 
+if torch.cuda.is_available():
+    print(f"GPU is available: {torch.cuda.get_device_name(0)}")
+else:
+    print("No GPU detected. Ensure CUDA is installed.")
+
 # Memory storage for interaction history
 interaction_history = []
 
