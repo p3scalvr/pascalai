@@ -1,5 +1,6 @@
 import ollama
 import torch  # PyTorch library, if Ollama internally uses PyTorch/TensorFlow
+import json
 
 # Check if GPU is available and set device
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -38,19 +39,28 @@ def get_ai_response(prompt: str):
 
         messages.append({"role": "user", "content": prompt})
 
-        # Send the request to Ollama for the AI response (assuming it uses GPU if available)
+        # Log the payload being sent
+        print("Request Payload:", json.dumps(messages, indent=2))
+
+        # Send the request to Ollama for the AI response
         response = ollama.chat(model="llama3.2", messages=messages)
 
-        ai_reply = response.get("message", {}).get("content", "Error: No valid response received.")
-        
+        # Validate the response
+        if response.get("message") and response["message"].get("content"):
+            ai_reply = response["message"]["content"]
+        else:
+            ai_reply = "Error: No valid response content received."
+
         # Store interaction history
         interaction_history.append({"user": prompt, "ai": ai_reply})
-        
         return ai_reply
 
+    except json.JSONDecodeError as e:
+        print(f"JSON decoding error: {e}")
+        return "Error: The response from the server was not valid JSON."
     except Exception as e:
         print(f"An error occurred: {e}")
-        return f"An error occurred: {e}"
+        return f"Error: {e}"
 
 # Example usage
 if __name__ == "__main__":
