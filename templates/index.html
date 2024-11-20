@@ -365,27 +365,23 @@
             const chatBox = document.getElementById('chat-box');
             const aiMessageDiv = document.createElement('div');
             aiMessageDiv.classList.add('ai-message');
-            aiMessageDiv.textContent = message;
+        
+            const aiNameDiv = document.createElement('div');
+            aiNameDiv.classList.add('ai-name');
+            aiNameDiv.textContent = 'PascalGPT:';
+        
+            // Enhanced formatting logic
+            const formattedMessage = formatMessage(message);
+        
+            const messageDiv = document.createElement('div');
+            messageDiv.innerHTML = formattedMessage;
+        
+            aiMessageDiv.appendChild(aiNameDiv);
+            aiMessageDiv.appendChild(messageDiv);
+        
             chatBox.appendChild(aiMessageDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
         }
-
-    const aiNameDiv = document.createElement('div');
-    aiNameDiv.classList.add('ai-name');
-    aiNameDiv.textContent = 'PascalGPT:';
-
-    // Enhanced formatting logic
-    const formattedMessage = formatMessage(message);
-
-    const messageDiv = document.createElement('div');
-    messageDiv.innerHTML = formattedMessage;
-
-    aiMessageDiv.appendChild(aiNameDiv);
-    aiMessageDiv.appendChild(messageDiv);
-
-    chatBox.appendChild(aiMessageDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
 
 /**
  * Function to apply advanced formatting to messages.
