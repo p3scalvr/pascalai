@@ -27,7 +27,7 @@
             100% { opacity: 1; }
         }
 
-        header {\
+        header {
             background-color: #000000;
             padding: 30px;
             text-align: center;
@@ -108,16 +108,17 @@
         }
 
         .ai-name {
-            font-weight: bold;
-            background: linear-gradient(135deg, #9b4dca, #5e2ca5);
-            -webkit-background-clip: text;
-            color: transparent;
-            font-size: 22px;
-            margin-bottom: 5px;
-            opacity: 0;
-            animation: fadeInName 1s ease-out forwards;
-            text-shadow: 0 0 10px #9b4dca;
-        }
+        font-weight: bold;
+        background: linear-gradient(135deg, #9b4dca, #5e2ca5);
+        -webkit-background-clip: text; /* Ensures compatibility with WebKit browsers */
+        background-clip: text; /* Standard property for broader browser support */
+        color: transparent;
+        font-size: 22px;
+        margin-bottom: 5px;
+        opacity: 0;
+        animation: fadeInName 1s ease-out forwards;
+        text-shadow: 0 0 10px #9b4dca;
+    }
 
         @keyframes fadeInName {
             0% { opacity: 0; transform: translateX(-30px); }
@@ -217,16 +218,17 @@
         }
 
         .thinking {
-            font-size: 20px;
-            font-weight: bold;
-            opacity: 0;
-            margin-bottom: 10px;
-            animation: fadeInBlue 1s ease-out forwards;
-            background: linear-gradient(135deg, #9b4dca, #5e2ca5);
-            -webkit-background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 10px #9b4dca;
-        }
+        font-size: 20px;
+        font-weight: bold;
+        opacity: 0;
+        margin-bottom: 10px;
+        animation: fadeInBlue 1s ease-out forwards;
+        background: linear-gradient(135deg, #9b4dca, #5e2ca5);
+        -webkit-background-clip: text; /* Ensures compatibility with WebKit browsers */
+        background-clip: text; /* Standard property for broader browser support */
+        color: transparent;
+        text-shadow: 0 0 10px #9b4dca;
+    }
 
         @keyframes fadeInBlue {
             0% { opacity: 0; transform: translateX(-30px); }
