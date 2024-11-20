@@ -1,19 +1,33 @@
 import ollama
-import torch  # PyTorch library, if Ollama internally uses PyTorch/TensorFlow
+import torch
 import json
-import time  # For measuring processing time
+import os
 
 # Check if GPU is available and set device
 device = "cuda" if torch.cuda.is_available() else "cpu"
-print(f"Using device: {device}")  # Prints "cuda" if GPU is available
+print(f"Using device: {device}")
 
-if torch.cuda.is_available():
-    print(f"GPU is available: {torch.cuda.get_device_name(0)}")
-else:
-    print("No GPU detected. Ensure CUDA is installed.")
+# Path to save interaction history
+history_file_path = "interaction_history.json"
 
-# Memory storage for interaction history
-interaction_history = []
+# Load interaction history from a file
+def load_interaction_history():
+    if os.path.exists(history_file_path):
+        try:
+            with open(history_file_path, "r", encoding="utf-8") as file:
+                return json.load(file)
+        except json.JSONDecodeError:
+            print("Error decoding the history file. Starting fresh.")
+            return []
+    return []
+
+# Save interaction history to a file
+def save_interaction_history(history):
+    with open(history_file_path, "w", encoding="utf-8") as file:
+        json.dump(history, file, indent=4)
+
+# Load history into memory
+interaction_history = load_interaction_history()
 
 # Load external knowledge base from a text file
 def load_knowledge_base(file_path: str):
@@ -30,28 +44,26 @@ knowledge_base = load_knowledge_base("knowledge_base.txt")
 # Function to interact with Ollama's AI model
 def get_ai_response(prompt: str):
     try:
-        # Only include a short context or recent interactions to reduce overhead
-        context_window = 2  # Adjust based on desired history depth
-        messages = [{"role": "system", "content": "You are a helpful AI."}]
+        # Include past interactions and knowledge base
+        context_window = 5  # Number of past interactions to include
+        messages = [{"role": "system", "content": "You are PascalGPT, a helpful and conversational AI."}]
 
-        # Add knowledge base content if available
+        # Add knowledge base if available
         if knowledge_base:
             messages.append({"role": "system", "content": f"Reference information: {knowledge_base}"})
 
-        # Add past interactions to the context
+        # Add recent interaction history
         for interaction in interaction_history[-context_window:]:
             messages.append({"role": "user", "content": interaction["user"]})
             messages.append({"role": "assistant", "content": interaction["ai"]})
 
+        # Add the new user input
         messages.append({"role": "user", "content": prompt})
 
-        # Log the payload being sent
+        # Log the request payload
         print("Request Payload:", json.dumps(messages, indent=2))
 
-        # Measure time to ensure GPU is being utilized effectively
-        start_time = time.time()
-
-        # Send the request to Ollama for the AI response
+        # Send request to Ollama
         response = ollama.chat(model="llama3.2", messages=messages, device=device)
 
         # Validate the response
@@ -60,12 +72,11 @@ def get_ai_response(prompt: str):
         else:
             ai_reply = "Error: No valid response content received."
 
-        # Store interaction history
+        # Store the new interaction in memory
         interaction_history.append({"user": prompt, "ai": ai_reply})
 
-        # Measure GPU processing time
-        end_time = time.time()
-        print(f"Processing Time: {end_time - start_time:.2f} seconds")
+        # Save the updated history to the file
+        save_interaction_history(interaction_history)
 
         return ai_reply
 
@@ -78,9 +89,11 @@ def get_ai_response(prompt: str):
 
 # Example usage
 if __name__ == "__main__":
+    print("Welcome to PascalGPT! Your conversations will be remembered.")
     while True:
         prompt = input("Enter a prompt for the AI (or 'exit' to quit): ")
         if prompt.lower() == "exit":
+            print("Goodbye!")
             break
         response = get_ai_response(prompt)
-        print(f"AI Response: {response}")
+        print(f"PascalGPT: {response}")
