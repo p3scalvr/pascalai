@@ -1,6 +1,7 @@
 import ollama
 import torch  # PyTorch library, if Ollama internally uses PyTorch/TensorFlow
 import json
+import time  # For measuring processing time
 
 # Check if GPU is available and set device
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -42,8 +43,11 @@ def get_ai_response(prompt: str):
         # Log the payload being sent
         print("Request Payload:", json.dumps(messages, indent=2))
 
+        # Measure time to ensure GPU is being utilized effectively
+        start_time = time.time()
+
         # Send the request to Ollama for the AI response
-        response = ollama.chat(model="llama3.2", messages=messages)
+        response = ollama.chat(model="llama3.2", messages=messages, device=device)
 
         # Validate the response
         if response.get("message") and response["message"].get("content"):
@@ -53,6 +57,11 @@ def get_ai_response(prompt: str):
 
         # Store interaction history
         interaction_history.append({"user": prompt, "ai": ai_reply})
+
+        # Measure GPU processing time
+        end_time = time.time()
+        print(f"Processing Time: {end_time - start_time:.2f} seconds")
+
         return ai_reply
 
     except json.JSONDecodeError as e:
