@@ -2,6 +2,7 @@ import ollama
 import torch
 import json
 import os
+import asyncio
 
 # Check if GPU is available and set device
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -29,7 +30,7 @@ def save_interaction_history(history):
 # Load history into memory
 interaction_history = load_interaction_history()
 
-# Load external knowledge base from a text file
+# Load and cache the knowledge base
 def load_knowledge_base(file_path: str):
     try:
         with open(file_path, "r", encoding="utf-8") as file:
@@ -38,11 +39,10 @@ def load_knowledge_base(file_path: str):
         print(f"Knowledge base file '{file_path}' not found.")
         return ""
 
-# Initialize knowledge base
 knowledge_base = load_knowledge_base("knowledge_base.txt")
 
 # Function to interact with Ollama's AI model
-def get_ai_response(prompt: str):
+async def get_ai_response(prompt: str):
     try:
         # Include past interactions and knowledge base
         context_window = 5  # Number of past interactions to include
@@ -60,11 +60,11 @@ def get_ai_response(prompt: str):
         # Add the new user input
         messages.append({"role": "user", "content": prompt})
 
-        # Log the request payload
-        print("Request Payload:", json.dumps(messages, indent=2))
-
-        # Send request to Ollama
-        response = ollama.chat(model="llama3.2", messages=messages, device=device)
+        # Send request to Ollama asynchronously
+        loop = asyncio.get_event_loop()
+        response = await loop.run_in_executor(
+            None, lambda: ollama.chat(model="llama3.2", messages=messages, device=device)
+        )
 
         # Validate the response
         if response.get("message") and response["message"].get("content"):
@@ -87,13 +87,16 @@ def get_ai_response(prompt: str):
         print(f"An error occurred: {e}")
         return f"Error: {e}"
 
-# Example usage
-if __name__ == "__main__":
+# Main interactive loop
+async def main():
     print("Welcome to PascalGPT! Your conversations will be remembered.")
     while True:
         prompt = input("Enter a prompt for the AI (or 'exit' to quit): ")
         if prompt.lower() == "exit":
             print("Goodbye!")
             break
-        response = get_ai_response(prompt)
+        response = await get_ai_response(prompt)
         print(f"PascalGPT: {response}")
+
+if __name__ == "__main__":
+    asyncio.run(main())

@@ -338,9 +338,7 @@
             const sendButton = document.getElementById('send-btn');
             const message = inputField.value.trim();
         
-            // If the message is not empty, proceed to send it
             if (message !== '') {
-                // Disable input and send button while waiting for the response
                 inputField.disabled = true;
                 sendButton.disabled = true;
         
@@ -362,11 +360,15 @@
             chatBox.appendChild(userMessageDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
         }
-
+   
         function displayAiMessage(message) {
-    const chatBox = document.getElementById('chat-box');
-    const aiMessageDiv = document.createElement('div');
-    aiMessageDiv.classList.add('ai-message');
+            const chatBox = document.getElementById('chat-box');
+            const aiMessageDiv = document.createElement('div');
+            aiMessageDiv.classList.add('ai-message');
+            aiMessageDiv.textContent = message;
+            chatBox.appendChild(aiMessageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
 
     const aiNameDiv = document.createElement('div');
     aiNameDiv.classList.add('ai-name');
@@ -419,57 +421,43 @@ function formatMessage(text) {
 }
 
 
-        function displayThinkingIndicator(message) {
-            const chatBox = document.getElementById('chat-box');
-            const thinkingDiv = document.createElement('div');
-            thinkingDiv.classList.add('thinking');
-            thinkingDiv.textContent = message;
-            chatBox.appendChild(thinkingDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
+function displayThinkingIndicator(message) {
+    const chatBox = document.getElementById('chat-box');
+    const thinkingDiv = document.createElement('div');
+    thinkingDiv.classList.add('thinking');
+    thinkingDiv.textContent = message;
+    chatBox.appendChild(thinkingDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function simulateAiResponse(userMessage, inputField, sendButton) {
+    fetch("/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ prompt: userMessage })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const aiResponse = data.response || "Sorry, I couldn't process your request.";
+        displayAiMessage(aiResponse);
+
+        const thinkingDiv = document.querySelector('.thinking');
+        if (thinkingDiv) {
+            thinkingDiv.remove();
         }
 
-        function simulateAiResponse(userMessage, inputField, sendButton) {
-            fetch("/chat", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ prompt: userMessage })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const aiResponse = data.response || "Sorry, I couldn't process your request.";
-                displayAiMessage(aiResponse);
-        
-                // Remove the "Thinking..." indicator
-                const thinkingDiv = document.querySelector('.thinking');
-                if (thinkingDiv) {
-                    thinkingDiv.remove();
-                }
-        
-                // Re-enable the input and send button
-                inputField.disabled = false;
-                sendButton.disabled = false;
-            })
-            .catch(error => {
-                console.error("Error fetching AI response:", error);
-                displayAiMessage("An error occurred while communicating with the AI.");
-        
-                // Re-enable the input and send button even if there's an error
-                inputField.disabled = false;
-                sendButton.disabled = false;
-            });
-        }
-
-        function checkEnter(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        }
-
-        window.onload = function() {
-            document.body.style.opacity = 1;
-        };
+        inputField.disabled = false;
+        sendButton.disabled = false;
+    })
+    .catch(error => {
+        console.error("Error fetching AI response:", error);
+        displayAiMessage("An error occurred while communicating with the AI.");
+        inputField.disabled = false;
+        sendButton.disabled = false;
+    });
+}
     </script>
 </body>
 </html>
