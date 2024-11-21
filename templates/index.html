@@ -350,7 +350,6 @@
                 eventSource.onmessage = function(event) {
                     const aiMessageDiv = document.querySelector(".ai-message");
                     if (!aiMessageDiv) {
-                        // Create the AI message container if it doesn't exist yet
                         const chatBox = document.getElementById("chat-box");
                         const aiMessageDiv = document.createElement("div");
                         aiMessageDiv.classList.add("ai-message");
@@ -360,8 +359,8 @@
                     }
         
                     const streamedText = document.querySelector(".streamed-text");
-                    streamedText.textContent += event.data; // Append streamed chunks
-                    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+                    streamedText.textContent += event.data;
+                    chatBox.scrollTop = chatBox.scrollHeight;
                 };
         
                 eventSource.onerror = function() {
@@ -376,7 +375,7 @@
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ prompt: userInput })
+                        body: JSON.stringify({ prompt: message })
                     })
                     .then(response => response.json())
                     .then(data => {
@@ -385,7 +384,9 @@
                     .catch(error => {
                         console.error('Error:', error);
                     });
-                }
+                };
+            }
+        }
                     
         
         function displayThinkingIndicator() {
