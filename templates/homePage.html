@@ -23,47 +23,47 @@
 
         /* Header Styles */
         header {
-            width: 80%; /* Cover 80% of the top */
-            padding: 30px 20px; /* Thinner header */
+            width: 90%;
+            padding: 20px 15px;
             text-align: center;
-            background-color: rgba(0, 0, 0, 0.7); /* Slightly lighter than the background */
+            background-color: rgba(0, 0, 0, 0.7);
             color: #fff;
             border-radius: 15px;
             position: relative;
             margin-top: 20px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.1); /* Very subtle outline */
+            border: 2px solid rgba(255, 255, 255, 0.1);
             margin-bottom: 50px;
             opacity: 0;
-            animation: fadeIn 1.5s ease-out 0.5s forwards; /* Delay added */
+            animation: fadeIn 1.5s ease-out 0.5s forwards;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Allow content to wrap on smaller screens */
         }
-
         /* Left side text */
         .left-text {
             font-size: 2.2em;
             font-weight: 600;
             color: #9b4dca;
             text-shadow: 0 0 20px #9b4dca, 0 0 30px #9b4dca;
-            position: absolute;
-            left: 3%;
-            top: 7%;
+            flex: 1 1 100%; /* Make text take up full width on smaller screens */
+            text-align: center; /* Center text on small screens */
         }
 
         /* Header buttons */
         .header-buttons {
-            margin-top: 0px;
             display: flex;
-            justify-content: flex-start;
-            gap: 40px;
-            position: absolute;
-            right: 5%; /* Move buttons to the right */
-            top: 50%;
-            transform: translateY(-50%); /* Center buttons vertically */
+            justify-content: space-between;
+            gap: 20px;
+            max-width: 100%; /* Ensure buttons are contained within header */
+            flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+            justify-content: center; /* Center buttons */
         }
-
+        
         .header-btn {
-            padding: 8px 16px; /* Smaller padding */
-            font-size: 0.9em; /* Smaller font size */
+            padding: 8px 16px;
+            font-size: 0.9em;
             border: 2px solid white;
             color: white;
             font-weight: bold;
@@ -71,6 +71,8 @@
             border-radius: 10px;
             text-transform: uppercase;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            min-width: 120px; /* Set a minimum width for buttons */
+            margin: 5px; /* Add space between buttons */
         }
 
         .header-btn:hover {
@@ -245,6 +247,24 @@
 
     .btn-purple, .btn-gray {
         padding: 6px 18px;
+    }
+}
+
+/* On mobile screens, the header text and buttons stack */
+@media (max-width: 768px) {
+    .left-text {
+        font-size: 1.8em; /* Adjust font size on small screens */
+        text-align: center; /* Center the text */
+    }
+
+    .header-buttons {
+        flex-direction: column; /* Stack buttons vertically */
+        align-items: center; /* Center the buttons vertically */
+        gap: 10px; /* Space out buttons */
+    }
+
+    .header-btn {
+        width: 80%; /* Make buttons take up 80% of the width */
     }
 }
     </style>
