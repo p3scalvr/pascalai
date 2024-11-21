@@ -338,54 +338,21 @@
             const sendButton = document.getElementById('send-btn');
             const message = inputField.value.trim();
         
+            // If the message is not empty, proceed to send it
             if (message !== '') {
+                // Disable input and send button while waiting for the response
                 inputField.disabled = true;
                 sendButton.disabled = true;
         
                 displayUserMessage(message);
                 inputField.value = '';
-                displayThinkingIndicator();
+                lastUserMessage = message;
+                lastAiMessage = "PascalAI is Thinking...";
         
-                const eventSource = new EventSource(`/chat`);
-                eventSource.onmessage = function(event) {
-                    const aiMessageDiv = document.querySelector(".ai-message");
-                    if (!aiMessageDiv) {
-                        // Create the AI message container if it doesn't exist yet
-                        const chatBox = document.getElementById("chat-box");
-                        const aiMessageDiv = document.createElement("div");
-                        aiMessageDiv.classList.add("ai-message");
-                        aiMessageDiv.innerHTML = `<strong>PascalAI:</strong> <span class="streamed-text"></span>`;
-                        chatBox.appendChild(aiMessageDiv);
-                        chatBox.scrollTop = chatBox.scrollHeight;
-                    }
-        
-                    const streamedText = document.querySelector(".streamed-text");
-                    streamedText.textContent += event.data; // Append streamed chunks
-                    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
-                };
-        
-                eventSource.onerror = function() {
-                    eventSource.close();
-                    inputField.disabled = false;
-                    sendButton.disabled = false;
-                };
-        
-                eventSource.onopen = function() {
-                    fetch("/chat", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ prompt: message }),
-                    }).then(() => {
-                        inputField.disabled = false;
-                        sendButton.disabled = false;
-                    });
-                };
+                displayThinkingIndicator(lastAiMessage);
+                simulateAiResponse(message, inputField, sendButton);
             }
         }
-        
-        function displayThinkingIndicator() {
-            const chatBox = document.getElementById("chat-box");
-            const thinkingDiv = document.createElement("div");
 
         function displayUserMessage(message) {
             const chatBox = document.getElementById('chat-box');
