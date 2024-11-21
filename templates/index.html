@@ -333,13 +333,13 @@
         let lastUserMessage = null;
         let lastAiMessage = null;
 
-        function displayAiMessage(message) {
+        function displayUserMessage(message) {
             const chatBox = document.getElementById('chat-box');
-            const aiMessageDiv = document.createElement('div');
-            aiMessageDiv.classList.add('ai-message');
-            aiMessageDiv.textContent = message;
-            chatBox.appendChild(aiMessageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
+            const userMessage = document.createElement('div');
+            userMessage.classList.add('user-message');
+            userMessage.innerText = message;
+            chatBox.appendChild(userMessage);
+            chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
         }
 
         function displayAiMessage(message) {
