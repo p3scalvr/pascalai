@@ -481,23 +481,6 @@ function formatMessage(text) {
                 sendButton.disabled = false;
             });
         }
-        
-        
-                        // Continuously display partial updates
-                        displayAiMessage(aiMessage);
-                        readStream();
-                    });
-                }
-        
-                readStream();
-            })
-            .catch(error => {
-                console.error("Error fetching AI response:", error);
-                displayAiMessage("An error occurred while communicating with the AI.");
-                inputField.disabled = false;
-                sendButton.disabled = false;
-            });
-        }
 
         function checkEnter(event) {
             if (event.key === "Enter") {
