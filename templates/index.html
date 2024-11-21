@@ -143,6 +143,7 @@
             opacity: 0;
             animation: fadeInElement 1s ease-out forwards;
             animation-delay: 1.5s;
+            transition: width 0.3s ease;
         }
 
         #user-input {
@@ -155,7 +156,11 @@
             font-size: 16px;
             outline: none;
             box-shadow: 0 0 10px rgba(191, 0, 255, 0.3);
-            transition: box-shadow 0.3s ease, background 0.3s ease;
+            transition: width 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        }
+
+        .input-container.shrink #user-input {
+            width: 50%;
         }
 
         #user-input::placeholder {
@@ -416,6 +421,25 @@ function formatMessage(text) {
     text = text.replace(/\n/g, '<br>');
 
     return text;
+}
+
+const inputField = document.getElementById('user-input');
+const inputContainer = document.querySelector('.input-container');
+
+// Add an event listener to handle focus and blur
+inputField.addEventListener('focus', () => {
+    inputContainer.classList.remove('shrink');
+});
+
+inputField.addEventListener('blur', () => {
+    if (!inputField.value) {
+        inputContainer.classList.add('shrink');
+    }
+});
+
+// Check when input is not focused
+if (!inputField.value) {
+    inputContainer.classList.add('shrink');
 }
 
 
