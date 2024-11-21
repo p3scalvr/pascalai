@@ -25,7 +25,7 @@ knowledge_base = load_knowledge_base("knowledge_base.txt")
 def get_ai_response(prompt: str):
     try:
         # Only include a short context or recent interactions to reduce overhead
-        context_window = 2  # Adjust based on desired history depth
+        context_window = 1  # Adjust based on desired history depth
         messages = [{"role": "system", "content": "You are a helpful AI."}]
 
         # Add knowledge base content if available
