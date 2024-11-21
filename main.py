@@ -34,9 +34,15 @@ def send_static(path):
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    user_input = request.json.get("prompt")
-    if not user_input:
-        return Response("No prompt received.", status=400)
+    if request.method == "POST":
+        user_input = request.json.get("prompt")
+        if user_input:
+            ai_response = get_ai_response(user_input)
+            return jsonify({"response": ai_response})
+        else:
+            return jsonify({"response": "No prompt received."})
+    elif request.method == "GET":
+        return jsonify({"response": "GET method not supported for this endpoint."})
     
     def generate_stream(prompt):
         try:
