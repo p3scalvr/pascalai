@@ -309,11 +309,30 @@
         width: 80%; /* Adjust input field width */
     }
 
-    /* Dropdown Menu */
+    /* Dropdown Menu Styling */
         .dropdown {
             position: relative;
             display: inline-block;
             margin: 20px;
+        }
+
+        .dropbtn {
+            background-color: #333;
+            color: white;
+            padding: 20px 40px;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            border-radius: 12px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s, box-shadow 0.3s;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .dropbtn:hover {
+            background-color: #5e2ca5;
+            box-shadow: 0 0 12px rgba(191, 0, 255, 0.6);
         }
 
         .dropdown-content {
@@ -321,13 +340,17 @@
             position: absolute;
             background-color: #333;
             min-width: 160px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             z-index: 1;
             border-radius: 8px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
         }
 
         .dropdown:hover .dropdown-content {
             display: block;
+            opacity: 1;
+            pointer-events: all;
         }
 
         .dropdown-content a {
@@ -341,21 +364,6 @@
 
         .dropdown-content a:hover {
             background-color: #9b4dca;
-        }
-
-        .dropdown:hover .dropbtn {
-            background-color: #5e2ca5;
-        }
-
-        .dropbtn {
-            background-color: #333;
-            color: white;
-            padding: 16px;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            border-radius: 12px;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
         }
 }
     </style>
@@ -372,10 +380,10 @@
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 12l18-6-6 18-6-18z"/></svg>
         </button>
     </div>
-
-    <!-- Dropdown for selecting AI model -->
+    
+    <!-- AI Model Dropdown -->
 <div class="dropdown">
-    <button class="dropbtn">Select AI Model</button>
+    <button class="dropbtn">AI Model</button>
     <div class="dropdown-content">
         <a href="#" onclick="setAIModel('Ollama Model')">Ollama Model</a>
         <a href="#" onclick="setAIModel('GPT-3')">GPT-3</a>
@@ -383,8 +391,6 @@
         <a href="#" onclick="setAIModel('Bing AI')">Bing AI</a>
     </div>
 </div>
-
-    
     <footer>
         <p>Built by <a href="https://github.com/p3scalvr" target="_blank">Pascal</a></p>
     </footer>
@@ -552,6 +558,7 @@ function formatMessage(text) {
             }, 2000);
         }
     });
+
     </script>
 </body>
 </html>
