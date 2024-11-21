@@ -67,17 +67,17 @@ def chat():
 @app.route("/switch-model/<model_name>", methods=["GET"])
 def switch_model(model_name):
     try:
-        # Check if the model is installed
-        available_models = ollama.models()
-        if model_name not in available_models:
-            return jsonify({"success": False, "message": f"Model {model_name} not found."})
-
-        # Update the current model (perhaps store it in a global variable or database)
-        current_model = model_name
-        print(f"Switched to {current_model}")
+        # List of supported models for this example
+        available_models = ["llama3.2:3b", "gpt3:base", "chatgpt:small"]
         
-        return jsonify({"success": True, "message": f"Model {model_name} is now active."})
+        if model_name not in available_models:
+            return jsonify({"success": False, "message": "Model not found."})
 
+        # Assume you store the selected model in a session or a variable
+        current_model = model_name
+        print(f"Successfully switched to {current_model}")
+
+        return jsonify({"success": True, "message": f"Model {model_name} is now active."})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)})
     
