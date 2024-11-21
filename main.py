@@ -21,20 +21,6 @@ def get_ai_response(prompt: str):
         # Handle any unexpected errors
         print(f"An error occurred: {e}")
         return f"An error occurred: {e}"
-    
-@app.route("/set-model/<model_name>", methods=["POST"])
-def set_model(model_name):
-    global current_model
-    try:
-        # Check if the requested model is installed
-        installed_models = ollama.list_models()  # You may need a method to check for installed models
-        if model_name not in installed_models:
-            return jsonify({"success": False, "error": f"Model {model_name} not installed."}), 400
-        
-        current_model = model_name
-        return jsonify({"success": True, "model": model_name})
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
 
 @app.route("/")
 def home():

@@ -309,62 +309,54 @@
         width: 80%; /* Adjust input field width */
     }
 
-    .dropdown {
-        position: relative;
-        display: inline-block;
-        margin: 30px;
-    }
+    /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            margin: 20px;
+        }
 
-    .dropdown-btn {
-        background-color: #444;
-        color: #fff;
-        padding: 15px 30px;
-        font-size: 18px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background 0.3s ease;
-    }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 8px;
+        }
 
-    .dropdown-btn:hover {
-        background-color: #6e1e9f;
-    }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
 
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #222;
-        min-width: 200px;
-        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-        z-index: 1;
-        border-radius: 5px;
-        opacity: 0;
-        animation: fadeIn 0.3s ease forwards;
-    }
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+            border-bottom: 1px solid #444;
+        }
 
-    .dropdown:hover .dropdown-content {
-        display: block;
-    }
+        .dropdown-content a:hover {
+            background-color: #9b4dca;
+        }
 
-    .dropdown-item {
-        color: #bbb;
-        padding: 12px 20px;
-        font-size: 16px;
-        text-align: left;
-        cursor: pointer;
-        transition: background 0.3s ease;
-    }
+        .dropdown:hover .dropbtn {
+            background-color: #5e2ca5;
+        }
 
-    .dropdown-item:hover {
-        background-color: #444;
-    }
-
-    .model-description {
-        font-size: 14px;
-        color: #888;
-        margin-top: 5px;
-        font-style: italic;
-    }
-    
+        .dropbtn {
+            background-color: #333;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 12px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+        }
 }
     </style>
 </head>
@@ -372,26 +364,6 @@
     <header>
         PascalAI
     </header>
-
-    <!-- Dropdown for Model Selection -->
-    <div class="dropdown">
-        <button class="dropdown-btn">Select AI Model</button>
-        <div class="dropdown-content" id="model-dropdown">
-            <div class="dropdown-item" data-model="llama3.2" onclick="switchModel('Llama 3.2', 'A powerful AI model designed for large language tasks.')">
-                Llama 3.2
-                <div class="model-description">A powerful AI model designed for large language tasks.</div>
-            </div>
-            <div class="dropdown-item" data-model="gpt4" onclick="switchModel('GPT-4', 'State-of-the-art language model by OpenAI.')">
-                GPT-4
-                <div class="model-description">State-of-the-art language model by OpenAI.</div>
-            </div>
-            <div class="dropdown-item" data-model="bard" onclick="switchModel('Bard', 'Google\'s conversational AI.')">
-                Bard
-                <div class="model-description">Google's conversational AI.</div>
-            </div>
-        </div>
-    </div>
-
     <div id="chat-box"></div>
     <div class="input-container">
         <input type="text" id="user-input" placeholder="Message PascalAI" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false">
@@ -400,6 +372,18 @@
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 12l18-6-6 18-6-18z"/></svg>
         </button>
     </div>
+
+    <!-- Dropdown for selecting AI model -->
+<div class="dropdown">
+    <button class="dropbtn">Select AI Model</button>
+    <div class="dropdown-content">
+        <a href="#" onclick="setAIModel('Ollama Model')">Ollama Model</a>
+        <a href="#" onclick="setAIModel('GPT-3')">GPT-3</a>
+        <a href="#" onclick="setAIModel('ChatGPT-4')">ChatGPT-4</a>
+        <a href="#" onclick="setAIModel('Bing AI')">Bing AI</a>
+    </div>
+</div>
+
     
     <footer>
         <p>Built by <a href="https://github.com/p3scalvr" target="_blank">Pascal</a></p>
@@ -548,29 +532,26 @@ function formatMessage(text) {
             document.body.style.opacity = 1;
         };
 
-        let currentModel = 'llama3.2';  // Default model
+        let aiModel = 'Ollama Model'; // Default AI model
 
-        function switchModel(modelName, description) {
-            // Log to console to check model switch
-            console.log(`Switched to model: ${modelName}`);
-            console.log(`Model description: ${description}`);
+    function setAIModel(model) {
+        aiModel = model;
+        alert('You selected: ' + model);
+    }
 
-            // Send model change to backend (you'll handle this in Flask later)
-            fetch(`/set-model/${modelName}`, { method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(`Switched to ${modelName}`);
-                        currentModel = modelName;
-                    } else {
-                        alert(`Error switching model: ${data.error}`);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+    document.getElementById("send-btn").addEventListener("click", function() {
+        const inputField = document.getElementById("user-input");
+        const userMessage = inputField.value;
+        inputField.value = '';
+
+        if (userMessage.trim()) {
+            addMessage('user', userMessage);
+            addMessage('ai', `Thinking with ${aiModel}...`);
+            setTimeout(() => {
+                addMessage('ai', `Response from ${aiModel} to: "${userMessage}"`);
+            }, 2000);
         }
-
+    });
     </script>
 </body>
 </html>
