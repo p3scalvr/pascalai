@@ -447,14 +447,15 @@ function formatMessage(text) {
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder("utf-8");
                 let aiMessage = "";
-                
+        
                 // Create the AI message container once
                 const chatBox = document.getElementById("chat-box");
                 const aiMessageDiv = document.createElement("div");
                 aiMessageDiv.classList.add("ai-message");
                 chatBox.appendChild(aiMessageDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
         
-                // Stream and update the AI message
+                // Read the response stream and update the AI message progressively
                 function readStream() {
                     reader.read().then(({ done, value }) => {
                         if (done) {
@@ -463,13 +464,13 @@ function formatMessage(text) {
                             return;
                         }
         
-                        // Append new characters to the message
+                        // Decode the chunk and append it to the message
                         const chunk = decoder.decode(value);
                         aiMessage += chunk;
-                        aiMessageDiv.textContent = aiMessage;
-                        chatBox.scrollTop = chatBox.scrollHeight;
+                        aiMessageDiv.textContent = aiMessage; // Update the displayed message
+                        chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the bottom
         
-                        readStream(); // Continue reading the next chunk
+                        readStream(); // Continue reading the stream
                     });
                 }
         

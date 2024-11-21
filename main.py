@@ -47,15 +47,12 @@ def chat():
         return jsonify({"response": "No prompt received."})
     
     def generate_response():
-        # Simulating AI generating response progressively
-        ai_response = get_ai_response(user_input)
-        for char in ai_response:
-            yield char  # Send each character immediately
-            time.sleep(0.03)  # Simulate processing delay
-    
+        ai_response = get_ai_response(user_input)  # Fetch the full response
+        for i in range(len(ai_response)):
+            yield ai_response[i]  # Send one character at a time
+            time.sleep(0.02)  # Simulate typing delay
+
     return Response(generate_response(), content_type="text/plain")
-    
-    return Response(generate_response(), content_type='application/json')
 
 @app.route("/chat-page")
 def chat_page():
