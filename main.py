@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, jsonify, send_from_directory, Response, time
-import ollama
+from flask import Flask, render_template, request, jsonify, send_from_directory, Response
+import ollama, time
 
 app = Flask(__name__, template_folder='templates')
 
