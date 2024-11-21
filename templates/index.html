@@ -447,14 +447,31 @@ function formatMessage(text) {
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder("utf-8");
                 let aiMessage = "";
-                
+        
                 // Create the AI message container once
                 const chatBox = document.getElementById("chat-box");
                 const aiMessageDiv = document.createElement("div");
                 aiMessageDiv.classList.add("ai-message");
-                chatBox.appendChild(aiMessageDiv);
         
-                // Stream and update the AI message
+                // Add PascalAI's name
+                const aiNameDiv = document.createElement("div");
+                aiNameDiv.classList.add("ai-name");
+                aiNameDiv.textContent = "PascalAI:";
+                aiMessageDiv.appendChild(aiNameDiv);
+        
+                // Add the message content container
+                const messageContentDiv = document.createElement("div");
+                messageContentDiv.classList.add("message-content");
+                aiMessageDiv.appendChild(messageContentDiv);
+        
+                chatBox.appendChild(aiMessageDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+        
+                // Remove "Thinking..." indicator (if present)
+                const thinkingDiv = document.querySelector('.thinking');
+                if (thinkingDiv) thinkingDiv.remove();
+        
+                // Read the response stream and update progressively
                 function readStream() {
                     reader.read().then(({ done, value }) => {
                         if (done) {
@@ -463,13 +480,13 @@ function formatMessage(text) {
                             return;
                         }
         
-                        // Append new characters to the message
+                        // Decode the chunk and append it to the message
                         const chunk = decoder.decode(value);
                         aiMessage += chunk;
-                        aiMessageDiv.textContent = aiMessage;
-                        chatBox.scrollTop = chatBox.scrollHeight;
+                        messageContentDiv.textContent = aiMessage; // Update the displayed message
+                        chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the bottom
         
-                        readStream(); // Continue reading the next chunk
+                        readStream(); // Continue reading the stream
                     });
                 }
         
@@ -477,6 +494,7 @@ function formatMessage(text) {
             })
             .catch(error => {
                 console.error("Error fetching AI response:", error);
+                displayAiMessage("An error occurred while communicating with the AI.");
                 inputField.disabled = false;
                 sendButton.disabled = false;
             });
