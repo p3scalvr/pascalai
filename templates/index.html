@@ -63,7 +63,6 @@
             opacity: 0;
             animation: fadeInElement 1s ease-out forwards;
             animation-delay: 1s;
-            transition: height 0.3s ease;
         }
 
         .fade-in {
@@ -160,8 +159,8 @@
             transition: width 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
         }
 
-        .input-container.shrink + #chat-box {
-            height: 30vh; /* Shrink chat box height */
+        .input-container.shrink #user-input {
+            width: 50%;
         }
 
         #user-input::placeholder {
@@ -319,7 +318,8 @@
 </head>
 <body>
     <header>
-        PascalAI
+         
+         
     </header>
     <div id="chat-box"></div>
     <div class="input-container">
@@ -426,27 +426,22 @@ function formatMessage(text) {
 
 const inputField = document.getElementById('user-input');
 const inputContainer = document.querySelector('.input-container');
-const chatBox = document.getElementById('chat-box');
 
-// Add event listener to handle focus and blur on the input field
+// Add an event listener to handle focus and blur
 inputField.addEventListener('focus', () => {
     inputContainer.classList.remove('shrink');
-    chatBox.style.transition = 'height 0.3s ease'; // Smooth transition when expanding
 });
 
 inputField.addEventListener('blur', () => {
     if (!inputField.value) {
         inputContainer.classList.add('shrink');
-        chatBox.style.transition = 'height 0.3s ease'; // Smooth transition when shrinking
     }
 });
 
 // Check when input is not focused
 if (!inputField.value) {
     inputContainer.classList.add('shrink');
-    chatBox.style.transition = 'height 0.3s ease'; // Ensure transition is smooth on load
 }
-
 
 
         function displayThinkingIndicator(message) {
