@@ -371,18 +371,21 @@
 <body>
     <header>
         PascalAI
-    </header>
-    
-    <div class="dropdown">
-        <button class="dropbtn">Choose AI Model</button>
-        <div class="dropdown-content">
-            <a href="#" onclick="setAIModel('Llama 3.2', 'The Llama 3.2 model offers fast responses and good general knowledge.')">Llama 3.2</a>
-            <a href="#" onclick="setAIModel('Ollama Model', 'Ollama model is designed for conversational interactions.')">Ollama Model</a>
-            <a href="#" onclick="setAIModel('GPT-3', 'GPT-3 can generate human-like text based on prompts.')">GPT-3</a>
-            <a href="#" onclick="setAIModel('ChatGPT-4', 'ChatGPT-4 excels in understanding and generating complex text.')">ChatGPT-4</a>
-            <a href="#" onclick="setAIModel('Bing AI', 'Bing AI provides answers with internet data and web search insights.')">Bing AI</a>
+    <header>
+        <!-- Your website's header content -->
+
+        <!-- AI Model Dropdown -->
+        <div class="dropdown">
+            <button class="dropbtn">Choose AI Model</button>
+            <div class="dropdown-content">
+                <a href="#" onclick="setAIModel('Llama 3.2', 'The Llama 3.2 model offers fast responses and good general knowledge.')">Llama 3.2</a>
+                <a href="#" onclick="setAIModel('Ollama Model', 'Ollama model is designed for conversational interactions.')">Ollama Model</a>
+                <a href="#" onclick="setAIModel('GPT-3', 'GPT-3 can generate human-like text based on prompts.')">GPT-3</a>
+                <a href="#" onclick="setAIModel('ChatGPT-4', 'ChatGPT-4 excels in understanding and generating complex text.')">ChatGPT-4</a>
+                <a href="#" onclick="setAIModel('Bing AI', 'Bing AI provides answers with internet data and web search insights.')">Bing AI</a>
+            </div>
         </div>
-    </div>
+    </header>
     <div id="chat-box"></div>
     <div class="input-container">
         <input type="text" id="user-input" placeholder="Message PascalAI" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false">
