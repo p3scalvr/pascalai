@@ -84,6 +84,7 @@ def switch_model(model_name):
 @app.route("/chat-page")
 def chat_page():
     # Serves the AI chat page (index.html)
+    
     return render_template("index.html")
 
 if __name__ == "__main__":
