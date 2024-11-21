@@ -313,11 +313,11 @@
 </head>
 <body>
     <header>
-        PascalGPT
+        PascalAI
     </header>
     <div id="chat-box"></div>
     <div class="input-container">
-        <input type="text" id="user-input" placeholder="Message PascalGPT" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input type="text" id="user-input" placeholder="Message PascalAI" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false">
         <button id="send-btn" onclick="sendMessage()">
             Send
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 12l18-6-6 18-6-18z"/></svg>
@@ -347,7 +347,7 @@
                 displayUserMessage(message);
                 inputField.value = '';
                 lastUserMessage = message;
-                lastAiMessage = "PascalGPT is Thinking...";
+                lastAiMessage = "PascalAI is Thinking...";
         
                 displayThinkingIndicator(lastAiMessage);
                 simulateAiResponse(message, inputField, sendButton);
@@ -370,7 +370,7 @@
 
     const aiNameDiv = document.createElement('div');
     aiNameDiv.classList.add('ai-name');
-    aiNameDiv.textContent = 'PascalGPT:';
+    aiNameDiv.textContent = 'PascalAI:';
 
     // Enhanced formatting logic
     const formattedMessage = formatMessage(message);
