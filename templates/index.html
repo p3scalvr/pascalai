@@ -348,18 +348,55 @@
                 inputField.value = '';
                 lastUserMessage = message;
                 lastAiMessage = "PascalAI is Thinking...";
-        
+
+                // Send message to the server and handle streaming AI response
                 displayThinkingIndicator(lastAiMessage);
-                simulateAiResponse(message, inputField, sendButton);
+                fetch("/chat-stream", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ prompt: message }),
+                })
+                .then(response => {
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    const stream = new ReadableStream({
+                        start(controller) {
+                            reader.read().then(function processText({ done, value }) {
+                                if (done) {
+                                    controller.close();
+                                    return;
+                                }
+                                controller.enqueue(decoder.decode(value, { stream: true }));
+                                reader.read().then(processText);
+                            });
+                        }
+                    });
+
+                    return new Response(stream);
+                })
+                .then(response => {
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    reader.read().then(function processText({ done, value }) {
+                        if (!done) {
+                            const newContent = decoder.decode(value, { stream: true });
+                            displayAiMessage(newContent);
+                            reader.read().then(processText);
+                        }
+                    });
+                })
+                .catch(error => console.error("Error during stream: ", error));
             }
         }
 
-        function displayUserMessage(message) {
+        function displayAiMessage(message) {
             const chatBox = document.getElementById('chat-box');
-            const userMessageDiv = document.createElement('div');
-            userMessageDiv.classList.add('user-message');
-            userMessageDiv.textContent = message;
-            chatBox.appendChild(userMessageDiv);
+            const aiMessageDiv = document.createElement('div');
+            aiMessageDiv.classList.add('ai-message');
+            aiMessageDiv.textContent = message;
+            chatBox.appendChild(aiMessageDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
@@ -419,14 +456,14 @@ function formatMessage(text) {
 }
 
 
-        function displayThinkingIndicator(message) {
-            const chatBox = document.getElementById('chat-box');
-            const thinkingDiv = document.createElement('div');
-            thinkingDiv.classList.add('thinking');
-            thinkingDiv.textContent = message;
-            chatBox.appendChild(thinkingDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+function displayThinkingIndicator(message) {
+    const chatBox = document.getElementById('chat-box');
+    const thinkingDiv = document.createElement('div');
+    thinkingDiv.classList.add('thinking');
+    thinkingDiv.textContent = message;
+    chatBox.appendChild(thinkingDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
 
         function simulateAiResponse(userMessage, inputField, sendButton) {
             fetch("/chat", {
@@ -462,7 +499,8 @@ function formatMessage(text) {
         }
 
         function checkEnter(event) {
-            if (event.key === 'Enter') {
+            if (event.key === "Enter") {
+                event.preventDefault();
                 sendMessage();
             }
         }
