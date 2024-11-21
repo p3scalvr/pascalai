@@ -371,31 +371,21 @@
                 };
         
                 eventSource.onopen = function() {
-                    fetch('/chat', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ prompt: userInput })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data.response);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
+                    fetch("/chat", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ prompt: message }),
+                    }).then(() => {
+                        inputField.disabled = false;
+                        sendButton.disabled = false;
                     });
-                }
-                    
+                };
+            }
+        }
         
         function displayThinkingIndicator() {
             const chatBox = document.getElementById("chat-box");
             const thinkingDiv = document.createElement("div");
-            thinkingDiv.classList.add("thinking");
-            thinkingDiv.textContent = "PascalAI is Thinking...";
-            chatBox.appendChild(thinkingDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
 
         function displayUserMessage(message) {
             const chatBox = document.getElementById('chat-box');
