@@ -229,12 +229,6 @@
         color: transparent;
         text-shadow: 0 0 10px #9b4dca;
     }
-
-        @keyframes fadeInBlue {
-            0% { opacity: 0; transform: translateX(-30px); }
-            100% { opacity: 1; transform: translateX(0); }
-        }
-
         @keyframes fadeInElement {
             0% { opacity: 0; }
             100% { opacity: 1; }
@@ -429,6 +423,16 @@ function formatMessage(text) {
         }
 
         function simulateAiResponse(userMessage, inputField, sendButton) {
+            const chatBox = document.getElementById('chat-box');
+        
+            // Create a div to display the AI response incrementally
+            const aiMessageDiv = document.createElement('div');
+            aiMessageDiv.classList.add('ai-message');
+            aiMessageDiv.textContent = "PascalAI is thinking...";
+            chatBox.appendChild(aiMessageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        
+            // Make the request to the backend
             fetch("/chat", {
                 method: "POST",
                 headers: {
@@ -436,26 +440,42 @@ function formatMessage(text) {
                 },
                 body: JSON.stringify({ prompt: userMessage })
             })
-            .then(response => response.json())
-            .then(data => {
-                const aiResponse = data.response || "Sorry, I couldn't process your request.";
-                displayAiMessage(aiResponse);
+            .then(response => {
+                if (!response.body) throw new Error("No response body found");
         
-                // Remove the "Thinking..." indicator
-                const thinkingDiv = document.querySelector('.thinking');
-                if (thinkingDiv) {
-                    thinkingDiv.remove();
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let fullMessage = "";
+        
+                // Process chunks as they arrive
+                function readChunk() {
+                    return reader.read().then(({ done, value }) => {
+                        if (done) {
+                            // Finalize the message display
+                            aiMessageDiv.textContent = fullMessage;
+                            return;
+                        }
+        
+                        // Decode the chunk and update the message
+                        fullMessage += decoder.decode(value, { stream: true });
+                        aiMessageDiv.textContent = fullMessage;
+        
+                        // Keep scrolling to the latest message
+                        chatBox.scrollTop = chatBox.scrollHeight;
+        
+                        // Continue reading the next chunk
+                        return readChunk();
+                    });
                 }
         
-                // Re-enable the input and send button
-                inputField.disabled = false;
-                sendButton.disabled = false;
+                return readChunk();
             })
             .catch(error => {
-                console.error("Error fetching AI response:", error);
-                displayAiMessage("An error occurred while communicating with the AI.");
-        
-                // Re-enable the input and send button even if there's an error
+                console.error("Error during AI response streaming:", error);
+                aiMessageDiv.textContent = "An error occurred while communicating with PascalAI.";
+            })
+            .finally(() => {
+                // Re-enable input and send button
                 inputField.disabled = false;
                 sendButton.disabled = false;
             });
