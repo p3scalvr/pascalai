@@ -508,6 +508,19 @@ function displayThinkingIndicator(message) {
                 .catch(error => console.error("Error during stream: ", error));
             }
         }
+
+        fetch('https://pq6xmkvh-5000.use.devtunnels.ms/chat-stream', {
+            method: 'POST',
+            body: JSON.stringify(data), // your request payload
+            headers: { 'Content-Type': 'application/json' },
+        })
+        .then(response => response.json())  // Expecting JSON response
+        .then(data => {
+            // Process JSON data
+            console.log(data);
+        })
+        .catch(error => console.error('Error:', error));
+        
     </script>
 </body>
 </html>
