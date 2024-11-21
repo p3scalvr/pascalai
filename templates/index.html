@@ -333,77 +333,65 @@
         let lastUserMessage = null;
         let lastAiMessage = null;
 
-        function sendMessage() {
-            const inputField = document.getElementById('user-input');
-            const sendButton = document.getElementById('send-btn');
-            const message = inputField.value.trim();
-        
-            if (message !== '') {
-                inputField.disabled = true;
-                sendButton.disabled = true;
-        
-                displayUserMessage(message);
-                inputField.value = '';
-                displayThinkingIndicator();
-        
-                const eventSource = new EventSource(`/chat`);
-                eventSource.onmessage = function(event) {
-                    const aiMessageDiv = document.querySelector(".ai-message");
-                    if (!aiMessageDiv) {
-                        // Create the AI message container if it doesn't exist yet
-                        const chatBox = document.getElementById("chat-box");
-                        const aiMessageDiv = document.createElement("div");
-                        aiMessageDiv.classList.add("ai-message");
-                        aiMessageDiv.innerHTML = `<strong>PascalAI:</strong> <span class="streamed-text"></span>`;
-                        chatBox.appendChild(aiMessageDiv);
-                        chatBox.scrollTop = chatBox.scrollHeight;
-                    }
-        
-                    const streamedText = document.querySelector(".streamed-text");
-                    streamedText.textContent += event.data; // Append streamed chunks
-                    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
-                };
-        
-                eventSource.onerror = function() {
-                    eventSource.close();
-                    inputField.disabled = false;
-                    sendButton.disabled = false;
-                };
-        
-                eventSource.onopen = function() {
-                    fetch('/chat', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ prompt: userInput })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data.response);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
+        // Define the sendMessage function
+    function sendMessage() {
+        const inputField = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-btn');
+        const message = inputField.value.trim();
+    
+        if (message !== '') {
+            inputField.disabled = true;
+            sendButton.disabled = true;
+    
+            displayUserMessage(message);
+            inputField.value = '';
+            displayThinkingIndicator();
+    
+            const eventSource = new EventSource(`/chat`);
+            eventSource.onmessage = function(event) {
+                const aiMessageDiv = document.querySelector(".ai-message");
+                if (!aiMessageDiv) {
+                    const chatBox = document.getElementById("chat-box");
+                    const aiMessageDiv = document.createElement("div");
+                    aiMessageDiv.classList.add("ai-message");
+                    aiMessageDiv.innerHTML = `<strong>PascalAI:</strong> <span class="streamed-text"></span>`;
+                    chatBox.appendChild(aiMessageDiv);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+    
+                const streamedText = document.querySelector(".streamed-text");
+                streamedText.textContent += event.data; 
+                chatBox.scrollTop = chatBox.scrollHeight; 
+            };
+    
+            eventSource.onerror = function() {
+                eventSource.close();
+                inputField.disabled = false;
+                sendButton.disabled = false;
+            };
+        }
+    }
                     
         
-        function displayThinkingIndicator() {
-            const chatBox = document.getElementById("chat-box");
-            const thinkingDiv = document.createElement("div");
-            thinkingDiv.classList.add("thinking");
-            thinkingDiv.textContent = "PascalAI is Thinking...";
-            chatBox.appendChild(thinkingDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+        // Function to display thinking indicator
+    function displayThinkingIndicator() {
+        const chatBox = document.getElementById('chat-box');
+        const thinkingDiv = document.createElement('div');
+        thinkingDiv.classList.add('thinking');
+        thinkingDiv.textContent = "PascalAI is Thinking...";
+        chatBox.appendChild(thinkingDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-        function displayUserMessage(message) {
-            const chatBox = document.getElementById('chat-box');
-            const userMessageDiv = document.createElement('div');
-            userMessageDiv.classList.add('user-message');
-            userMessageDiv.textContent = message;
-            chatBox.appendChild(userMessageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+        // Function to display user messages
+    function displayUserMessage(message) {
+        const chatBox = document.getElementById('chat-box');
+        const userMessageDiv = document.createElement('div');
+        userMessageDiv.classList.add('user-message');
+        userMessageDiv.textContent = message;
+        chatBox.appendChild(userMessageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
         function displayAiMessage(message) {
     const chatBox = document.getElementById('chat-box');
@@ -503,18 +491,15 @@ function formatMessage(text) {
             });
         }
 
-        // Define the checkEnter function
         function checkEnter(event) {
-            // Check if the pressed key is "Enter"
             if (event.key === "Enter") {
-                event.preventDefault();  // Prevent the default action (like form submission)
-                const userInput = document.getElementById("user-input").value; // Get the input value
-                console.log("User entered: " + userInput); // Log or send the input somewhere
-
-                // Clear the input field after the Enter key is pressed
+                event.preventDefault();
+                const userInput = document.getElementById("user-input").value;
+                console.log("User entered: " + userInput);
                 document.getElementById("user-input").value = "";
             }
         }
+
         window.onload = function() {
             document.body.style.opacity = 1;
         };
