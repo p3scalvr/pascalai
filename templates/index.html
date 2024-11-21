@@ -333,13 +333,34 @@
         let lastUserMessage = null;
         let lastAiMessage = null;
 
+        function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-btn');
+            const message = inputField.value.trim();
+        
+            // If the message is not empty, proceed to send it
+            if (message !== '') {
+                // Disable input and send button while waiting for the response
+                inputField.disabled = true;
+                sendButton.disabled = true;
+        
+                displayUserMessage(message);
+                inputField.value = '';
+                lastUserMessage = message;
+                lastAiMessage = "PascalAI is Thinking...";
+        
+                displayThinkingIndicator(lastAiMessage);
+                simulateAiResponse(message, inputField, sendButton);
+            }
+        }
+
         function displayUserMessage(message) {
             const chatBox = document.getElementById('chat-box');
-            const userMessage = document.createElement('div');
-            userMessage.classList.add('user-message');
-            userMessage.innerText = message;
-            chatBox.appendChild(userMessage);
-            chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.classList.add('user-message');
+            userMessageDiv.textContent = message;
+            chatBox.appendChild(userMessageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
 
         function displayAiMessage(message) {
@@ -398,14 +419,14 @@ function formatMessage(text) {
 }
 
 
-function displayThinkingIndicator(message) {
-    const chatBox = document.getElementById('chat-box');
-    const thinkingDiv = document.createElement('div');
-    thinkingDiv.classList.add('thinking');
-    thinkingDiv.textContent = message;
-    chatBox.appendChild(thinkingDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
+        function displayThinkingIndicator(message) {
+            const chatBox = document.getElementById('chat-box');
+            const thinkingDiv = document.createElement('div');
+            thinkingDiv.classList.add('thinking');
+            thinkingDiv.textContent = message;
+            chatBox.appendChild(thinkingDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
 
         function simulateAiResponse(userMessage, inputField, sendButton) {
             fetch("/chat", {
@@ -441,8 +462,7 @@ function displayThinkingIndicator(message) {
         }
 
         function checkEnter(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
+            if (event.key === 'Enter') {
                 sendMessage();
             }
         }
@@ -450,77 +470,6 @@ function displayThinkingIndicator(message) {
         window.onload = function() {
             document.body.style.opacity = 1;
         };
-
-        function sendMessage() {
-            const inputField = document.getElementById('user-input');
-            const sendButton = document.getElementById('send-btn');
-            const message = inputField.value.trim();
-        
-            // If the message is not empty, proceed to send it
-            if (message !== '') {
-                // Disable input and send button while waiting for the response
-                inputField.disabled = true;
-                sendButton.disabled = true;
-        
-                displayUserMessage(message);
-                inputField.value = '';
-                lastUserMessage = message;
-                lastAiMessage = "PascalAI is Thinking...";
-
-                // Send message to the server and handle streaming AI response
-                displayThinkingIndicator(lastAiMessage);
-                fetch("/chat-stream", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ prompt: message }),
-                })
-                .then(response => {
-                    const reader = response.body.getReader();
-                    const decoder = new TextDecoder();
-                    const stream = new ReadableStream({
-                        start(controller) {
-                            reader.read().then(function processText({ done, value }) {
-                                if (done) {
-                                    controller.close();
-                                    return;
-                                }
-                                controller.enqueue(decoder.decode(value, { stream: true }));
-                                reader.read().then(processText);
-                            });
-                        }
-                    });
-
-                    return new Response(stream);
-                })
-                .then(response => {
-                    const reader = response.body.getReader();
-                    const decoder = new TextDecoder();
-                    reader.read().then(function processText({ done, value }) {
-                        if (!done) {
-                            const newContent = decoder.decode(value, { stream: true });
-                            displayAiMessage(newContent);
-                            reader.read().then(processText);
-                        }
-                    });
-                })
-                .catch(error => console.error("Error during stream: ", error));
-            }
-        }
-
-        fetch('https://pq6xmkvh-5000.use.devtunnels.ms/chat-stream', {
-            method: 'POST',
-            body: JSON.stringify(data), // your request payload
-            headers: { 'Content-Type': 'application/json' },
-        })
-        .then(response => response.json())  // Expecting JSON response
-        .then(data => {
-            // Process JSON data
-            console.log(data);
-        })
-        .catch(error => console.error('Error:', error));
-        
     </script>
 </body>
 </html>
