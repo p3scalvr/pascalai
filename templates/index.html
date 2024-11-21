@@ -449,7 +449,7 @@ function formatMessage(text) {
                     reader.read().then(({ done, value }) => {
                         if (done) {
                             displayAiMessage(aiMessage);
-                            // Re-enable the input and send button
+                            // Re-enable input and send button
                             inputField.disabled = false;
                             sendButton.disabled = false;
         
@@ -460,13 +460,17 @@ function formatMessage(text) {
                             return;
                         }
         
-                        // Decode the streamed chunk and update the AI message
+                        // Decode and process each streamed chunk
                         const chunk = decoder.decode(value);
-                        try {
-                            const json = JSON.parse(chunk);
-                            aiMessage = json.partial; // Update the growing message
-                        } catch (err) {
-                            console.error("Failed to parse chunk:", chunk, err);
+                        const lines = chunk.split("\n").filter(line => line.trim() !== "");
+        
+                        for (const line of lines) {
+                            try {
+                                const json = JSON.parse(line);
+                                aiMessage = json.partial; // Update the growing message
+                            } catch (err) {
+                                console.error("Failed to parse chunk:", line, err);
+                            }
                         }
         
                         // Continuously display partial updates

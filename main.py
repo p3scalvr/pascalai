@@ -51,7 +51,7 @@ def chat():
         buffer = ""
         for char in ai_response:
             buffer += char
-            yield json.dumps({"partial": buffer}) + "\n"
+            yield f"{json.dumps({'partial': buffer})}\n"  # Ensure newline after each JSON object
             time.sleep(0.03)  # Adjust delay for typing effect
     
     return Response(generate_response(), content_type='application/json')
