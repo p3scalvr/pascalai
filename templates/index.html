@@ -503,9 +503,16 @@ function formatMessage(text) {
             });
         }
 
+        // Define the checkEnter function
         function checkEnter(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
+            // Check if the pressed key is "Enter"
+            if (event.key === "Enter") {
+                event.preventDefault();  // Prevent the default action (like form submission)
+                const userInput = document.getElementById("user-input").value; // Get the input value
+                console.log("User entered: " + userInput); // Log or send the input somewhere
+
+                // Clear the input field after the Enter key is pressed
+                document.getElementById("user-input").value = "";
             }
         }
 
