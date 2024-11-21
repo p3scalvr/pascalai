@@ -47,12 +47,13 @@ def chat():
         return jsonify({"response": "No prompt received."})
     
     def generate_response():
+        # Simulating AI generating response progressively
         ai_response = get_ai_response(user_input)
-        buffer = ""
         for char in ai_response:
-            buffer += char
-            yield f"{json.dumps({'partial': buffer})}\n"  # Ensure newline after each JSON object
-            time.sleep(0.03)  # Adjust delay for typing effect
+            yield char  # Send each character immediately
+            time.sleep(0.03)  # Simulate processing delay
+    
+    return Response(generate_response(), content_type="text/plain")
     
     return Response(generate_response(), content_type='application/json')
 
