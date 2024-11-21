@@ -7,7 +7,7 @@ app = Flask(__name__, template_folder='templates')
 def get_ai_response(prompt: str):
     try:
         # Send a request to the Ollama model and get the response
-        response = ollama.chat(model="gemma:7b", messages=[{"role": "user", "content": prompt}])
+        response = ollama.chat(model="llama3.2:3b", messages=[{"role": "user", "content": prompt}])
 
         # Check if the 'message' field is present and contains 'content'
         if "message" in response and "content" in response["message"]:
