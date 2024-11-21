@@ -365,29 +365,32 @@
 
         function displayAiMessage(message) {
             const chatBox = document.getElementById('chat-box');
-            const aiMessageDiv = document.createElement('div');
-            aiMessageDiv.classList.add('ai-message');
+            let aiMessageDiv = document.querySelector('.ai-message'); // Find existing AI message
         
-            const aiNameDiv = document.createElement('div');
-            aiNameDiv.classList.add('ai-name');
-            aiNameDiv.textContent = 'PascalAI:';
-            
-            const messageDiv = document.createElement('div');
-            aiMessageDiv.appendChild(aiNameDiv);
-            aiMessageDiv.appendChild(messageDiv);
-            chatBox.appendChild(aiMessageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
+            if (!aiMessageDiv) {
+                // If no AI message exists, create a new one
+                aiMessageDiv = document.createElement('div');
+                aiMessageDiv.classList.add('ai-message');
         
-            let index = 0;
-            function typeCharacter() {
-                if (index < message.length) {
-                    messageDiv.innerHTML += message[index++];
-                    chatBox.scrollTop = chatBox.scrollHeight;
-                    setTimeout(typeCharacter, 30); // Adjust typing speed here
-                }
+                const aiNameDiv = document.createElement('div');
+                aiNameDiv.classList.add('ai-name');
+                aiNameDiv.textContent = 'PascalAI:';
+                aiMessageDiv.appendChild(aiNameDiv);
+        
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message-content');
+                aiMessageDiv.appendChild(messageDiv);
+        
+                chatBox.appendChild(aiMessageDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
             }
-            typeCharacter();
+        
+            // Update the existing message content
+            const messageDiv = aiMessageDiv.querySelector('.message-content');
+            messageDiv.textContent = message; // Update message progressively
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
+        
 
 /**
  * Function to apply advanced formatting to messages.
