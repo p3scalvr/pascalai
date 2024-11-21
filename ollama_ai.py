@@ -33,7 +33,7 @@ def get_ai_response(prompt: str):
 
         print("Request Payload:", json.dumps(messages, indent=2))
 
-        response = ollama.chat(model="gemma:7b", messages=messages)
+        response = ollama.chat(model="llama3.2:3b", messages=messages)
 
         if response.get("message") and response["message"].get("content"):
             ai_reply = response["message"]["content"]
