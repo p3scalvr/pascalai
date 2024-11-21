@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-    <title>PascalAI: Your AI companion</title>
+    <title>PascalAI: Your Personal AI Companion</title>
     <!-- Importing Google Font 'Roboto' for a modern look -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&family=Poppins:wght@600&display=swap" rel="stylesheet">
     <style>
@@ -246,74 +246,58 @@
         }
 
         /* Responsive Styles */
-@media (max-width: 1200px) {
-    header {
-        font-size: 2.2em;
-    }
-    #chat-box {
-        padding: 10px;
-        margin-bottom: 100px;
-    }
-    .user-message, .ai-message {
-        font-size: 16px;
-    }
-    #send-btn {
-        font-size: 14px;
-    }
-}
-
-@media (max-width: 768px) {
-    header {
-        font-size: 2em;
-    }
-    .user-message, .ai-message {
-        font-size: 14px;
-        max-width: 85%;
-    }
-    #send-btn {
-        font-size: 14px;
-        padding: 10px 15px;
-    }
-    #user-input {
-        font-size: 14px;
-    }
-}
-
-@media (max-width: 480px) {
-    header {
-        font-size: 1.5em;
-    }
-    .user-message, .ai-message {
-        font-size: 12px;
-        max-width: 90%;
-    }
-    #send-btn {
-        font-size: 12px;
-        padding: 8px 12px;
-    }
-    #user-input {
-        font-size: 12px;
-    }
-}
-
-@media (max-width: 480px) {
-    header {
-        font-size: 1.5em;
-    }
-    .user-message, .ai-message {
-        font-size: 12px;
-        max-width: 90%;
-    }
-    #send-btn {
-        font-size: 12px;
-        padding: 8px 12px;
-    }
-    #user-input {
-        font-size: 14px; /* Adjusted font size */
-        padding: 12px;   /* Adjusted padding */
-        width: 80%; /* Adjust input field width */
-    }
-}
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            header {
+                font-size: 2.2em;
+            }
+            #chat-box {
+                padding: 10px;
+                margin-bottom: 100px;
+            }
+            .user-message, .ai-message {
+                font-size: 16px;
+            }
+            #send-btn {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                font-size: 2em;
+            }
+            .user-message, .ai-message {
+                font-size: 14px;
+                max-width: 85%;
+            }
+            #send-btn {
+                font-size: 14px;
+                padding: 10px 15px;
+            }
+            #user-input {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            header {
+                font-size: 1.5em;
+            }
+            .user-message, .ai-message {
+                font-size: 12px;
+                max-width: 90%;
+            }
+            #send-btn {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+            #user-input {
+                font-size: 12px;
+                padding: 12px;
+                width: 80%;
+            }
+        }
     </style>
 </head>
 <body>
