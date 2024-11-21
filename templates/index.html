@@ -364,26 +364,30 @@
         }
 
         function displayAiMessage(message) {
-    const chatBox = document.getElementById('chat-box');
-    const aiMessageDiv = document.createElement('div');
-    aiMessageDiv.classList.add('ai-message');
-
-    const aiNameDiv = document.createElement('div');
-    aiNameDiv.classList.add('ai-name');
-    aiNameDiv.textContent = 'PascalAI:';
-
-    // Enhanced formatting logic
-    const formattedMessage = formatMessage(message);
-
-    const messageDiv = document.createElement('div');
-    messageDiv.innerHTML = formattedMessage;
-
-    aiMessageDiv.appendChild(aiNameDiv);
-    aiMessageDiv.appendChild(messageDiv);
-
-    chatBox.appendChild(aiMessageDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
+            const chatBox = document.getElementById('chat-box');
+            const aiMessageDiv = document.createElement('div');
+            aiMessageDiv.classList.add('ai-message');
+        
+            const aiNameDiv = document.createElement('div');
+            aiNameDiv.classList.add('ai-name');
+            aiNameDiv.textContent = 'PascalAI:';
+            
+            const messageDiv = document.createElement('div');
+            aiMessageDiv.appendChild(aiNameDiv);
+            aiMessageDiv.appendChild(messageDiv);
+            chatBox.appendChild(aiMessageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        
+            let index = 0;
+            function typeCharacter() {
+                if (index < message.length) {
+                    messageDiv.innerHTML += message[index++];
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                    setTimeout(typeCharacter, 30); // Adjust typing speed here
+                }
+            }
+            typeCharacter();
+        }
 
 /**
  * Function to apply advanced formatting to messages.

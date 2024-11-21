@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, send_from_directory
+from flask import Flask, render_template, request, jsonify, send_from_directory, Response, time
 import ollama
 
 app = Flask(__name__, template_folder='templates')
@@ -34,13 +34,17 @@ def send_static(path):
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    # Endpoint for AI chat interaction
     user_input = request.json.get("prompt")
-    if user_input:
-        ai_response = get_ai_response(user_input)
-        return jsonify({"response": ai_response})
-    else:
+    if not user_input:
         return jsonify({"response": "No prompt received."})
+    
+    def generate_response():
+        ai_response = get_ai_response(user_input)
+        for char in ai_response:
+            yield char
+            time.sleep(0.03)  # Simulates streaming delay for better UI effect
+    
+    return Response(generate_response(), content_type='text/plain')
 
 @app.route("/chat-page")
 def chat_page():
