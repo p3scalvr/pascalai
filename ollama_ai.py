@@ -43,7 +43,7 @@ def get_ai_response(prompt: str):
         print("Request Payload:", json.dumps(messages, indent=2))
 
         # Send the request to Ollama for the AI response
-        response = ollama.chat(model="llama3.2", messages=messages)
+        response = ollama.chat(model="llama3.2:3b", messages=messages)
 
         # Validate the response
         if response.get("message") and response["message"].get("content"):
