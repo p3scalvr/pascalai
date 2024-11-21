@@ -330,68 +330,62 @@
     
 
     <script>
-        function checkEnter(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        }
-
         let lastUserMessage = null;
         let lastAiMessage = null;
 
         function sendMessage() {
-        const inputField = document.getElementById('user-input');
-        const sendButton = document.getElementById('send-btn');
-        const message = inputField.value.trim();
-    
-        if (message !== '') {
-            inputField.disabled = true;
-            sendButton.disabled = true;
-    
-            displayUserMessage(message);
-            inputField.value = '';
-            displayThinkingIndicator();
-    
-            const eventSource = new EventSource(`/chat`);
-            eventSource.onmessage = function(event) {
-                const aiMessageDiv = document.querySelector(".ai-message");
-                if (!aiMessageDiv) {
-                    // Create the AI message container if it doesn't exist yet
-                    const chatBox = document.getElementById("chat-box");
-                    const aiMessageDiv = document.createElement("div");
-                    aiMessageDiv.classList.add("ai-message");
-                    aiMessageDiv.innerHTML = `<strong>PascalAI:</strong> <span class="streamed-text"></span>`;
-                    chatBox.appendChild(aiMessageDiv);
-                    chatBox.scrollTop = chatBox.scrollHeight;
+            const inputField = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-btn');
+            const message = inputField.value.trim();
+        
+            if (message !== '') {
+                inputField.disabled = true;
+                sendButton.disabled = true;
+        
+                displayUserMessage(message);
+                inputField.value = '';
+                displayThinkingIndicator();
+        
+                const eventSource = new EventSource(`/chat`);
+                eventSource.onmessage = function(event) {
+                    const aiMessageDiv = document.querySelector(".ai-message");
+                    if (!aiMessageDiv) {
+                        // Create the AI message container if it doesn't exist yet
+                        const chatBox = document.getElementById("chat-box");
+                        const aiMessageDiv = document.createElement("div");
+                        aiMessageDiv.classList.add("ai-message");
+                        aiMessageDiv.innerHTML = `<strong>PascalAI:</strong> <span class="streamed-text"></span>`;
+                        chatBox.appendChild(aiMessageDiv);
+                        chatBox.scrollTop = chatBox.scrollHeight;
+                    }
+        
+                    const streamedText = document.querySelector(".streamed-text");
+                    streamedText.textContent += event.data; // Append streamed chunks
+                    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+                };
+        
+                eventSource.onerror = function() {
+                    eventSource.close();
+                    inputField.disabled = false;
+                    sendButton.disabled = false;
+                };
+        
+                eventSource.onopen = function() {
+                    fetch('/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ prompt: userInput })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data.response);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
                 }
-    
-                const streamedText = document.querySelector(".streamed-text");
-                streamedText.textContent += event.data; // Append streamed chunks
-                chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
-            };
-    
-            eventSource.onerror = function() {
-                eventSource.close();
-                inputField.disabled = false;
-                sendButton.disabled = false;
-            };
-    
-            eventSource.onopen = function() {
-                fetch('/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ prompt: userInput })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data.response);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            }
                     
         
         function displayThinkingIndicator() {
@@ -510,9 +504,15 @@ function formatMessage(text) {
             });
         }
 
+        function checkEnter(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
         window.onload = function() {
             document.body.style.opacity = 1;
         };
-    <script>
+    </script>
 </body>
 </html>
