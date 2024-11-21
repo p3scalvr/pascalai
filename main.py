@@ -1,10 +1,18 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory, Response
-import ollama, time
+import ollama
+import json
+import time
 
 app = Flask(__name__, template_folder='templates')
 
 # Function to interact with Ollama's AI model
 def get_ai_response(prompt: str):
+    """
+    Interact with Ollama's AI model and return the response as a string
+    :param prompt: The user's input to the AI
+    :return: The AI's response as a string
+    :raises Exception: If something unexpected goes wrong
+    """
     try:
         # Send a request to the Ollama model and get the response
         response = ollama.chat(model="gemma:7b", messages=[{"role": "user", "content": prompt}])
@@ -40,11 +48,13 @@ def chat():
     
     def generate_response():
         ai_response = get_ai_response(user_input)
+        buffer = ""
         for char in ai_response:
-            yield char
-            time.sleep(0.03)  # Simulates streaming delay for better UI effect
+            buffer += char
+            yield json.dumps({"partial": buffer}) + "\n"
+            time.sleep(0.03)  # Adjust delay for typing effect
     
-    return Response(generate_response(), content_type='text/plain')
+    return Response(generate_response(), content_type='application/json')
 
 @app.route("/chat-page")
 def chat_page():
