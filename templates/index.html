@@ -483,7 +483,14 @@ function formatMessage(text) {
                 inputField.disabled = false;
                 sendButton.disabled = false;
             });
-        }        
+        }
+
+        function checkEnter(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+        
     </script>
 </body>
 </html>
