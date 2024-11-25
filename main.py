@@ -1,6 +1,5 @@
-from flask import Flask, render_template, request, jsonify, send_from_directory, Response
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import ollama
-from ollama_ai import get_ai_response_stream, get_ai_response  # Import the functions
 
 app = Flask(__name__, template_folder='templates')
 
@@ -22,18 +21,6 @@ def get_ai_response(prompt: str):
         # Handle any unexpected errors
         print(f"An error occurred: {e}")
         return f"An error occurred: {e}"
-
-@app.route("/chat-stream", methods=["GET"])
-def chat_stream():
-    user_input = request.args.get("prompt")
-    if not user_input:
-        return Response("No prompt received.", status=400)
-
-    def generate():
-        for chunk in get_ai_response_stream(user_input):
-            yield f"data:{chunk}\n\n"
-
-    return Response(generate(), content_type='text/event-stream')
 
 @app.route("/")
 def home():
