@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #000;
+            background-color: #121212;
             color: #e1e1e1;
             display: flex;
             flex-direction: column;
@@ -24,7 +24,7 @@
             min-height: 100vh;
             overflow-x: hidden;
             opacity: 0;
-            animation: fadeInAll 1.5s ease-out forwards;
+            animation: fadeInAll 0.8s forwards;
         }
 
         a {
@@ -41,12 +41,12 @@
             justify-content: space-between;
             align-items: center;
             position: fixed;
-            top: -100px;
-            left: 0;
+            top: 0;
             z-index: 10;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            opacity: 0;
-            animation: slideInFromTop 1s ease-out forwards;
+            opacity: 1;
+            animation: fadeInHeader 1s ease-out;
+            transition: opacity 0.5s ease-in-out;
         }
 
         .logo {
@@ -75,12 +75,11 @@
 
         /* Hero Section */
         .hero {
-            margin-top: 150px;
+            margin-top: 120px;
             text-align: center;
             width: 100%;
             padding: 0 20px;
-            opacity: 0;
-            animation: fadeInSection 1.5s ease-out 1s forwards;
+            animation: fadeInSection 1s ease-out;
         }
 
         .hero h1 {
@@ -104,7 +103,6 @@
             justify-content: center;
             align-items: center;
             gap: 10px;
-            position: relative;
         }
 
         .search-bar {
@@ -118,7 +116,6 @@
             color: #e1e1e1;
             outline: none;
             transition: border-color 0.3s ease;
-            text-align: center;
         }
 
         .search-bar:focus {
@@ -142,6 +139,23 @@
             transform: scale(1.05);
         }
 
+        /* Footer */
+        footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer a {
+            color: #bb86fc;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
         /* Animations */
         @keyframes fadeInAll {
             0% {
@@ -152,13 +166,11 @@
             }
         }
 
-        @keyframes slideInFromTop {
+        @keyframes fadeInHeader {
             0% {
-                top: -100px;
                 opacity: 0;
             }
             100% {
-                top: 0;
                 opacity: 1;
             }
         }
@@ -170,37 +182,6 @@
             }
             100% {
                 transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeOutSlideUp {
-            0% {
-                transform: translateY(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-        }
-
-        @keyframes fadeInSlideDown {
-            0% {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            100% {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInTextOnly {
-            0% {
-                opacity: 0;
-            }
-            100% {
                 opacity: 1;
             }
         }
@@ -260,37 +241,40 @@
     <main>
         <section class="hero">
             <h1>Ask PascalAI Anything</h1>
-            <p class="hero-text">Unlock limitless possibilities with cutting-edge AI technology. Start your journey now!</p>
+            <p>Unlock limitless possibilities with cutting-edge AI technology. Start your journey now!</p>
             <div class="search-container">
-                <input type="text" class="search-bar" id="search-bar" placeholder="Ask me anything..." readonly>
+                <input type="text" class="search-bar" placeholder="Ask me anything...">
                 <button class="search-btn" onclick="location.href='/chat-page';">Get Started</button>
             </div>
         </section>
     </main>
 
     <footer>
-        <p>© 2024 PascalAI. Built with ❤️ and advanced AI.</p>
+        <p>© 2024 PascalAI.</p>
     </footer>
 
     <script>
-        const exampleQuestions = [
-            "Who is the President of the United States?",
-            "What is the capital of France?",
-            "Explain the theory of relativity",
-            "Who was the first president?",
-            "What is the meaning of life?",
-            "What is 2 + 2?",
-            "How far is the moon from Earth?"
-        ];
+        let lastScrollTop = 0;
+        const header = document.getElementById('header');
 
-        let currentIndex = 0;
-        const searchBarText = document.getElementById("search-bar-text");
+        window.addEventListener('scroll', function () {
+            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
 
-        // Change text on animation end
-        searchBarText.addEventListener("animationiteration", () => {
-            currentIndex = (currentIndex + 1) % exampleQuestions.length;
-            searchBarText.textContent = exampleQuestions[currentIndex];
+            if (currentScroll > lastScrollTop) {
+                // Scroll down
+                header.classList.add('hidden-header');
+            } else {
+                // Scroll up
+                header.classList.remove('hidden-header');
+                header.classList.add('visible-header');
+            }
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
+
+        // Ensure the page fades in top to bottom in a nice order when loaded
+        window.onload = function () {
+            document.body.style.opacity = 1;
+        };
     </script>
 </body>
 </html>
