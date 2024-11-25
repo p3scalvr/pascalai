@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory, Response
 import ollama
-from ollama_ai import get_ai_response_stream  # Import the function
+from ollama_ai import get_ai_response_stream, get_ai_response  # Import the functions
 
 app = Flask(__name__, template_folder='templates')
 
