@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, send_from_directory
+from flask import Flask, render_template, request, jsonify, send_from_directory, Response
 import ollama
 
 app = Flask(__name__, template_folder='templates')
@@ -22,6 +22,11 @@ def get_ai_response(prompt: str):
         print(f"An error occurred: {e}")
         return f"An error occurred: {e}"
 
+def get_ai_response_stream(prompt: str):
+    # Simulate streaming response from AI
+    for word in ollama.chat_stream(model="llama3.2:3b", messages=[{"role": "user", "content": prompt}]):
+        yield f"{word} "
+
 @app.route("/")
 def home():
     # Serves the homepage (homePage.html)
@@ -37,8 +42,7 @@ def chat():
     # Endpoint for AI chat interaction
     user_input = request.json.get("prompt")
     if user_input:
-        ai_response = get_ai_response(user_input)
-        return jsonify({"response": ai_response})
+        return Response(get_ai_response_stream(user_input), content_type='text/plain')
     else:
         return jsonify({"response": "No prompt received."})
 

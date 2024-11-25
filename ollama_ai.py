@@ -63,6 +63,12 @@ def get_ai_response(prompt: str):
         print(f"An error occurred: {e}")
         return f"Error: {e}"
 
+def chat_stream(model, messages):
+    # Simulate streaming response from AI
+    response = ollama.chat(model=model, messages=messages)
+    for word in response["message"]["content"].split():
+        yield word
+
 # Example usage
 if __name__ == "__main__":
     while True:
