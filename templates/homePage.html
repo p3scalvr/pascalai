@@ -189,6 +189,17 @@
             }
         }
 
+        @keyframes fadeOutSlideUp {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+        }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             .hero h1 {
@@ -243,8 +254,9 @@
 
     <main>
         <section class="hero">
-            <h1>Ask ChatGPT Anything</h1>
-            <p>Unlock limitless possibilities with cutting-edge AI technology. Start your journey now!</p>
+            <h1>Ask PascalAI Anything</h1>
+            <p class="example-question">Quiz me for my Math Test</p>
+            <p class="hero-text">Unlock limitless possibilities with cutting-edge AI technology. Start your journey now!</p>
             <div class="search-container">
                 <input type="text" class="search-bar" placeholder="Ask me anything...">
                 <button class="search-btn" onclick="location.href='/chat-page';">Get Started</button>
@@ -253,31 +265,46 @@
     </main>
 
     <footer>
-        <p>© 2024 PascalAI. Built with ❤️ and advanced AI.</p>
+        <p>© 2024 PascalAI.</p>
     </footer>
 
     <script>
-        let lastScrollTop = 0;
-        const header = document.getElementById('header');
+        let exampleQuestions = [
+            "Quiz me for my Math Test",
+            "Who was the first president?",
+            "What is the capital of France?",
+            "Explain the theory of relativity",
+            "How do I make a website?",
+            "What is the meaning of life?",
+            "What is 2 + 2?",
+            "How far is the moon from Earth?"
+        ];
 
-        window.addEventListener('scroll', function () {
-            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        let currentIndex = 0;
+        const exampleText = document.querySelector(".example-question");
 
-            if (currentScroll > lastScrollTop) {
-                // Scroll down
-                header.classList.add('hidden-header');
-            } else {
-                // Scroll up
-                header.classList.remove('hidden-header');
-                header.classList.add('visible-header');
-            }
-            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        // Function to change the text with sliding and fading out/in animation
+        function changeExampleText() {
+            exampleText.style.animation = "fadeOutSlideUp 0.5s forwards";
+
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % exampleQuestions.length;
+                exampleText.textContent = exampleQuestions[currentIndex];
+                exampleText.style.animation = "none";  // Reset animation
+                exampleText.offsetHeight;  // Trigger reflow to reset animation
+                exampleText.style.animation = "fadeInSection 0.5s forwards";  // Fade it in
+            }, 500);  // Wait for the slide-up fade-out to complete
+        }
+
+        // Change the text every 3 seconds
+        setInterval(changeExampleText, 3500);
+
+        // Initial text fade-in
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                exampleText.style.animation = "fadeInSection 1s forwards";  // Initial fade-in of the first example
+            }, 1000);
         });
-
-        // Ensure the page fades in top to bottom in a nice order when loaded
-        window.onload = function () {
-            document.body.style.opacity = 1;
-        };
     </script>
 </body>
 </html>
