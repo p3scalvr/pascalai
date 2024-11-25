@@ -24,23 +24,19 @@
         /* Header Styles */
         header {
             width: 90%;
-            padding: 20px 15px;
-            text-align: center;
+            padding: 20px;
             background-color: rgba(0, 0, 0, 0.7);
             color: #fff;
             border-radius: 15px;
-            position: relative;
             margin-top: 20px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             border: 2px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 50px;
-            opacity: 0;
-            animation: fadeIn 1.5s ease-out 0.5s forwards;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap; /* Allow content to wrap on smaller screens */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
         }
+        
         /* Left side text */
         .left-text {
             font-size: 2.2em;
@@ -54,16 +50,14 @@
         /* Header buttons */
         .header-buttons {
             display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            max-width: 100%; /* Ensure buttons are contained within header */
-            flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
-            justify-content: center; /* Center buttons */
+            gap: 15px; /* Spacing between buttons */
+            flex-wrap: wrap; /* Ensure buttons wrap on smaller screens */
+            justify-content: center; /* Center buttons horizontally */
         }
         
         .header-btn {
-            padding: 8px 16px;
-            font-size: 0.9em;
+            padding: 10px 20px;
+            font-size: 1em;
             border: 2px solid white;
             color: white;
             font-weight: bold;
@@ -71,9 +65,10 @@
             border-radius: 10px;
             text-transform: uppercase;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            min-width: 120px; /* Set a minimum width for buttons */
-            margin: 5px; /* Add space between buttons */
+            min-width: 140px; /* Minimum button width for consistency */
+            text-align: center;
         }
+        
 
         .header-btn:hover {
             box-shadow: 0 0 25px rgba(255, 255, 255, 0.7);
@@ -267,6 +262,19 @@
         width: 80%; /* Make buttons take up 80% of the width */
     }
 }
+
+@media (max-width: 768px) {
+    .header-buttons {
+        flex-direction: column; /* Stack buttons vertically */
+        align-items: center; /* Center buttons */
+        gap: 10px; /* Space between buttons */
+    }
+
+    .header-btn {
+        width: 80%; /* Buttons occupy 80% of container width */
+    }
+}
+
     </style>
 </head>
 <body>
