@@ -24,7 +24,7 @@
             min-height: 100vh;
             overflow-x: hidden;
             opacity: 0;
-            animation: fadeInAll 0.8s forwards;
+            animation: fadeInAll 1.5s ease-out forwards;
         }
 
         a {
@@ -41,12 +41,12 @@
             justify-content: space-between;
             align-items: center;
             position: fixed;
-            top: 0;
+            top: -100px; /* Start hidden above the viewport */
+            left: 0;
             z-index: 10;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            opacity: 1;
-            animation: fadeInHeader 1s ease-out;
-            transition: opacity 0.5s ease-in-out;
+            opacity: 0;
+            animation: slideInFromTop 1s ease-out forwards;
         }
 
         .logo {
@@ -75,11 +75,12 @@
 
         /* Hero Section */
         .hero {
-            margin-top: 120px;
+            margin-top: 150px; /* Added space for the header */
             text-align: center;
             width: 100%;
             padding: 0 20px;
-            animation: fadeInSection 1s ease-out;
+            opacity: 0;
+            animation: fadeInSection 1.5s ease-out 1s forwards; /* Delayed text fade-in */
         }
 
         .hero h1 {
@@ -166,11 +167,13 @@
             }
         }
 
-        @keyframes fadeInHeader {
+        @keyframes slideInFromTop {
             0% {
+                top: -100px;
                 opacity: 0;
             }
             100% {
+                top: 0;
                 opacity: 1;
             }
         }
@@ -240,7 +243,7 @@
 
     <main>
         <section class="hero">
-            <h1>Ask PascalAI Anything</h1>
+            <h1>Ask ChatGPT Anything</h1>
             <p>Unlock limitless possibilities with cutting-edge AI technology. Start your journey now!</p>
             <div class="search-container">
                 <input type="text" class="search-bar" placeholder="Ask me anything...">
@@ -250,7 +253,7 @@
     </main>
 
     <footer>
-        <p>© 2024 PascalAI.</p>
+        <p>© 2024 PascalAI. Built with ❤️ and advanced AI.</p>
     </footer>
 
     <script>
