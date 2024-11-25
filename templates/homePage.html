@@ -118,8 +118,6 @@
             color: #e1e1e1;
             outline: none;
             transition: border-color 0.3s ease;
-            text-align: center;
-            position: relative;
         }
 
         .search-bar:focus {
@@ -175,21 +173,34 @@
             }
         }
 
+        @keyframes fadeOutSlideUp {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeInSlideDown {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
         @keyframes fadeInTextOnly {
             0% {
                 opacity: 0;
             }
             100% {
                 opacity: 1;
-            }
-        }
-
-        @keyframes fadeOutTextOnly {
-            0% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
             }
         }
 
@@ -257,16 +268,15 @@
     </main>
 
     <footer>
-        <p>© 2024 PascalAI.</p>
+        <p>© 2024 PascalAI. Built with ❤️ and advanced AI.</p>
     </footer>
 
     <script>
         let exampleQuestions = [
-            "Quiz me for my Math Test",
-            "Who was the first president?",
+            "Who is the President of the United States?",
             "What is the capital of France?",
             "Explain the theory of relativity",
-            "How do I make a website?",
+            "Who was the first president?",
             "What is the meaning of life?",
             "What is 2 + 2?",
             "How far is the moon from Earth?"
@@ -275,22 +285,21 @@
         let currentIndex = 0;
         const searchBar = document.querySelector("#search-bar");
 
-        // Function to change the text inside the search box with fade-in and fade-out effect on the text
+        // Function to change the text inside the search box
         function changeExampleText() {
-            // Fade out the current text
-            searchBar.style.animation = "fadeOutTextOnly 0.3s forwards";
+            // Apply fade out animation only to the text
+            searchBar.style.animation = "fadeOutSlideUp 0.3s forwards";
 
             setTimeout(() => {
-                // Update the text after fade-out
                 currentIndex = (currentIndex + 1) % exampleQuestions.length;
                 searchBar.value = exampleQuestions[currentIndex];
-
-                // Fade in the new text
-                searchBar.style.animation = "fadeInTextOnly 0.3s forwards";
+                searchBar.style.animation = "none";  // Reset animation
+                searchBar.offsetHeight;  // Trigger reflow to reset animation
+                searchBar.style.animation = "fadeInTextOnly 0.3s forwards";  // Fade in new text
             }, 300);  // Wait for the fade-out animation to finish
         }
 
-        setInterval(changeExampleText, 3000); // Change every 3 seconds
+        setInterval(changeExampleText, 700); // Change every 3 seconds
         changeExampleText(); // Initialize the first text change
     </script>
 </body>
