@@ -48,10 +48,10 @@
         
         .header-buttons {
             display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
+            gap: 15px; /* Space between buttons */
+            flex-wrap: nowrap; /* Prevent buttons from stacking */
             justify-content: flex-end; /* Align buttons to the right */
-            flex: 0; /* Ensure buttons don't stretch */
+            flex: 0; /* Prevent buttons from stretching */
         }
         
         .header-btn {
@@ -278,15 +278,14 @@
 </head>
 <body>
     <header>
-        <div class="left-text">
-            PascalAI
-        </div>
+        <div class="left-text">PascalAI</div>
         <div class="header-buttons">
             <a href="#" class="header-btn">Random 1</a>
             <a href="#" class="header-btn">Random 2</a>
             <a href="#" class="header-btn">Random 3</a>
         </div>
     </header>
+    
 
     <div class="main-text">
         Introducing the New GPT
