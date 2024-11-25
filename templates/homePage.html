@@ -24,7 +24,7 @@
             min-height: 100vh;
             overflow-x: hidden;
             opacity: 0;
-            animation: fadeIn 1s forwards;
+            animation: fadeInAll 0.8s forwards;
         }
 
         a {
@@ -53,11 +53,6 @@
             font-size: 1.5rem;
             font-weight: bold;
             color: #9b4dca;
-            transition: color 0.3s ease;
-        }
-
-        .logo:hover {
-            color: #bb86fc;
         }
 
         .header-links {
@@ -84,7 +79,7 @@
             text-align: center;
             width: 100%;
             padding: 0 20px;
-            animation: fadeInHero 1s ease-out;
+            animation: fadeInSection 1s ease-out;
         }
 
         .hero h1 {
@@ -161,7 +156,37 @@
             text-decoration: underline;
         }
 
-        /* Responsive */
+        /* Animations */
+        @keyframes fadeInAll {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInHeader {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInSection {
+            0% {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Styles */
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
@@ -200,47 +225,10 @@
                 font-size: 0.8rem;
             }
         }
-
-        /* Animations */
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInHeader {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInHero {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        /* Scroll Effects */
-        .hidden-header {
-            opacity: 0;
-        }
-
-        .visible-header {
-            opacity: 1;
-        }
     </style>
 </head>
 <body>
-    <header id="header">
+    <header id="header" class="visible-header">
         <div class="logo">PascalAI</div>
         <nav class="header-links">
             <a href="#" class="header-link">Home</a>
@@ -283,7 +271,7 @@
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
 
-        // To ensure the page fades in initially
+        // Ensure the page fades in top to bottom in a nice order when loaded
         window.onload = function () {
             document.body.style.opacity = 1;
         };
