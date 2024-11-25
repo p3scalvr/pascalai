@@ -45,7 +45,7 @@
             z-index: 10;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             opacity: 1;
-            animation: fadeInHeader 1s ease-out;
+            animation: slideDown 1s ease-out forwards;
             transition: opacity 0.5s ease-in-out;
         }
 
@@ -186,6 +186,32 @@
             }
         }
 
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+            animation-delay: 1s; /* Start fading in after the header animation */
+        }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             .hero h1 {
@@ -249,8 +275,13 @@
         </section>
     </main>
 
-    <footer>
-        <p>© 2024 PascalAI.</p>
+    <div class="fade-in">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 12l18-6-6 18-6-18z"/></svg>
+        <button id="send-btn">Send</button>
+    </div>
+
+    <footer class="fade-in">
+        <p>Built by <a href="https://github.com/p3scalvr" target="_blank">Pascal</a></p>
     </footer>
 
     <script>
@@ -275,6 +306,68 @@
         window.onload = function () {
             document.body.style.opacity = 1;
         };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeInElements = document.querySelectorAll('.fade-in');
+            fadeInElements.forEach(element => {
+                element.style.animationPlayState = 'running';
+            });
+        });
+
+        let lastUserMessage = null;
+        let lastAiMessage = null;
+
+        function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-btn');
+            const message = inputField.value.trim();
+        
+            // If the message is not empty, proceed to send it
+            if (message !== '') {
+                // Disable input and send button while waiting for the response
+                inputField.disabled = true;
+                sendButton.disabled = true;
+        
+                displayUserMessage(message);
+                inputField.value = '';
+                lastUserMessage = message;
+                lastAiMessage = "PascalAI is Thinking...";
+        
+                displayThinkingIndicator(lastAiMessage);
+                simulateAiResponse(message, inputField, sendButton);
+            }
+        }
+
+        function displayUserMessage(message) {
+            const chatBox = document.getElementById('chat-box');
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.classList.add('user-message');
+            userMessageDiv.textContent = message;
+            chatBox.appendChild(userMessageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function displayAiMessage(message) {
+            const chatBox = document.getElementById('chat-box');
+            const aiMessageDiv = document.createElement('div');
+            aiMessageDiv.classList.add('ai-message');
+
+            const aiNameDiv = document.createElement('div');
+            aiNameDiv.classList.add('ai-name');
+            aiNameDiv.textContent = 'PascalAI:';
+
+            // Enhanced formatting logic
+            const formattedMessage = formatMessage(message);
+
+            const messageDiv = document.createElement('div');
+            messageDiv.innerHTML = formattedMessage;
+
+            aiMessageDiv.appendChild(aiNameDiv);
+            aiMessageDiv.appendChild(messageDiv);
+
+            chatBox.appendChild(aiMessageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
     </script>
 </body>
 </html>
