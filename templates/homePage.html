@@ -273,7 +273,7 @@
     </footer>
 
     <script>
-        let exampleQuestions = [
+        const exampleQuestions = [
             "Who is the President of the United States?",
             "What is the capital of France?",
             "Explain the theory of relativity",
@@ -284,24 +284,13 @@
         ];
 
         let currentIndex = 0;
-        const searchBar = document.querySelector("#search-bar");
+        const searchBarText = document.getElementById("search-bar-text");
 
-        // Function to change the text inside the search box
-        function changeExampleText() {
-            // Apply fade out animation only to the text
-            searchBar.style.animation = "fadeOutSlideUp 0.3s forwards";
-
-            setTimeout(() => {
-                currentIndex = (currentIndex + 1) % exampleQuestions.length;
-                searchBar.value = exampleQuestions[currentIndex];
-                searchBar.style.animation = "none";  // Reset animation
-                searchBar.offsetHeight;  // Trigger reflow to reset animation
-                searchBar.style.animation = "fadeInTextOnly 0.3s forwards";  // Fade in new text
-            }, 300);  // Wait for the fade-out animation to finish
-        }
-
-        setInterval(changeExampleText, 700); // Change every 3 seconds
-        changeExampleText(); // Initialize the first text change
+        // Change text on animation end
+        searchBarText.addEventListener("animationiteration", () => {
+            currentIndex = (currentIndex + 1) % exampleQuestions.length;
+            searchBarText.textContent = exampleQuestions[currentIndex];
+        });
     </script>
 </body>
 </html>
