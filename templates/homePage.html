@@ -79,48 +79,37 @@
             text-align: center;
             color: #fff;
             margin-top: 20px;
-            font-size: 4em; /* Larger text */
+            font-size: 4em; /* Large text */
             font-weight: bold;
             text-shadow: 
-                0 0 10px #fff, 
-                0 0 20px #ff00ff, 
-                0 0 30px #ff00ff, 
-                0 0 40px #ff00ff, 
-                0 0 50px #ff00ff, 
-                0 0 75px #ff00ff;
-            animation: glowPulse 2s infinite; /* Add pulsing glow animation */
+                0 0 8px #9b4dca, 
+                0 0 16px #9b4dca, 
+                0 0 24px #9b4dca;
+            animation: subtlePulse 2.5s infinite; /* Smooth, subtle pulsing animation */
         }
-
-        /* Keyframes for pulsing glow animation */
-@keyframes glowPulse {
-    0% {
-        text-shadow: 
-            0 0 10px #fff, 
-            0 0 20px #ff00ff, 
-            0 0 30px #ff00ff, 
-            0 0 40px #ff00ff, 
-            0 0 50px #ff00ff, 
-            0 0 75px #ff00ff;
-    }
-    50% {
-        text-shadow: 
-            0 0 20px #fff, 
-            0 0 30px #ff33ff, 
-            0 0 40px #ff33ff, 
-            0 0 50px #ff33ff, 
-            0 0 75px #ff33ff, 
-            0 0 100px #ff33ff;
-    }
-    100% {
-        text-shadow: 
-            0 0 10px #fff, 
-            0 0 20px #ff00ff, 
-            0 0 30px #ff00ff, 
-            0 0 40px #ff00ff, 
-            0 0 50px #ff00ff, 
-            0 0 75px #ff00ff;
-    }
-}
+        
+        /* Keyframes for a gentler pulsing animation */
+        @keyframes subtlePulse {
+            0% {
+                text-shadow: 
+                    0 0 6px #9b4dca, 
+                    0 0 12px #9b4dca, 
+                    0 0 18px #9b4dca;
+            }
+            50% {
+                text-shadow: 
+                    0 0 10px #9b4dca, 
+                    0 0 20px #9b4dca, 
+                    0 0 30px #9b4dca;
+            }
+            100% {
+                text-shadow: 
+                    0 0 6px #9b4dca, 
+                    0 0 12px #9b4dca, 
+                    0 0 18px #9b4dca;
+            }
+        }
+        
 
         .sub-text {
             font-size: 1.2em;
