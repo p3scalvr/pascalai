@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <title>PascalAI: Your Personal AI Companion</title>
     <!-- Importing Google Font 'Roboto' for a modern look -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&family=Poppins:wght@600&display=swap" rel="stylesheet">
@@ -103,6 +103,8 @@
             white-space: normal;
             margin-bottom: 10px;
             line-height: 1.4;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
         }
 
         .ai-name {
@@ -318,106 +320,165 @@
     
 
     <script>
-    let lastUserMessage = null;
-    let lastAiMessage = null;
+        let lastUserMessage = null;
+        let lastAiMessage = null;
 
-    function sendMessage() {
-        const inputField = document.getElementById('user-input');
-        const sendButton = document.getElementById('send-btn');
-        const message = inputField.value.trim();
-
-        if (message !== '') {
-            inputField.disabled = true;
-            sendButton.disabled = true;
-
-            displayUserMessage(message);
-            inputField.value = '';
-            lastUserMessage = message;
-
-            displayThinkingIndicator();
-            fetchAiResponseStream(message, inputField, sendButton);
-        }
-    }
-
-    function displayUserMessage(message) {
-        const chatBox = document.getElementById('chat-box');
-        const userMessageDiv = document.createElement('div');
-        userMessageDiv.classList.add('user-message');
-        userMessageDiv.textContent = message;
-        chatBox.appendChild(userMessageDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function displayAiMessage(message) {
-        const chatBox = document.getElementById('chat-box');
-        const aiMessageDiv = document.createElement('div');
-        aiMessageDiv.classList.add('ai-message');
-
-        const aiNameDiv = document.createElement('div');
-        aiNameDiv.classList.add('ai-name');
-        aiNameDiv.textContent = 'PascalAI:';
-
-        const messageDiv = document.createElement('div');
-        messageDiv.innerHTML = message;
-
-        aiMessageDiv.appendChild(aiNameDiv);
-        aiMessageDiv.appendChild(messageDiv);
-
-        chatBox.appendChild(aiMessageDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function displayThinkingIndicator() {
-        const chatBox = document.getElementById('chat-box');
-        const thinkingDiv = document.createElement('div');
-        thinkingDiv.classList.add('thinking');
-        thinkingDiv.textContent = "PascalAI is Thinking...";
-        chatBox.appendChild(thinkingDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function fetchAiResponseStream(userMessage, inputField, sendButton) {
-        const chatBox = document.getElementById('chat-box');
-        const thinkingDiv = document.querySelector('.thinking');
-        const aiMessageDiv = document.createElement('div');
-        aiMessageDiv.classList.add('ai-message');
-        const aiNameDiv = document.createElement('div');
-        aiNameDiv.classList.add('ai-name');
-        aiNameDiv.textContent = 'PascalAI:';
-        const messageDiv = document.createElement('div');
-        aiMessageDiv.appendChild(aiNameDiv);
-        aiMessageDiv.appendChild(messageDiv);
-        chatBox.appendChild(aiMessageDiv);
-
-        const eventSource = new EventSource("/chat-stream?prompt=" + encodeURIComponent(userMessage));
-        eventSource.onmessage = function(event) {
-            if (thinkingDiv) {
-                thinkingDiv.remove();
+        function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-btn');
+            const message = inputField.value.trim();
+        
+            // If the message is not empty, proceed to send it
+            if (message !== '') {
+                // Disable input and send button while waiting for the response
+                inputField.disabled = true;
+                sendButton.disabled = true;
+        
+                displayUserMessage(message);
+                inputField.value = '';
+                lastUserMessage = message;
+                lastAiMessage = "PascalAI is Thinking...";
+        
+                displayThinkingIndicator(lastAiMessage);
+                simulateAiResponse(message, inputField, sendButton);
             }
-            messageDiv.innerHTML += event.data;
-            chatBox.scrollTop = chatBox.scrollHeight;
-        };
-        eventSource.onerror = function() {
-            eventSource.close();
-            inputField.disabled = false;
-            sendButton.disabled = false;
-        };
-        eventSource.onopen = function() {
-            inputField.disabled = false;
-            sendButton.disabled = false;
-        };
-    }
-
-    function checkEnter(event) {
-        if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault();
-            sendMessage();
         }
-    }
 
-    window.onload = function() {
-        document.body.style.opacity = 1;
-    };
-</script>
+        function displayUserMessage(message) {
+            const chatBox = document.getElementById('chat-box');
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.classList.add('user-message');
+            userMessageDiv.textContent = message;
+            chatBox.appendChild(userMessageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function displayAiMessage(message) {
+    const chatBox = document.getElementById('chat-box');
+    const aiMessageDiv = document.createElement('div');
+    aiMessageDiv.classList.add('ai-message');
+
+    const aiNameDiv = document.createElement('div');
+    aiNameDiv.classList.add('ai-name');
+    aiNameDiv.textContent = 'PascalAI:';
+
+    // Enhanced formatting logic
+    const formattedMessage = formatMessage(message);
+
+    const messageDiv = document.createElement('div');
+    messageDiv.innerHTML = formattedMessage;
+
+    aiMessageDiv.appendChild(aiNameDiv);
+    aiMessageDiv.appendChild(messageDiv);
+
+    chatBox.appendChild(aiMessageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+/**
+ * Function to apply advanced formatting to messages.
+ * Supports:
+ * - **bold**
+ * - *italic*
+ * - `inline code`
+ * - ```multiline code blocks```
+ * - Links (e.g., [text](url))
+ * @param {string} text
+ * @returns {string} HTML-formatted string
+ */
+function formatMessage(text) {
+    // Handle bold: **bold text**
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // Handle italic: *italic text*
+    text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+    // Handle inline code: `inline code`
+    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    // Handle multiline code blocks: ```code```
+    text = text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+
+    // Handle links: [text](url)
+    text = text.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+    // Replace newlines with <br> for proper line breaks
+    text = text.replace(/\n/g, '<br>');
+
+    return text;
+}
+
+const inputField = document.getElementById('user-input');
+const inputContainer = document.querySelector('.input-container');
+
+// Add an event listener to handle focus and blur
+inputField.addEventListener('focus', () => {
+    inputContainer.classList.remove('shrink');
+});
+
+inputField.addEventListener('blur', () => {
+    if (!inputField.value) {
+        inputContainer.classList.add('shrink');
+    }
+});
+
+// Check when input is not focused
+if (!inputField.value) {
+    inputContainer.classList.add('shrink');
+}
+
+
+        function displayThinkingIndicator(message) {
+            const chatBox = document.getElementById('chat-box');
+            const thinkingDiv = document.createElement('div');
+            thinkingDiv.classList.add('thinking');
+            thinkingDiv.textContent = message;
+            chatBox.appendChild(thinkingDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function simulateAiResponse(userMessage, inputField, sendButton) {
+            fetch("/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ prompt: userMessage })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const aiResponse = data.response || "Sorry, I couldn't process your request.";
+                displayAiMessage(aiResponse);
+        
+                // Remove the "Thinking..." indicator
+                const thinkingDiv = document.querySelector('.thinking');
+                if (thinkingDiv) {
+                    thinkingDiv.remove();
+                }
+        
+                // Re-enable the input and send button
+                inputField.disabled = false;
+                sendButton.disabled = false;
+            })
+            .catch(error => {
+                console.error("Error fetching AI response:", error);
+                displayAiMessage("An error occurred while communicating with the AI.");
+        
+                // Re-enable the input and send button even if there's an error
+                inputField.disabled = false;
+                sendButton.disabled = false;
+            });
+        }
+
+        function checkEnter(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        window.onload = function() {
+            document.body.style.opacity = 1;
+        };
+    </script>
 </body>
 </html>
