@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #121212;
+            background-color: #000; /* Change background color to black */
             color: #e1e1e1;
             display: flex;
             flex-direction: column;
@@ -195,6 +195,15 @@
             }
         }
 
+        @keyframes fadeInTextOnly {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             .hero h1 {
@@ -264,11 +273,10 @@
 
     <script>
         let exampleQuestions = [
-            "Quiz me for my Math Test",
-            "Who was the first president?",
+            "Who is the President of the United States?",
             "What is the capital of France?",
             "Explain the theory of relativity",
-            "How do I make a website?",
+            "Who was the first president?",
             "What is the meaning of life?",
             "What is 2 + 2?",
             "How far is the moon from Earth?"
@@ -279,6 +287,7 @@
 
         // Function to change the text inside the search box
         function changeExampleText() {
+            // Apply fade out animation only to the text
             searchBar.style.animation = "fadeOutSlideUp 0.3s forwards";
 
             setTimeout(() => {
@@ -286,20 +295,12 @@
                 searchBar.value = exampleQuestions[currentIndex];
                 searchBar.style.animation = "none";  // Reset animation
                 searchBar.offsetHeight;  // Trigger reflow to reset animation
-                searchBar.style.animation = "fadeInSlideDown 0.3s forwards";  // Fade it in
-            }, 300);  // Wait for the slide-up fade-out to complete
+                searchBar.style.animation = "fadeInTextOnly 0.3s forwards";  // Fade in new text
+            }, 300);  // Wait for the fade-out animation to finish
         }
 
-        // Change the text every 2 seconds (scroll speed adjustment)
-        setInterval(changeExampleText, 2000);
-
-        // Initial text fade-in
-        window.addEventListener("load", () => {
-            setTimeout(() => {
-                searchBar.style.animation = "fadeInSection 1s forwards";  // Initial fade-in
-                changeExampleText();  // Change to the first text
-            }, 1000);
-        });
+        setInterval(changeExampleText, 700); // Change every 3 seconds
+        changeExampleText(); // Initialize the first text change
     </script>
 </body>
 </html>
