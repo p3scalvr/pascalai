@@ -24,8 +24,7 @@
             min-height: 100vh;
             overflow-x: hidden;
             opacity: 0;
-            animation: fadeIn 1s forwards;
-            animation-delay: 1s; /* Delay the fade-in animation */
+            animation: fadeInAll 0.8s forwards;
         }
 
         a {
@@ -46,7 +45,7 @@
             z-index: 10;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             opacity: 1;
-            animation: slideDown 1s ease-out forwards;
+            animation: fadeInHeader 1s ease-out;
             transition: opacity 0.5s ease-in-out;
         }
 
@@ -72,22 +71,6 @@
 
         .header-link:hover {
             color: #bb86fc;
-        }
-
-        .fade-in {
-            opacity: 0;
-            animation: fadeInUp 1s ease-out forwards;
-            animation-delay: 2s; /* Start fading in after the header animation */
-        }
-
-        .hidden-header {
-            transform: translateY(-100%);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .visible-header {
-            transform: translateY(0);
-            transition: transform 0.3s ease-in-out;
         }
 
         /* Hero Section */
@@ -203,37 +186,6 @@
             }
         }
 
-        @keyframes slideDown {
-            0% {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            100% {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInUp {
-            0% {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-            100% {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
         /* Responsive Styles */
         @media (max-width: 768px) {
             .hero h1 {
@@ -273,13 +225,6 @@
                 font-size: 0.8rem;
             }
         }
-
-        /* Parallax effect for background */
-        .parallax {
-            background-attachment: fixed;
-            background-size: cover;
-            background-position: center;
-        }
     </style>
 </head>
 <body>
@@ -292,23 +237,20 @@
             <a href="#" class="header-link">Contact</a>
         </nav>
     </header>
-    <div class="parallax" style="background-image: url('your-image-url.jpg'); height: 500px;">
-        <!-- Parallax background content -->
-    </div>
-    <div class="fade-in">
-        <main>
-            <section class="hero">
-                <h1>Ask PascalAI Anything</h1>
-                <p>Unlock limitless possibilities with cutting-edge AI technology. Start your journey now!</p>
-                <div class="search-container">
-                    <input type="text" class="search-bar" placeholder="Ask me anything...">
-                    <button class="search-btn" onclick="location.href='/chat-page';">Get Started</button>
-                </div>
-            </section>
-        </main>
-    </div>
-    <footer class="fade-in">
-        <p>Built by <a href="https://github.com/p3scalvr" target="_blank">Pascal</a></p>
+
+    <main>
+        <section class="hero">
+            <h1>Ask PascalAI Anything</h1>
+            <p>Unlock limitless possibilities with cutting-edge AI technology. Start your journey now!</p>
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="Ask me anything...">
+                <button class="search-btn" onclick="location.href='/chat-page';">Get Started</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2024 PascalAI.</p>
     </footer>
 
     <script>
