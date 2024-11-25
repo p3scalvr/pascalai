@@ -62,11 +62,39 @@ def get_ai_response(prompt: str):
         print(f"An error occurred: {e}")
         return f"Error: {e}"
 
+def get_ai_response_stream(prompt: str):
+    try:
+        context_window = 1  # Adjust based on desired history depth
+        messages = [{"role": "system", "content": "You are a helpful AI."}]
+
+        if knowledge_base:
+            messages.append({"role": "system", "content": f"Reference information: {knowledge_base}"})
+
+        for interaction in interaction_history[-context_window:]:
+            messages.append({"role": "user", "content": interaction["user"]})
+            messages.append({"role": "assistant", "content": interaction["ai"]})
+
+        messages.append({"role": "user", "content": prompt})
+
+        print("Request Payload:", json.dumps(messages, indent=2))
+
+        for word in ollama.chat_stream(model="llama3.2:3b", messages=messages):
+            yield word + " "
+
+    except json.JSONDecodeError as e:
+        print(f"JSON decoding error: {e}")
+        yield "Error: The response from the server was not valid JSON."
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        yield f"Error: {e}"
+
 # Example usage
 if __name__ == "__main__":
     while True:
         prompt = input("Enter a prompt for the AI (or 'exit' to quit): ")
         if prompt.lower() == "exit":
             break
-        response = get_ai_response(prompt)
-        print(f"AI Response: {response}")
+        response_stream = get_ai_response_stream(prompt)
+        for chunk in response_stream:
+            print(chunk, end='', flush=True)
+        print()

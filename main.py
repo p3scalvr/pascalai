@@ -46,6 +46,18 @@ def chat():
     else:
         return jsonify({"response": "No prompt received."})
 
+@app.route("/chat-stream", methods=["GET"])
+def chat_stream():
+    user_input = request.args.get("prompt")
+    if not user_input:
+        return Response("No prompt received.", status=400)
+
+    def generate():
+        for chunk in get_ai_response_stream(user_input):
+            yield f"data:{chunk}\n\n"
+
+    return Response(generate(), content_type='text/event-stream')
+
 @app.route("/chat-page")
 def chat_page():
     # Serves the AI chat page (index.html)
