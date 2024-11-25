@@ -32,27 +32,26 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             border: 2px solid rgba(255, 255, 255, 0.1);
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* Space between text and buttons */
             align-items: center;
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            flex-wrap: wrap;
         }
         
-        /* Left side text */
         .left-text {
-            font-size: 2.2em;
+            font-size: 2em;
             font-weight: 600;
             color: #9b4dca;
             text-shadow: 0 0 20px #9b4dca, 0 0 30px #9b4dca;
-            flex: 1 1 100%; /* Make text take up full width on smaller screens */
-            text-align: center; /* Center text on small screens */
+            flex: 1; /* Take available space on the left */
+            text-align: left; /* Align text to the left */
         }
-
-        /* Header buttons */
+        
         .header-buttons {
             display: flex;
-            gap: 15px; /* Spacing between buttons */
-            flex-wrap: wrap; /* Ensure buttons wrap on smaller screens */
-            justify-content: center; /* Center buttons horizontally */
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: flex-end; /* Align buttons to the right */
+            flex: 0; /* Ensure buttons don't stretch */
         }
         
         .header-btn {
