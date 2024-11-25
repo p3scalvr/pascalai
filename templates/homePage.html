@@ -103,6 +103,7 @@
             justify-content: center;
             align-items: center;
             gap: 10px;
+            position: relative;
         }
 
         .search-bar {
@@ -186,6 +187,26 @@
             }
         }
 
+        @keyframes scrollText {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-100%);
+            }
+        }
+
+        /* Text Scrolling Effect */
+        .scrolling-text {
+            font-size: 1.2rem;
+            color: #e1e1e1;
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+            animation: scrollText 10s linear infinite;
+            position: absolute;
+        }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             .hero h1 {
@@ -243,7 +264,9 @@
             <h1>Ask PascalAI Anything</h1>
             <p>Unlock limitless possibilities with cutting-edge AI technology. Start your journey now!</p>
             <div class="search-container">
-                <input type="text" class="search-bar" placeholder="Ask me anything...">
+                <div class="search-bar">
+                    <span class="scrolling-text" id="scrolling-text"></span>
+                </div>
                 <button class="search-btn" onclick="location.href='/chat-page';">Get Started</button>
             </div>
         </section>
@@ -254,27 +277,31 @@
     </footer>
 
     <script>
-        let lastScrollTop = 0;
-        const header = document.getElementById('header');
+        const questions = [
+            "What's 2+2?",
+            "Who is the president of the United States?",
+            "How far is the moon from Earth?",
+            "What is the capital of France?",
+            "Tell me about the theory of relativity.",
+            "How does quantum computing work?",
+            "What is AI?",
+            "Who was the first president of the United States?"
+        ];
 
-        window.addEventListener('scroll', function () {
-            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        let currentIndex = 0;
+        const scrollingTextElement = document.getElementById('scrolling-text');
 
-            if (currentScroll > lastScrollTop) {
-                // Scroll down
-                header.classList.add('hidden-header');
-            } else {
-                // Scroll up
-                header.classList.remove('hidden-header');
-                header.classList.add('visible-header');
-            }
-            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
-        });
+        // Update the text every few seconds
+        function updateScrollingText() {
+            scrollingTextElement.textContent = questions[currentIndex];
+            currentIndex = (currentIndex + 1) % questions.length;
+        }
 
-        // Ensure the page fades in top to bottom in a nice order when loaded
-        window.onload = function () {
-            document.body.style.opacity = 1;
-        };
+        // Initial text
+        updateScrollingText();
+
+        // Change text every 5 seconds
+        setInterval(updateScrollingText, 5000);
     </script>
 </body>
 </html>
