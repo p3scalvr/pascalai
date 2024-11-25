@@ -4,327 +4,222 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PascalAI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
+        /* Global Styles */
+        * {
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: #000;
-            color: #ddd;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            color: #e1e1e1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            opacity: 0;
-            animation: fadeIn 1.5s ease-out forwards;
-            min-height: 100vh; /* Ensure body takes up the full height */
-            padding-bottom: 50px; /* Add padding at the bottom to prevent overlap */
+            justify-content: space-between;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* Header Styles */
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Header */
         header {
-            width: 90%;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            border-radius: 15px;
-            margin-top: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: space-between; /* Space between text and buttons */
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .left-text {
-            font-size: 2em;
-            font-weight: 600;
-            color: #9b4dca;
-            text-shadow: 0 0 20px #9b4dca, 0 0 30px #9b4dca;
-            flex: 1; /* Take available space on the left */
-            text-align: left; /* Align text to the left */
-        }
-        
-        .header-buttons {
-            display: flex;
-            gap: 15px; /* Space between buttons */
-            flex-wrap: nowrap; /* Prevent buttons from stacking */
-            justify-content: flex-end; /* Align buttons to the right */
-            flex: 0; /* Prevent buttons from stretching */
-        }
-        
-        .header-btn {
-            padding: 10px 20px;
-            font-size: 1em;
-            border: 2px solid white;
-            color: white;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 10px;
-            text-transform: uppercase;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            min-width: 140px; /* Minimum button width for consistency */
-            text-align: center;
-        }
-        
-
-        .header-btn:hover {
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.7);
-            transform: scale(1.05);
-        }
-
-        /* Main text outside header */
-        .main-text {
-            text-align: center;
-            color: #fff;
-            margin-top: 20px;
-            font-size: 4em; /* Large text */
-            font-weight: bold;
-            text-shadow: 
-                0 0 8px #9b4dca, 
-                0 0 16px #9b4dca, 
-                0 0 24px #9b4dca;
-            animation: subtlePulse 2.5s infinite; /* Smooth, subtle pulsing animation */
-        }
-        
-        /* Keyframes for a gentler pulsing animation */
-        @keyframes subtlePulse {
-            0% {
-                text-shadow: 
-                    0 0 6px #9b4dca, 
-                    0 0 12px #9b4dca, 
-                    0 0 18px #9b4dca;
-            }
-            50% {
-                text-shadow: 
-                    0 0 10px #9b4dca, 
-                    0 0 20px #9b4dca, 
-                    0 0 30px #9b4dca;
-            }
-            100% {
-                text-shadow: 
-                    0 0 6px #9b4dca, 
-                    0 0 12px #9b4dca, 
-                    0 0 18px #9b4dca;
-            }
-        }
-        
-
-        .sub-text {
-            font-size: 1.2em;
-            color: #bbb;
-            margin-top: 10px;
-            text-align: center;
-            opacity: 0;
-            animation: fadeIn 1.5s ease-out 1.5s forwards; /* Delay added */
-        }
-
-        /* Purple Button */
-        .btn-purple {
-            display: inline-block;
-            padding: 12px 30px;
-            margin-top: 20px;
-            background: linear-gradient(135deg, #9900ff, #5e2ca5);
-            color: white;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 10px;
-            text-transform: uppercase;
-            box-shadow: 0 0 15px rgba(156, 0, 255, 0.4);
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
-            opacity: 0;
-            animation: fadeIn 1.5s ease-out 2s forwards; /* Delay added */
-        }
-
-        .btn-purple:hover {
-            box-shadow: 0 0 25px rgba(156, 0, 255, 0.8);
-            transform: scale(1.05);
-        }
-
-        /* Gray Button */
-        .btn-gray {
-            display: inline-block;
-            padding: 12px 30px;
-            margin-top: 20px;
-            border: 2px solid white;
-            color: white;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 10px;
-            text-transform: uppercase;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            opacity: 0;
-            animation: fadeIn 1.5s ease-out 2.5s forwards; /* Delay added */
-        }
-
-        .btn-gray:hover {
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.7);
-            transform: scale(1.05);
-        }
-
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(-20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        footer {
-            position: fixed;
-            bottom: 0;
             width: 100%;
+            padding: 15px 30px;
+            background-color: #121212;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #9b4dca;
+            transition: color 0.3s ease;
+        }
+
+        .logo:hover {
+            color: #bb86fc;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .header-link {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #e1e1e1;
+            text-transform: uppercase;
+            padding: 5px 10px;
+            transition: color 0.3s ease;
+        }
+
+        .header-link:hover {
+            color: #bb86fc;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 120px;
             text-align: center;
-            color: #555;
-            font-size: 0.9em;
-            opacity: 0;
-            animation: fadeInFromBottom 1.5s ease-out 3s forwards; /* Fade in from the bottom */
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            background: linear-gradient(90deg, #bb86fc, #8e44ad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #b3b3b3;
+            margin-bottom: 40px;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-bar {
+            width: 60%;
+            max-width: 600px;
+            padding: 15px 20px;
+            font-size: 1rem;
+            border: 2px solid #bb86fc;
+            border-radius: 30px;
+            background-color: #1f1f1f;
+            color: #e1e1e1;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-bar:focus {
+            border-color: #8e44ad;
+        }
+
+        .search-btn {
+            padding: 15px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #bb86fc, #8e44ad);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: linear-gradient(135deg, #8e44ad, #bb86fc);
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         footer a {
-            color: #9900ff;
-            text-decoration: none;
+            color: #bb86fc;
         }
 
         footer a:hover {
             text-decoration: underline;
         }
 
-        @keyframes fadeInFromBottom {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .search-bar {
+                width: 80%;
+                font-size: 0.9rem;
+            }
+
+            .search-btn {
+                padding: 12px 25px;
+                font-size: 0.9rem;
+            }
         }
 
-        /* Responsive Styles */
-@media (max-width: 1200px) {
-    header {
-        width: 90%;
-        padding: 20px 15px;
-    }
+        @media (max-width: 480px) {
+            header {
+                padding: 10px 20px;
+            }
 
-    .main-text {
-        font-size: 3em;
-    }
+            .hero h1 {
+                font-size: 2rem;
+            }
 
-    .sub-text {
-        font-size: 1em;
-    }
+            .search-bar {
+                width: 90%;
+            }
 
-    .header-btn {
-        padding: 6px 12px;
-        font-size: 0.85em;
-    }
-
-    .btn-purple, .btn-gray {
-        padding: 10px 25px;
-    }
-}
-
-@media (max-width: 768px) {
-    .left-text {
-        font-size: 1.8em;
-    }
-
-    .header-btn {
-        padding: 5px 10px;
-        font-size: 0.8em;
-    }
-
-    .main-text {
-        font-size: 2.5em;
-    }
-
-    .sub-text {
-        font-size: 1em;
-    }
-
-    .btn-purple, .btn-gray {
-        padding: 8px 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    header {
-        width: 100%;
-        padding: 15px 10px;
-    }
-
-    .left-text {
-        font-size: 1.5em;
-    }
-
-    .main-text {
-        font-size: 2em;
-    }
-
-    .sub-text {
-        font-size: 0.9em;
-    }
-
-    .header-btn {
-        padding: 4px 8px;
-        font-size: 0.75em;
-    }
-
-    .btn-purple, .btn-gray {
-        padding: 6px 18px;
-    }
-}
-
-/* On mobile screens, the header text and buttons stack */
-@media (max-width: 768px) {
-    .left-text {
-        font-size: 1.8em; /* Adjust font size on small screens */
-        text-align: center; /* Center the text */
-    }
-
-    .header-buttons {
-        flex-direction: column; /* Stack buttons vertically */
-        align-items: center; /* Center the buttons vertically */
-        gap: 10px; /* Space out buttons */
-    }
-
-    .header-btn {
-        width: 80%; /* Make buttons take up 80% of the width */
-    }
-}
-
-@media (max-width: 768px) {
-    .header-buttons {
-        flex-direction: column; /* Stack buttons vertically */
-        align-items: center; /* Center buttons */
-        gap: 10px; /* Space between buttons */
-    }
-
-    .header-btn {
-        width: 80%; /* Buttons occupy 80% of container width */
-    }
-}
-
+            .search-btn {
+                padding: 10px 20px;
+                font-size: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
     <header>
-        <div class="left-text">PascalAI</div>
-        <div class="header-buttons">
-            <a href="#" class="header-btn">Random 1</a>
-            <a href="#" class="header-btn">Random 2</a>
-            <a href="#" class="header-btn">Random 3</a>
-        </div>
+        <div class="logo">PascalAI</div>
+        <nav class="header-links">
+            <a href="#" class="header-link">Home</a>
+            <a href="#" class="header-link">Features</a>
+            <a href="#" class="header-link">About</a>
+            <a href="#" class="header-link">Contact</a>
+        </nav>
     </header>
-    
 
-    <div class="main-text">
-        Introducing the New GPT
-    </div>
-    <div class="sub-text">
-        The New Era of AI is Here.
-    </div>
-
-    <!-- The "Get Started" button now correctly links to index.html -->
-    <a href="/chat-page" class="btn-purple">Get Started</a>
-    <a href="#" class="btn-gray">Button</a>
+    <main>
+        <section class="hero">
+            <h1>Ask ChatGPT Anything</h1>
+            <p>Unlock limitless possibilities with cutting-edge AI technology. Start your journey now!</p>
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="Ask me anything...">
+                <button class="search-btn" onclick="location.href='/chat-page';">Get Started</button>
+            </div>
+        </section>
+    </main>
 
     <footer>
-        <p>Built by <a href="https://www.example.com" target="_blank">Pascal</a></p>
+        <p>© 2024 PascalAI. Built with ❤️ and advanced AI.</p>
     </footer>
 </body>
 </html>
