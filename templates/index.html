@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>PascalAI: Your Personal AI Companion</title>
     <!-- Importing Google Font 'Roboto' for a modern look -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&family=Poppins:wght@600&display=swap" rel="stylesheet">
@@ -354,79 +354,23 @@
         }
 
         function displayAiMessage(message) {
-    const chatBox = document.getElementById('chat-box');
-    const aiMessageDiv = document.createElement('div');
-    aiMessageDiv.classList.add('ai-message');
+            const chatBox = document.getElementById('chat-box');
+            const aiMessageDiv = document.createElement('div');
+            aiMessageDiv.classList.add('ai-message');
 
-    const aiNameDiv = document.createElement('div');
-    aiNameDiv.classList.add('ai-name');
-    aiNameDiv.textContent = 'PascalAI:';
+            const aiNameDiv = document.createElement('div');
+            aiNameDiv.classList.add('ai-name');
+            aiNameDiv.textContent = 'PascalAI:';
 
-    // Enhanced formatting logic
-    const formattedMessage = formatMessage(message);
+            const messageDiv = document.createElement('div');
+            messageDiv.innerHTML = message;
 
-    const messageDiv = document.createElement('div');
-    messageDiv.innerHTML = formattedMessage;
+            aiMessageDiv.appendChild(aiNameDiv);
+            aiMessageDiv.appendChild(messageDiv);
 
-    aiMessageDiv.appendChild(aiNameDiv);
-    aiMessageDiv.appendChild(messageDiv);
-
-    chatBox.appendChild(aiMessageDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-/**
- * Function to apply advanced formatting to messages.
- * Supports:
- * - **bold**
- * - *italic*
- * - `inline code`
- * - ```multiline code blocks```
- * - Links (e.g., [text](url))
- * @param {string} text
- * @returns {string} HTML-formatted string
- */
-function formatMessage(text) {
-    // Handle bold: **bold text**
-    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-    // Handle italic: *italic text*
-    text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-    // Handle inline code: `inline code`
-    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-    // Handle multiline code blocks: ```code```
-    text = text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-
-    // Handle links: [text](url)
-    text = text.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
-
-    // Replace newlines with <br> for proper line breaks
-    text = text.replace(/\n/g, '<br>');
-
-    return text;
-}
-
-const inputField = document.getElementById('user-input');
-const inputContainer = document.querySelector('.input-container');
-
-// Add an event listener to handle focus and blur
-inputField.addEventListener('focus', () => {
-    inputContainer.classList.remove('shrink');
-});
-
-inputField.addEventListener('blur', () => {
-    if (!inputField.value) {
-        inputContainer.classList.add('shrink');
-    }
-});
-
-// Check when input is not focused
-if (!inputField.value) {
-    inputContainer.classList.add('shrink');
-}
-
+            chatBox.appendChild(aiMessageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
 
         function displayThinkingIndicator(message) {
             const chatBox = document.getElementById('chat-box');

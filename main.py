@@ -39,10 +39,10 @@ def send_static(path):
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    # Endpoint for AI chat interaction
     user_input = request.json.get("prompt")
     if user_input:
-        return Response(get_ai_response_stream(user_input), content_type='text/plain')
+        ai_response = get_ai_response(user_input)
+        return jsonify({"response": ai_response})
     else:
         return jsonify({"response": "No prompt received."})
 
