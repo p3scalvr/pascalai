@@ -23,6 +23,7 @@ knowledge_base = load_knowledge_base("knowledge_base.txt")
 
 # Function to interact with Ollama's AI model
 def get_ai_response(prompt: str):
+    
     try:
         # Only include a short context or recent interactions to reduce overhead
         context_window = 1  # Adjust based on desired history depth
