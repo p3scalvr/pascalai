@@ -203,6 +203,37 @@
             }
         }
 
+        @keyframes slideDown {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             .hero h1 {
@@ -261,6 +292,7 @@
             <a href="#" class="header-link">Contact</a>
         </nav>
     </header>
+    <div class="parallax" style="background-image: url('your-image-url.jpg'); height: 500px;">
         <!-- Parallax background content -->
     </div>
     <div class="fade-in">
@@ -274,8 +306,6 @@
                 </div>
             </section>
         </main>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 12l18-6-6 18-6-18z"/></svg>
-        <button id="send-btn">Send</button>
     </div>
     <footer class="fade-in">
         <p>Built by <a href="https://github.com/p3scalvr" target="_blank">Pascal</a></p>
