@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #121212;
+            background-color: #000000;
             color: #e1e1e1;
             display: flex;
             flex-direction: column;
@@ -24,7 +24,7 @@
             min-height: 100vh;
             overflow-x: hidden;
             opacity: 0;
-            animation: fadeInAll 1s forwards;
+            animation: fadeInAll 0.8s forwards;
         }
 
         a {
@@ -35,7 +35,7 @@
         /* Header */
         header {
             width: 100%;
-            padding: 20px 40px;
+            padding: 15px 30px;
             background-color: #121212;
             display: flex;
             justify-content: space-between;
@@ -45,37 +45,32 @@
             z-index: 10;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             opacity: 1;
-            animation: fadeInHeader 1.5s ease-out;
+            animation: fadeInHeader 1s ease-out;
             transition: opacity 0.5s ease-in-out;
         }
 
         .logo {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #9b4dca;
-            letter-spacing: 2px;
-            text-transform: uppercase;
         }
 
         .header-links {
             display: flex;
-            gap: 25px;
+            gap: 20px;
         }
 
         .header-link {
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 600;
             color: #e1e1e1;
             text-transform: uppercase;
-            padding: 7px 15px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
+            padding: 5px 10px;
+            transition: color 0.3s ease;
         }
 
         .header-link:hover {
-            background-color: #8e44ad;
-            color: white;
-            transform: scale(1.05);
+            color: #bb86fc;
         }
 
         /* Hero Section */
@@ -84,59 +79,56 @@
             text-align: center;
             width: 100%;
             padding: 0 20px;
-            animation: fadeInSection 1.2s ease-out;
+            animation: fadeInSection 1s ease-out;
         }
 
         .hero h1 {
-            font-size: 4rem;
+            font-size: 3.5rem;
             font-weight: bold;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             line-height: 1.2;
             background: linear-gradient(90deg, #bb86fc, #8e44ad);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: slideInFromLeft 1.5s ease-out;
         }
 
         .hero p {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             color: #b3b3b3;
-            margin-bottom: 50px;
-            animation: fadeInUp 1.5s ease-out;
+            margin-bottom: 40px;
         }
 
         .search-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
         .search-bar {
-            width: 65%;
-            max-width: 650px;
-            padding: 16px 20px;
-            font-size: 1.1rem;
+            width: 60%;
+            max-width: 600px;
+            padding: 15px 20px;
+            font-size: 1rem;
             border: 2px solid #bb86fc;
-            border-radius: 35px;
+            border-radius: 30px;
             background-color: #1f1f1f;
             color: #e1e1e1;
             outline: none;
-            transition: border-color 0.3s ease, transform 0.3s ease;
+            transition: border-color 0.3s ease;
         }
 
         .search-bar:focus {
             border-color: #8e44ad;
-            transform: scale(1.05);
         }
 
         .search-btn {
-            padding: 16px 35px;
-            font-size: 1.1rem;
+            padding: 15px 30px;
+            font-size: 1rem;
             font-weight: 600;
             background: linear-gradient(135deg, #bb86fc, #8e44ad);
             border: none;
-            border-radius: 35px;
+            border-radius: 30px;
             color: white;
             cursor: pointer;
             transition: background 0.3s ease, transform 0.3s ease;
@@ -154,8 +146,6 @@
             font-size: 0.9rem;
             color: #777;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 40px;
-            animation: fadeInFooter 1.5s ease-out;
         }
 
         footer a {
@@ -168,87 +158,47 @@
 
         /* Animations */
         @keyframes fadeInAll {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
         }
 
         @keyframes fadeInHeader {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
         }
 
         @keyframes fadeInSection {
-            0% { transform: translateY(50px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes slideInFromLeft {
-            0% { transform: translateX(-100%); opacity: 0; }
-            100% { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes fadeInUp {
-            0% { transform: translateY(30px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes fadeInFooter {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
-        /* Parallax Scrolling */
-        .parallax {
-            background: url('https://via.placeholder.com/1500') no-repeat center center fixed;
-            background-size: cover;
-            height: 500px;
-            position: relative;
-            animation: fadeInSection 1s ease-out;
-        }
-
-        .parallax-content {
-            position: absolute;
-            bottom: 30px;
-            left: 30px;
-            color: white;
-            font-size: 1.5rem;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 10px 20px;
-            border-radius: 8px;
+            0% {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         /* Responsive Styles */
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 3rem;
+                font-size: 2.5rem;
             }
 
             .hero p {
-                font-size: 1.1rem;
+                font-size: 1rem;
             }
 
             .search-bar {
                 width: 80%;
-                font-size: 1rem;
-            }
-
-            .search-btn {
-                padding: 14px 30px;
-                font-size: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            header {
-                padding: 15px 25px;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .search-bar {
-                width: 90%;
+                font-size: 0.9rem;
             }
 
             .search-btn {
@@ -257,20 +207,24 @@
             }
         }
 
-        /* Hide scrollbar but keep the scroll functionality */
-body {
-    overflow: hidden;  /* Hide the default scrollbar */
-}
+        @media (max-width: 480px) {
+            header {
+                padding: 10px 20px;
+            }
 
-body::-webkit-scrollbar {
-    display: none;  /* For Chrome, Safari, and Edge */
-}
+            .hero h1 {
+                font-size: 2rem;
+            }
 
-body {
-    -ms-overflow-style: none;  /* For Internet Explorer 10+ */
-    scrollbar-width: none;  /* For Firefox */
-}
+            .search-bar {
+                width: 90%;
+            }
 
+            .search-btn {
+                padding: 10px 20px;
+                font-size: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -293,16 +247,10 @@ body {
                 <button class="search-btn" onclick="location.href='/chat-page';">Get Started</button>
             </div>
         </section>
-
-        <section class="parallax">
-            <div class="parallax-content">
-                Dive deeper into the world of AI and discover new possibilities with PascalAI.
-            </div>
-        </section>
     </main>
 
     <footer>
-        <p>© 2024 PascalAI. All rights reserved.</p>
+        <p>© 2024 PascalAI.</p>
     </footer>
 
     <script>
@@ -313,14 +261,17 @@ body {
             let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
 
             if (currentScroll > lastScrollTop) {
+                // Scroll down
                 header.classList.add('hidden-header');
             } else {
+                // Scroll up
                 header.classList.remove('hidden-header');
                 header.classList.add('visible-header');
             }
             lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         });
 
+        // Ensure the page fades in top to bottom in a nice order when loaded
         window.onload = function () {
             document.body.style.opacity = 1;
         };
