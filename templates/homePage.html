@@ -104,6 +104,7 @@
             justify-content: center;
             align-items: center;
             gap: 10px;
+            position: relative;
         }
 
         .search-bar {
@@ -138,23 +139,6 @@
         .search-btn:hover {
             background: linear-gradient(135deg, #8e44ad, #bb86fc);
             transform: scale(1.05);
-        }
-
-        /* Footer */
-        footer {
-            padding: 20px;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #777;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        footer a {
-            color: #bb86fc;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
         }
 
         /* Animations */
@@ -197,6 +181,17 @@
             100% {
                 transform: translateY(-20px);
                 opacity: 0;
+            }
+        }
+
+        @keyframes fadeInSlideDown {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
             }
         }
 
@@ -255,10 +250,9 @@
     <main>
         <section class="hero">
             <h1>Ask PascalAI Anything</h1>
-            <p class="example-question">Quiz me for my Math Test</p>
             <p class="hero-text">Unlock limitless possibilities with cutting-edge AI technology. Start your journey now!</p>
             <div class="search-container">
-                <input type="text" class="search-bar" placeholder="Ask me anything...">
+                <input type="text" class="search-bar" id="search-bar" placeholder="Ask me anything..." readonly>
                 <button class="search-btn" onclick="location.href='/chat-page';">Get Started</button>
             </div>
         </section>
@@ -281,28 +275,29 @@
         ];
 
         let currentIndex = 0;
-        const exampleText = document.querySelector(".example-question");
+        const searchBar = document.querySelector("#search-bar");
 
-        // Function to change the text with sliding and fading out/in animation
+        // Function to change the text inside the search box
         function changeExampleText() {
-            exampleText.style.animation = "fadeOutSlideUp 0.5s forwards";
+            searchBar.style.animation = "fadeOutSlideUp 0.3s forwards";
 
             setTimeout(() => {
                 currentIndex = (currentIndex + 1) % exampleQuestions.length;
-                exampleText.textContent = exampleQuestions[currentIndex];
-                exampleText.style.animation = "none";  // Reset animation
-                exampleText.offsetHeight;  // Trigger reflow to reset animation
-                exampleText.style.animation = "fadeInSection 0.5s forwards";  // Fade it in
-            }, 500);  // Wait for the slide-up fade-out to complete
+                searchBar.value = exampleQuestions[currentIndex];
+                searchBar.style.animation = "none";  // Reset animation
+                searchBar.offsetHeight;  // Trigger reflow to reset animation
+                searchBar.style.animation = "fadeInSlideDown 0.3s forwards";  // Fade it in
+            }, 300);  // Wait for the slide-up fade-out to complete
         }
 
-        // Change the text every 3 seconds
-        setInterval(changeExampleText, 3500);
+        // Change the text every 2 seconds (scroll speed adjustment)
+        setInterval(changeExampleText, 2000);
 
         // Initial text fade-in
         window.addEventListener("load", () => {
             setTimeout(() => {
-                exampleText.style.animation = "fadeInSection 1s forwards";  // Initial fade-in of the first example
+                searchBar.style.animation = "fadeInSection 1s forwards";  // Initial fade-in
+                changeExampleText();  // Change to the first text
             }, 1000);
         });
     </script>
