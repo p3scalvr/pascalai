@@ -23,6 +23,8 @@
             justify-content: space-between;
             min-height: 100vh;
             overflow-x: hidden;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
         }
 
         a {
@@ -42,6 +44,9 @@
             top: 0;
             z-index: 10;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            opacity: 1;
+            animation: fadeInHeader 1s ease-out;
+            transition: opacity 0.5s ease-in-out;
         }
 
         .logo {
@@ -79,6 +84,7 @@
             text-align: center;
             width: 100%;
             padding: 0 20px;
+            animation: fadeInHero 1s ease-out;
         }
 
         .hero h1 {
@@ -194,10 +200,47 @@
                 font-size: 0.8rem;
             }
         }
+
+        /* Animations */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInHeader {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInHero {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Scroll Effects */
+        .hidden-header {
+            opacity: 0;
+        }
+
+        .visible-header {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
-    <header>
+    <header id="header">
         <div class="logo">PascalAI</div>
         <nav class="header-links">
             <a href="#" class="header-link">Home</a>
@@ -209,7 +252,7 @@
 
     <main>
         <section class="hero">
-            <h1>Ask ChatGPT Anything</h1>
+            <h1>Ask PascalAI Anything</h1>
             <p>Unlock limitless possibilities with cutting-edge AI technology. Start your journey now!</p>
             <div class="search-container">
                 <input type="text" class="search-bar" placeholder="Ask me anything...">
@@ -219,7 +262,31 @@
     </main>
 
     <footer>
-        <p>© 2024 PascalAI. Built with ❤️ and advanced AI.</p>
+        <p>© 2024 PascalAI.</p>
     </footer>
+
+    <script>
+        let lastScrollTop = 0;
+        const header = document.getElementById('header');
+
+        window.addEventListener('scroll', function () {
+            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (currentScroll > lastScrollTop) {
+                // Scroll down
+                header.classList.add('hidden-header');
+            } else {
+                // Scroll up
+                header.classList.remove('hidden-header');
+                header.classList.add('visible-header');
+            }
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+
+        // To ensure the page fades in initially
+        window.onload = function () {
+            document.body.style.opacity = 1;
+        };
+    </script>
 </body>
 </html>
