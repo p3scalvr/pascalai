@@ -63,6 +63,12 @@
             opacity: 0;
             animation: fadeInElement 1s ease-out forwards;
             animation-delay: 1s;
+            scrollbar-width: none; /* For Firefox */
+            -ms-overflow-style: none; /* For Internet Explorer and Edge */
+        }
+
+        #chat-box::-webkit-scrollbar {
+            display: none; /* For Chrome, Safari, and Opera */
         }
 
         .fade-in {
@@ -156,6 +162,12 @@
             transition: width 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
             resize: none; /* Prevent resizing */
             overflow-y: auto; /* Allow vertical scrolling */
+            scrollbar-width: none; /* For Firefox */
+            -ms-overflow-style: none; /* For Internet Explorer and Edge */
+        }
+
+        #user-input::-webkit-scrollbar {
+            display: none; /* For Chrome, Safari, and Opera */
         }
 
         .input-container.shrink #user-input {
@@ -481,4 +493,4 @@ if (!inputField.value) {
         };
     </script>
 </body>
-</html>
+</html> 
