@@ -379,50 +379,27 @@
     aiNameDiv.classList.add('ai-name');
     aiNameDiv.textContent = 'PascalAI:';
 
-    // Enhanced formatting logic
-    const formattedMessage = formatMessage(message);
-
     const messageDiv = document.createElement('div');
-    messageDiv.innerHTML = formattedMessage;
-
     aiMessageDiv.appendChild(aiNameDiv);
     aiMessageDiv.appendChild(messageDiv);
 
     chatBox.appendChild(aiMessageDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Stream the message
+    streamMessage(message, messageDiv);
 }
 
-/**
- * Function to apply advanced formatting to messages.
- * Supports:
- * - **bold**
- * - *italic*
- * - `inline code`
- * - ```multiline code blocks```
- * - Links (e.g., [text](url))
- * @param {string} text
- * @returns {string} HTML-formatted string
- */
-function formatMessage(text) {
-    // Handle bold: **bold text**
-    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-    // Handle italic: *italic text*
-    text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-    // Handle inline code: `inline code`
-    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-    // Handle multiline code blocks: ```code```
-    text = text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-
-    // Handle links: [text](url)
-    text = text.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
-
-    // Replace newlines with <br> for proper line breaks
-    text = text.replace(/\n/g, '<br>');
-
-    return text;
+function streamMessage(message, element) {
+    let index = 0;
+    function type() {
+        if (index < message.length) {
+            element.innerHTML += message.charAt(index);
+            index++;
+            setTimeout(type, 50); // Adjust typing speed here
+        }
+    }
+    type();
 }
 
 const inputField = document.getElementById('user-input');
@@ -499,4 +476,4 @@ if (!inputField.value) {
         };
     </script>
 </body>
-</html>
+</html> 
