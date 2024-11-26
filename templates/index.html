@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>PascalAI: Your Personal AI Companion</title>
     <!-- Importing Google Font 'Roboto' for a modern look -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&family=Poppins:wght@600&display=swap" rel="stylesheet">
@@ -157,6 +157,8 @@
             outline: none;
             box-shadow: 0 0 10px rgba(191, 0, 255, 0.3);
             transition: width 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            resize: none; /* Prevent resizing */
+            overflow-y: auto; /* Allow vertical scrolling */
         }
 
         .input-container.shrink #user-input {
@@ -307,7 +309,7 @@
     </header>
     <div id="chat-box"></div>
     <div class="input-container">
-        <input type="text" id="user-input" placeholder="Message PascalAI" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false">
+        <textarea id="user-input" placeholder="Message PascalAI" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
         <button id="send-btn" onclick="sendMessage()">
             Send
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 12l18-6-6 18-6-18z"/></svg>
@@ -471,7 +473,8 @@ if (!inputField.value) {
         }
 
         function checkEnter(event) {
-            if (event.key === 'Enter') {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
                 sendMessage();
             }
         }
