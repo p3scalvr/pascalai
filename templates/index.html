@@ -160,7 +160,8 @@
             resize: none; /* Prevent resizing */
             overflow-wrap: break-word; /* Wrap text */
             white-space: pre-wrap; /* Preserve whitespace and wrap text */
-            height: 50px; /* Fixed height */
+            height: 50px; /* Initial height */
+            max-height: 150px; /* Maximum height */
             overflow-y: auto; /* Allow vertical scrolling */
         }
 
@@ -444,7 +445,7 @@ if (!inputField.value) {
 // Adjust the height of the input field based on content
 inputField.addEventListener('input', () => {
     inputField.style.height = 'auto';
-    inputField.style.height = inputField.scrollHeight + 'px';
+    inputField.style.height = Math.min(inputField.scrollHeight, 150) + 'px';
 });
 
         function displayThinkingIndicator(message) {
