@@ -370,7 +370,7 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        function displayAiMessage(message) {
+        function displayAiMessage() {
     const chatBox = document.getElementById('chat-box');
     const aiMessageDiv = document.createElement('div');
     aiMessageDiv.classList.add('ai-message');
@@ -386,20 +386,20 @@
     chatBox.appendChild(aiMessageDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
 
-    // Stream the message
-    streamMessage(message, messageDiv);
+    return messageDiv;
 }
 
-function streamMessage(message, element) {
-    let index = 0;
-    function type() {
-        if (index < message.length) {
-            element.innerHTML += message.charAt(index);
-            index++;
-            setTimeout(type, 50); // Adjust typing speed here
-        }
+function streamMessage(messageDiv, reader) {
+    const decoder = new TextDecoder();
+    function read() {
+        reader.read().then(({ done, value }) => {
+            if (done) return;
+            messageDiv.innerHTML += decoder.decode(value, { stream: true });
+            chatBox.scrollTop = chatBox.scrollHeight;
+            read();
+        });
     }
-    type();
+    read();
 }
 
 const inputField = document.getElementById('user-input');
@@ -432,37 +432,37 @@ if (!inputField.value) {
         }
 
         function simulateAiResponse(userMessage, inputField, sendButton) {
-            fetch("/chat", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ prompt: userMessage })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const aiResponse = data.response || "Sorry, I couldn't process your request.";
-                displayAiMessage(aiResponse);
-        
-                // Remove the "Thinking..." indicator
-                const thinkingDiv = document.querySelector('.thinking');
-                if (thinkingDiv) {
-                    thinkingDiv.remove();
-                }
-        
-                // Re-enable the input and send button
-                inputField.disabled = false;
-                sendButton.disabled = false;
-            })
-            .catch(error => {
-                console.error("Error fetching AI response:", error);
-                displayAiMessage("An error occurred while communicating with the AI.");
-        
-                // Re-enable the input and send button even if there's an error
-                inputField.disabled = false;
-                sendButton.disabled = false;
-            });
+    fetch("/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ prompt: userMessage })
+    })
+    .then(response => {
+        const reader = response.body.getReader();
+        const messageDiv = displayAiMessage();
+        streamMessage(messageDiv, reader);
+
+        // Remove the "Thinking..." indicator
+        const thinkingDiv = document.querySelector('.thinking');
+        if (thinkingDiv) {
+            thinkingDiv.remove();
         }
+
+        // Re-enable the input and send button
+        inputField.disabled = false;
+        sendButton.disabled = false;
+    })
+    .catch(error => {
+        console.error("Error fetching AI response:", error);
+        displayAiMessage("An error occurred while communicating with the AI.");
+
+        // Re-enable the input and send button even if there's an error
+        inputField.disabled = false;
+        sendButton.disabled = false;
+    });
+}
 
         function checkEnter(event) {
             if (event.key === 'Enter' && !event.shiftKey) {
@@ -476,4 +476,4 @@ if (!inputField.value) {
         };
     </script>
 </body>
-</html> 
+</html>
