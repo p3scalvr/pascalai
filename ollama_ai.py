@@ -23,39 +23,45 @@ knowledge_base = load_knowledge_base("knowledge_base.txt")
 
 # Function to interact with Ollama's AI model
 def get_ai_response(prompt: str):
+    
     try:
+        # Only include a short context or recent interactions to reduce overhead
         context_window = 1  # Adjust based on desired history depth
         messages = [{"role": "system", "content": "You are a helpful AI."}]
 
+        # Add knowledge base content if available
         if knowledge_base:
             messages.append({"role": "system", "content": f"Reference information: {knowledge_base}"})
 
+        # Add past interactions to the context
         for interaction in interaction_history[-context_window:]:
             messages.append({"role": "user", "content": interaction["user"]})
             messages.append({"role": "assistant", "content": interaction["ai"]})
 
         messages.append({"role": "user", "content": prompt})
 
+        # Log the payload being sent
         print("Request Payload:", json.dumps(messages, indent=2))
 
-        response = ollama.chat(model="llama3.2:3b", messages=messages, stream=True)
+        # Send the request to Ollama for the AI response
+        response = ollama.chat(model="llama3.2:3b", messages=messages)
 
-        ai_reply = ""
-        for chunk in response.iter_content(chunk_size=1):
-            if chunk:
-                ai_reply += chunk.decode('utf-8')
-                yield ai_reply
+        # Validate the response
+        if response.get("message") and response["message"].get("content"):
+            ai_reply = response["message"]["content"]
+        else:
+            ai_reply = "Error: No valid response content received."
 
+        # Store interaction history
         interaction_history.append({"user": prompt, "ai": ai_reply})
-        print(f"User: {prompt}")
-        print(f"AI: {ai_reply}")
+        return ai_reply
 
     except json.JSONDecodeError as e:
         print(f"JSON decoding error: {e}")
-        yield "Error: The response from the server was not valid JSON."
+        return "Error: The response from the server was not valid JSON."
     except Exception as e:
         print(f"An error occurred: {e}")
-        yield f"Error: {e}"
+        return f"Error: {e}"
 
 # Example usage
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <title>PascalAI: Your Personal AI Companion</title>
     <!-- Importing Google Font 'Roboto' for a modern look -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&family=Poppins:wght@600&display=swap" rel="stylesheet">
@@ -353,7 +353,7 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        function displayAiMessage() {
+        function displayAiMessage(message) {
     const chatBox = document.getElementById('chat-box');
     const aiMessageDiv = document.createElement('div');
     aiMessageDiv.classList.add('ai-message');
@@ -362,71 +362,53 @@
     aiNameDiv.classList.add('ai-name');
     aiNameDiv.textContent = 'PascalAI:';
 
+    // Enhanced formatting logic
+    const formattedMessage = formatMessage(message);
+
     const messageDiv = document.createElement('div');
+    messageDiv.innerHTML = formattedMessage;
+
     aiMessageDiv.appendChild(aiNameDiv);
     aiMessageDiv.appendChild(messageDiv);
 
     chatBox.appendChild(aiMessageDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
-
-    return messageDiv;
 }
 
-function streamMessage(messageDiv, reader) {
-    const chatBox = document.getElementById('chat-box');
-    const decoder = new TextDecoder();
-    function read() {
-        reader.read().then(({ done, value }) => {
-            if (done) {
-                messageDiv.style.opacity = 0;
-                messageDiv.style.transition = "opacity 1s ease-out";
-                setTimeout(() => {
-                    messageDiv.style.opacity = 1;
-                }, 100);
-                return;
-            }
-            messageDiv.innerHTML += decoder.decode(value, { stream: true });
-            chatBox.scrollTop = chatBox.scrollHeight;
-            read();
-        });
-    }
-    read();
+/**
+ * Function to apply advanced formatting to messages.
+ * Supports:
+ * - **bold**
+ * - *italic*
+ * - `inline code`
+ * - ```multiline code blocks```
+ * - Links (e.g., [text](url))
+ * @param {string} text
+ * @returns {string} HTML-formatted string
+ */
+function formatMessage(text) {
+    // Handle bold: **bold text**
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // Handle italic: *italic text*
+    text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+    // Handle inline code: `inline code`
+    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    // Handle multiline code blocks: ```code```
+    text = text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+
+    // Handle links: [text](url)
+    text = text.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+    // Replace newlines with <br> for proper line breaks
+    text = text.replace(/\n/g, '<br>');
+
+    return text;
 }
 
-function simulateAiResponse(userMessage, inputField, sendButton) {
-    fetch("/chat", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ prompt: userMessage })
-    })
-    .then(response => {
-        const reader = response.body.getReader();
-        const messageDiv = displayAiMessage();
-        streamMessage(messageDiv, reader);
-
-        // Remove the "Thinking..." indicator
-        const thinkingDiv = document.querySelector('.thinking');
-        if (thinkingDiv) {
-            thinkingDiv.remove();
-        }
-
-        // Re-enable the input and send button
-        inputField.disabled = false;
-        sendButton.disabled = false;
-    })
-    .catch(error => {
-        console.error("Error fetching AI response:", error);
-        displayAiMessage("An error occurred while communicating with the AI.");
-
-        // Re-enable the input and send button even if there's an error
-        inputField.disabled = false;
-        sendButton.disabled = false;
-    });
-}
-
-        const inputField = document.getElementById('user-input');
+const inputField = document.getElementById('user-input');
 const inputContainer = document.querySelector('.input-container');
 
 // Add an event listener to handle focus and blur
@@ -453,6 +435,39 @@ if (!inputField.value) {
             thinkingDiv.textContent = message;
             chatBox.appendChild(thinkingDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function simulateAiResponse(userMessage, inputField, sendButton) {
+            fetch("/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ prompt: userMessage })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const aiResponse = data.response || "Sorry, I couldn't process your request.";
+                displayAiMessage(aiResponse);
+        
+                // Remove the "Thinking..." indicator
+                const thinkingDiv = document.querySelector('.thinking');
+                if (thinkingDiv) {
+                    thinkingDiv.remove();
+                }
+        
+                // Re-enable the input and send button
+                inputField.disabled = false;
+                sendButton.disabled = false;
+            })
+            .catch(error => {
+                console.error("Error fetching AI response:", error);
+                displayAiMessage("An error occurred while communicating with the AI.");
+        
+                // Re-enable the input and send button even if there's an error
+                inputField.disabled = false;
+                sendButton.disabled = false;
+            });
         }
 
         function checkEnter(event) {
