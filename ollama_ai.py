@@ -56,9 +56,10 @@ def get_ai_response(prompt: str):
     except Exception as e:
         return f"data: {json.dumps({'text': f'Error: {e}'})}\n\n"
 
-@app.route('/chat', methods=['GET'])
+@app.route('/chat', methods=['POST'])
 def chat():
-    prompt = request.args.get('prompt', '')
+    data = request.get_json()
+    prompt = data.get('prompt', '')
     return get_ai_response(prompt)
 
 if __name__ == "__main__":

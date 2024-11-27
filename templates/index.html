@@ -414,7 +414,6 @@ if (!inputField.value) {
         }
 
         function simulateAiResponse(userMessage, inputField, sendButton) {
-    const eventSource = new EventSource(`/chat?prompt=${encodeURIComponent(userMessage)}`);
     const chatBox = document.getElementById('chat-box');
     const aiMessageDiv = document.createElement('div');
     aiMessageDiv.classList.add('ai-message');
@@ -429,17 +428,39 @@ if (!inputField.value) {
     chatBox.appendChild(aiMessageDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
 
-    eventSource.onmessage = function(event) {
-        const data = JSON.parse(event.data);
-        messageDiv.innerHTML += data.text;
-        chatBox.scrollTop = chatBox.scrollHeight;
-    };
+    fetch("/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ prompt: userMessage })
+    })
+    .then(response => {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let aiReply = "";
 
-    eventSource.onerror = function() {
-        eventSource.close();
+        function read() {
+            reader.read().then(({ done, value }) => {
+                if (done) {
+                    inputField.disabled = false;
+                    sendButton.disabled = false;
+                    return;
+                }
+                aiReply += decoder.decode(value);
+                messageDiv.innerHTML = aiReply;
+                chatBox.scrollTop = chatBox.scrollHeight;
+                read();
+            });
+        }
+        read();
+    })
+    .catch(error => {
+        console.error("Error fetching AI response:", error);
+        messageDiv.innerHTML = "An error occurred while communicating with the AI.";
         inputField.disabled = false;
         sendButton.disabled = false;
-    };
+    });
 }
 
         function checkEnter(event) {
@@ -453,4 +474,4 @@ if (!inputField.value) {
         };
     </script>
 </body>
-</html> 
+</html>
