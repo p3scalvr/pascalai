@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <title>PascalAI: Your Personal AI Companion</title>
     <!-- Importing Google Font 'Roboto' for a modern look -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&family=Poppins:wght@600&display=swap" rel="stylesheet">
@@ -20,12 +20,6 @@
             overflow: hidden;
             opacity: 0;
             animation: fadeInPage 1s ease-out forwards;
-            scrollbar-width: none; /* For Firefox */
-            -ms-overflow-style: none; /* For Internet Explorer and Edge */
-        }
-
-        body::-webkit-scrollbar {
-            display: none; /* For Chrome, Safari, and Opera */
         }
 
         @keyframes fadeInPage {
@@ -69,12 +63,6 @@
             opacity: 0;
             animation: fadeInElement 1s ease-out forwards;
             animation-delay: 1s;
-            scrollbar-width: none; /* For Firefox */
-            -ms-overflow-style: none; /* For Internet Explorer and Edge */
-        }
-
-        #chat-box::-webkit-scrollbar {
-            display: none; /* For Chrome, Safari, and Opera */
         }
 
         .fade-in {
@@ -121,7 +109,10 @@
 
         .ai-name {
         font-weight: bold;
-        color: #9900ff; /* Updated to match the purple scheme */
+        background: linear-gradient(135deg, #9b4dca, #5e2ca5);
+        -webkit-background-clip: text; /* Ensures compatibility with WebKit browsers */
+        background-clip: text; /* Standard property for broader browser support */
+        color: transparent;
         font-size: 22px;
         margin-bottom: 5px;
         opacity: 0;
@@ -157,7 +148,7 @@
 
         #user-input {
             width: 75%;
-            padding: 10px; /* Reduced padding to make the height smaller */
+            padding: 15px;
             background: #222;
             border: 1px solid #444;
             color: #fff;
@@ -166,14 +157,6 @@
             outline: none;
             box-shadow: 0 0 10px rgba(191, 0, 255, 0.3);
             transition: width 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-            resize: none; /* Prevent resizing */
-            overflow-y: auto; /* Allow vertical scrolling */
-            scrollbar-width: none; /* For Firefox */
-            -ms-overflow-style: none; /* For Internet Explorer and Edge */
-        }
-
-        #user-input::-webkit-scrollbar {
-            display: none; /* For Chrome, Safari, and Opera */
         }
 
         .input-container.shrink #user-input {
@@ -324,7 +307,7 @@
     </header>
     <div id="chat-box"></div>
     <div class="input-container">
-        <textarea id="user-input" placeholder="Message PascalAI" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+        <input type="text" id="user-input" placeholder="Message PascalAI" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false">
         <button id="send-btn" onclick="sendMessage()">
             Send
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 12l18-6-6 18-6-18z"/></svg>
@@ -370,7 +353,7 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        function displayAiMessage() {
+        function displayAiMessage(message) {
     const chatBox = document.getElementById('chat-box');
     const aiMessageDiv = document.createElement('div');
     aiMessageDiv.classList.add('ai-message');
@@ -379,31 +362,51 @@
     aiNameDiv.classList.add('ai-name');
     aiNameDiv.textContent = 'PascalAI:';
 
+    // Enhanced formatting logic
+    const formattedMessage = formatMessage(message);
+
     const messageDiv = document.createElement('div');
+    messageDiv.innerHTML = formattedMessage;
+
     aiMessageDiv.appendChild(aiNameDiv);
     aiMessageDiv.appendChild(messageDiv);
 
     chatBox.appendChild(aiMessageDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
-
-    return messageDiv;
 }
 
-// ...existing code...
-function streamMessage(messageDiv, reader) {
-    const chatBox = document.getElementById('chat-box');
-    const decoder = new TextDecoder();
-    function read() {
-        reader.read().then(({ done, value }) => {
-            if (done) return;
-            messageDiv.innerHTML += decoder.decode(value, { stream: true });
-            chatBox.scrollTop = chatBox.scrollHeight;
-            read();
-        });
-    }
-    read();
+/**
+ * Function to apply advanced formatting to messages.
+ * Supports:
+ * - **bold**
+ * - *italic*
+ * - `inline code`
+ * - ```multiline code blocks```
+ * - Links (e.g., [text](url))
+ * @param {string} text
+ * @returns {string} HTML-formatted string
+ */
+function formatMessage(text) {
+    // Handle bold: **bold text**
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // Handle italic: *italic text*
+    text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+    // Handle inline code: `inline code`
+    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    // Handle multiline code blocks: ```code```
+    text = text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+
+    // Handle links: [text](url)
+    text = text.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+    // Replace newlines with <br> for proper line breaks
+    text = text.replace(/\n/g, '<br>');
+
+    return text;
 }
-// ...existing code...
 
 const inputField = document.getElementById('user-input');
 const inputContainer = document.querySelector('.input-container');
@@ -435,41 +438,40 @@ if (!inputField.value) {
         }
 
         function simulateAiResponse(userMessage, inputField, sendButton) {
-    fetch("/chat", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ prompt: userMessage })
-    })
-    .then(response => {
-        const reader = response.body.getReader();
-        const messageDiv = displayAiMessage();
-        streamMessage(messageDiv, reader);
-
-        // Remove the "Thinking..." indicator
-        const thinkingDiv = document.querySelector('.thinking');
-        if (thinkingDiv) {
-            thinkingDiv.remove();
+            fetch("/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ prompt: userMessage })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const aiResponse = data.response || "Sorry, I couldn't process your request.";
+                displayAiMessage(aiResponse);
+        
+                // Remove the "Thinking..." indicator
+                const thinkingDiv = document.querySelector('.thinking');
+                if (thinkingDiv) {
+                    thinkingDiv.remove();
+                }
+        
+                // Re-enable the input and send button
+                inputField.disabled = false;
+                sendButton.disabled = false;
+            })
+            .catch(error => {
+                console.error("Error fetching AI response:", error);
+                displayAiMessage("An error occurred while communicating with the AI.");
+        
+                // Re-enable the input and send button even if there's an error
+                inputField.disabled = false;
+                sendButton.disabled = false;
+            });
         }
 
-        // Re-enable the input and send button
-        inputField.disabled = false;
-        sendButton.disabled = false;
-    })
-    .catch(error => {
-        console.error("Error fetching AI response:", error);
-        displayAiMessage("An error occurred while communicating with the AI.");
-
-        // Re-enable the input and send button even if there's an error
-        inputField.disabled = false;
-        sendButton.disabled = false;
-    });
-}
-
         function checkEnter(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
+            if (event.key === 'Enter') {
                 sendMessage();
             }
         }
