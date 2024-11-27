@@ -1,10 +1,13 @@
+from flask import Flask, request, Response
 import ollama
-import torch  # PyTorch library, if Ollama internally uses PyTorch/TensorFlow
+import torch
 import json
+
+app = Flask(__name__)
 
 # Check if GPU is available and set device
 device = "cuda" if torch.cuda.is_available() else "cpu"
-print(f"Using device: {device}")  # Prints "cuda" if GPU is available
+print(f"Using device: {device}")
 
 # Memory storage for interaction history
 interaction_history = []
@@ -23,51 +26,40 @@ knowledge_base = load_knowledge_base("knowledge_base.txt")
 
 # Function to interact with Ollama's AI model
 def get_ai_response(prompt: str):
-    
     try:
-        # Only include a short context or recent interactions to reduce overhead
-        context_window = 1  # Adjust based on desired history depth
+        context_window = 1
         messages = [{"role": "system", "content": "You are a helpful AI."}]
 
-        # Add knowledge base content if available
         if knowledge_base:
             messages.append({"role": "system", "content": f"Reference information: {knowledge_base}"})
 
-        # Add past interactions to the context
-        for interaction in interaction_history[-context_window:] :
+        for interaction in interaction_history[-context_window:]:
             messages.append({"role": "user", "content": interaction["user"]})
             messages.append({"role": "assistant", "content": interaction["ai"]})
 
         messages.append({"role": "user", "content": prompt})
 
-        # Log the payload being sent
-        print("Request Payload:", json.dumps(messages, indent=2))
-
-        # Send the request to Ollama for the AI response
         response = ollama.chat(model="llama3.2:3b", messages=messages, stream=True)
 
-        ai_reply = ""
-        for chunk in response.iter_content(chunk_size=128):
-            if chunk:
-                ai_reply += chunk.decode('utf-8')
-                print(chunk.decode('utf-8'), end='', flush=True)  # Stream the response
+        def generate():
+            ai_reply = ""
+            for chunk in response.iter_content(chunk_size=128):
+                if chunk:
+                    ai_reply += chunk.decode('utf-8')
+                    yield f"data: {json.dumps({'text': chunk.decode('utf-8')})}\n\n"
+            interaction_history.append({"user": prompt, "ai": ai_reply})
 
-        # Store interaction history
-        interaction_history.append({"user": prompt, "ai": ai_reply})
-        return ai_reply
+        return Response(generate(), content_type='text/event-stream')
 
     except json.JSONDecodeError as e:
-        print(f"JSON decoding error: {e}")
-        return "Error: The response from the server was not valid JSON."
+        return f"data: {json.dumps({'text': 'Error: The response from the server was not valid JSON.'})}\n\n"
     except Exception as e:
-        print(f"An error occurred: {e}")
-        return f"Error: {e}"
+        return f"data: {json.dumps({'text': f'Error: {e}'})}\n\n"
 
-# Example usage
+@app.route('/chat', methods=['GET'])
+def chat():
+    prompt = request.args.get('prompt', '')
+    return get_ai_response(prompt)
+
 if __name__ == "__main__":
-    while True:
-        prompt = input("Enter a prompt for the AI (or 'exit' to quit): ")
-        if prompt.lower() == "exit":
-            break
-        response = get_ai_response(prompt)
-        print(f"AI Response: {response}")
+    app.run(debug=True)
