@@ -34,7 +34,7 @@ def get_ai_response(prompt: str):
             messages.append({"role": "system", "content": f"Reference information: {knowledge_base}"})
 
         # Add past interactions to the context
-        for interaction in interaction_history[-context_window:]:
+        for interaction in interaction_history[-context_window:] :
             messages.append({"role": "user", "content": interaction["user"]})
             messages.append({"role": "assistant", "content": interaction["ai"]})
 
@@ -44,13 +44,13 @@ def get_ai_response(prompt: str):
         print("Request Payload:", json.dumps(messages, indent=2))
 
         # Send the request to Ollama for the AI response
-        response = ollama.chat(model="llama3.2:3b", messages=messages)
+        response = ollama.chat(model="llama3.2:3b", messages=messages, stream=True)
 
-        # Validate the response
-        if response.get("message") and response["message"].get("content"):
-            ai_reply = response["message"]["content"]
-        else:
-            ai_reply = "Error: No valid response content received."
+        ai_reply = ""
+        for chunk in response.iter_content(chunk_size=128):
+            if chunk:
+                ai_reply += chunk.decode('utf-8')
+                print(chunk.decode('utf-8'), end='', flush=True)  # Stream the response
 
         # Store interaction history
         interaction_history.append({"user": prompt, "ai": ai_reply})
