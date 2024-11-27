@@ -389,7 +389,9 @@
     return messageDiv;
 }
 
+// ...existing code...
 function streamMessage(messageDiv, reader) {
+    const chatBox = document.getElementById('chat-box');
     const decoder = new TextDecoder();
     function read() {
         reader.read().then(({ done, value }) => {
@@ -401,6 +403,7 @@ function streamMessage(messageDiv, reader) {
     }
     read();
 }
+// ...existing code...
 
 const inputField = document.getElementById('user-input');
 const inputContainer = document.querySelector('.input-container');
