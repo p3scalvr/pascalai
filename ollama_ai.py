@@ -44,21 +44,24 @@ def get_ai_response(prompt: str):
         print("Request Payload:", json.dumps(messages, indent=2))
 
         # Send the request to Ollama for the AI response
-        response = ollama.chat(model="llama3.2:3b", messages=messages, stream=True)
+        response = ollama.chat(model="llama3.2:3b", messages=messages)
 
-        ai_reply = ""
-        for chunk in response:
-            if "message" in chunk and "content" in chunk["message"]:
-                ai_reply += chunk["message"]["content"]
-                yield ai_reply  # Stream the response
+        # Validate the response
+        if response.get("message") and response["message"].get("content"):
+            ai_reply = response["message"]["content"]
+        else:
+            ai_reply = "Error: No valid response content received."
 
         # Store interaction history
         interaction_history.append({"user": prompt, "ai": ai_reply})
+        return ai_reply
 
     except json.JSONDecodeError as e:
-        yield f"Error: JSON decoding error: {e}"
+        print(f"JSON decoding error: {e}")
+        return "Error: The response from the server was not valid JSON."
     except Exception as e:
-        yield f"Error: {e}"
+        print(f"An error occurred: {e}")
+        return f"Error: {e}"
 
 # Example usage
 if __name__ == "__main__":
@@ -67,5 +70,4 @@ if __name__ == "__main__":
         if prompt.lower() == "exit":
             break
         response = get_ai_response(prompt)
-        for partial_response in response:
-            print(f"AI Response: {partial_response}")
+        print(f"AI Response: {response}")
