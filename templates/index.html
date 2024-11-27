@@ -157,6 +157,9 @@
             outline: none;
             box-shadow: 0 0 10px rgba(191, 0, 255, 0.3);
             transition: width 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            resize: none; /* Prevent resizing */
+            overflow-wrap: break-word; /* Wrap text */
+            white-space: pre-wrap; /* Preserve whitespace and wrap text */
         }
 
         .input-container.shrink #user-input {
@@ -362,26 +365,50 @@
     aiNameDiv.classList.add('ai-name');
     aiNameDiv.textContent = 'PascalAI:';
 
+    // Enhanced formatting logic
+    const formattedMessage = formatMessage(message);
+
     const messageDiv = document.createElement('div');
+    messageDiv.innerHTML = formattedMessage;
+
     aiMessageDiv.appendChild(aiNameDiv);
     aiMessageDiv.appendChild(messageDiv);
+
     chatBox.appendChild(aiMessageDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
-
-    // Stream the message
-    streamText(message, messageDiv);
 }
 
-function streamText(text, element) {
-    let index = 0;
-    function type() {
-        if (index < text.length) {
-            element.innerHTML += text.charAt(index);
-            index++;
-            setTimeout(type, 10); // Adjust typing speed here
-        }
-    }
-    type();
+/**
+ * Function to apply advanced formatting to messages.
+ * Supports:
+ * - **bold**
+ * - *italic*
+ * - `inline code`
+ * - ```multiline code blocks```
+ * - Links (e.g., [text](url))
+ * @param {string} text
+ * @returns {string} HTML-formatted string
+ */
+function formatMessage(text) {
+    // Handle bold: **bold text**
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // Handle italic: *italic text*
+    text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+    // Handle inline code: `inline code`
+    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    // Handle multiline code blocks: ```code```
+    text = text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+
+    // Handle links: [text](url)
+    text = text.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+    // Replace newlines with <br> for proper line breaks
+    text = text.replace(/\n/g, '<br>');
+
+    return text;
 }
 
 const inputField = document.getElementById('user-input');
@@ -414,57 +441,41 @@ if (!inputField.value) {
         }
 
         function simulateAiResponse(userMessage, inputField, sendButton) {
-    const chatBox = document.getElementById('chat-box');
-    const aiMessageDiv = document.createElement('div');
-    aiMessageDiv.classList.add('ai-message');
-
-    const aiNameDiv = document.createElement('div');
-    aiNameDiv.classList.add('ai-name');
-    aiNameDiv.textContent = 'PascalAI:';
-
-    const messageDiv = document.createElement('div');
-    aiMessageDiv.appendChild(aiNameDiv);
-    aiMessageDiv.appendChild(messageDiv);
-    chatBox.appendChild(aiMessageDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    fetch("/chat", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ prompt: userMessage })
-    })
-    .then(response => {
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let aiReply = "";
-
-        function read() {
-            reader.read().then(({ done, value }) => {
-                if (done) {
-                    inputField.disabled = false;
-                    sendButton.disabled = false;
-                    return;
+            fetch("/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ prompt: userMessage })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const aiResponse = data.response || "Sorry, I couldn't process your request.";
+                displayAiMessage(aiResponse);
+        
+                // Remove the "Thinking..." indicator
+                const thinkingDiv = document.querySelector('.thinking');
+                if (thinkingDiv) {
+                    thinkingDiv.remove();
                 }
-                aiReply += decoder.decode(value);
-                messageDiv.innerHTML = aiReply;
-                chatBox.scrollTop = chatBox.scrollHeight;
-                read();
+        
+                // Re-enable the input and send button
+                inputField.disabled = false;
+                sendButton.disabled = false;
+            })
+            .catch(error => {
+                console.error("Error fetching AI response:", error);
+                displayAiMessage("An error occurred while communicating with the AI.");
+        
+                // Re-enable the input and send button even if there's an error
+                inputField.disabled = false;
+                sendButton.disabled = false;
             });
         }
-        read();
-    })
-    .catch(error => {
-        console.error("Error fetching AI response:", error);
-        messageDiv.innerHTML = "An error occurred while communicating with the AI.";
-        inputField.disabled = false;
-        sendButton.disabled = false;
-    });
-}
 
         function checkEnter(event) {
-            if (event.key === 'Enter') {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault(); // Prevent default Enter behavior
                 sendMessage();
             }
         }
