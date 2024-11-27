@@ -26,7 +26,7 @@ def get_ai_response(prompt: str):
 def stream_ai_response(prompt: str):
     try:
         response = ollama.chat(model="llama3.2:3b", messages=[{"role": "user", "content": prompt}], stream=True)
-        for chunk in response.iter_content(chunk_size=128):
+        for chunk in response:
             if chunk:
                 yield chunk.decode('utf-8')
                 time.sleep(0.1)  # Simulate delay for streaming effect
