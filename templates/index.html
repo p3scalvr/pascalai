@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>PascalAI: Your Personal AI Companion</title>
     <!-- Importing Google Font 'Roboto' for a modern look -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&family=Poppins:wght@600&display=swap" rel="stylesheet">
@@ -103,8 +103,6 @@
             white-space: normal;
             margin-bottom: 10px;
             line-height: 1.4;
-            opacity: 0;
-            animation: fadeIn 1s ease-out forwards;
         }
 
         .ai-name {
@@ -362,50 +360,25 @@
     aiNameDiv.classList.add('ai-name');
     aiNameDiv.textContent = 'PascalAI:';
 
-    // Enhanced formatting logic
-    const formattedMessage = formatMessage(message);
-
     const messageDiv = document.createElement('div');
-    messageDiv.innerHTML = formattedMessage;
-
     aiMessageDiv.appendChild(aiNameDiv);
     aiMessageDiv.appendChild(messageDiv);
-
     chatBox.appendChild(aiMessageDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Stream text generation
+    streamTextGeneration(message, messageDiv);
 }
 
-/**
- * Function to apply advanced formatting to messages.
- * Supports:
- * - **bold**
- * - *italic*
- * - `inline code`
- * - ```multiline code blocks```
- * - Links (e.g., [text](url))
- * @param {string} text
- * @returns {string} HTML-formatted string
- */
-function formatMessage(text) {
-    // Handle bold: **bold text**
-    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-    // Handle italic: *italic text*
-    text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-    // Handle inline code: `inline code`
-    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-    // Handle multiline code blocks: ```code```
-    text = text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-
-    // Handle links: [text](url)
-    text = text.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
-
-    // Replace newlines with <br> for proper line breaks
-    text = text.replace(/\n/g, '<br>');
-
-    return text;
+function streamTextGeneration(text, element) {
+    let index = 0;
+    function updateText() {
+        if (index < text.length) {
+            element.innerHTML += text[index++];
+            setTimeout(updateText, 50); // Adjust speed as needed
+        }
+    }
+    updateText();
 }
 
 const inputField = document.getElementById('user-input');
