@@ -4,8 +4,15 @@ import json
 import time
 
 # Check if GPU is available and set device
-device = "cuda" if torch.cuda.is_available() else "cpu"
-print(f"Using device: {device}")  # Prints "cuda" if GPU is available
+def get_device():
+    if torch.cuda.is_available():
+        gpu_properties = torch.cuda.get_device_properties(0)
+        if gpu_properties.total_memory >= 4 * 1024 * 1024 * 1024:  # Check if GPU has at least 4GB of memory
+            return "cuda"
+    return "cpu"
+
+device = get_device()
+print(f"Using device: {device}")  # Prints "cuda" if GPU is available and sufficient, otherwise "cpu"
 
 # Memory storage for interaction history
 interaction_history = []
@@ -29,7 +36,7 @@ def get_ai_response(prompt: str):
         messages = [{"role": "system", "content": "You are a helpful AI."}]
 
         # Add knowledge base content if available
-        if knowledge_base:
+        if (knowledge_base):
             messages.append({"role": "system", "content": f"Reference information: {knowledge_base}"})
 
         # Add past interactions to the context

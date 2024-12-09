@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>PascalAI: Your Personal AI Companion</title>
     <!-- Importing Google Font 'Roboto' for a modern look -->
+    <link rel="icon" href="https://pngimg.com/uploads/letter_p/letter_p_PNG14.png" type="image/png">
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&family=Poppins:wght@600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -430,38 +432,19 @@
             transition: transform 0.3s ease-in-out;
         }
 
-        .mic-button {
-            background: transparent;
-            border: none;
-            border-radius: 50%;
-            width: 50px; /* Increased width */
-            height: 50px; /* Increased height */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            position: absolute;
-            right: 10px; /* Move to the right end */
-            opacity: 1;
-        }
-
-        .mic-button:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .mic-button img {
-            width: 24px; /* Increased icon size */
-            height: 24px; /* Increased icon size */
-        }
-
         .recording-indicator {
-            color: red;
-            font-size: 14px;
+            display: none; /* Hide recording indicator */
+        }
+
+        .gpu-utilization {
             position: fixed;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 10px;
+            right: 10px;
+            background-color: #1e90ff;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
             display: none;
         }
     </style>
@@ -474,12 +457,8 @@
     <div id="chat-box"></div>
     <div class="input-container">
         <textarea id="user-input" placeholder="Message PascalAI" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
-
-        <button class="mic-button" id="mic-btn" onclick="toggleRecording()">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSxKvCL8OSgcyQKZxj32yGj7svRIJcu9fTTg&s" alt="Mic">
-        </button>
     </div>
-    <div class="recording-indicator" id="recording-indicator">Recording 0:00</div>
+    <div class="gpu-utilization" id="gpu-utilization">GPU Utilization: 0%</div>
     
     <footer>
         <p>Built by <a href="https://github.com/p3scalvr" target="_blank">Pascal</a></p>
@@ -492,10 +471,6 @@
     <script>
         let lastUserMessage = null;
         let lastAiMessage = null;
-        let isRecording = false;
-        let recognition;
-        let recordingInterval;
-        let recordingTime = 0;
 
         function sendMessage() {
             const inputField = document.getElementById('user-input');
@@ -639,6 +614,9 @@
         
                 // Re-enable the input
                 inputField.disabled = false;
+
+                // Update GPU utilization
+                updateGpuUtilization();
             })
             .catch(error => {
                 console.error("Error fetching AI response:", error);
@@ -656,66 +634,6 @@
             }
         }
     
-        function toggleRecording() {
-            if (isRecording) {
-                stopRecording();
-            } else {
-                startRecording();
-            }
-        }
-
-        function startRecording() {
-            if (!('webkitSpeechRecognition' in window)) {
-                alert('Your browser does not support speech recognition. Please use Google Chrome.');
-                return;
-            }
-
-            recognition = new webkitSpeechRecognition();
-            recognition.continuous = true;
-            recognition.interimResults = false;
-            recognition.lang = 'en-US';
-
-            recognition.onstart = function() {
-                isRecording = true;
-                document.getElementById('recording-indicator').style.display = 'block';
-                recordingTime = 0;
-                recordingInterval = setInterval(updateRecordingTime, 1000);
-            };
-
-            recognition.onresult = function(event) {
-                const transcript = event.results[event.results.length - 1][0].transcript;
-                inputField.value += transcript;
-                inputField.style.height = Math.min(inputField.scrollHeight, 150) + 'px';
-            };
-
-            recognition.onerror = function(event) {
-                console.error('Speech recognition error:', event.error);
-                stopRecording();
-            };
-
-            recognition.onend = function() {
-                stopRecording();
-            };
-
-            recognition.start();
-        }
-
-        function stopRecording() {
-            if (recognition) {
-                recognition.stop();
-            }
-            isRecording = false;
-            document.getElementById('recording-indicator').style.display = 'none';
-            clearInterval(recordingInterval);
-        }
-
-        function updateRecordingTime() {
-            recordingTime++;
-            const minutes = Math.floor(recordingTime / 60);
-            const seconds = recordingTime % 60;
-            document.getElementById('recording-indicator').textContent = `Recording ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        }
-
         function checkHardwareAcceleration() {
             const canvas = document.createElement('canvas');
             const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -726,6 +644,20 @@
                 // Hardware acceleration is not enabled
                 document.getElementById('hardware-acceleration-notification').style.display = 'block';
             }
+        }
+
+        function updateGpuUtilization() {
+            fetch("/gpu-utilization")
+                .then(response => response.json())
+                .then(data => {
+                    const gpuUtilization = data.gpu_utilization;
+                    const gpuUtilizationDiv = document.getElementById('gpu-utilization');
+                    gpuUtilizationDiv.textContent = `GPU Utilization: ${gpuUtilization}%`;
+                    gpuUtilizationDiv.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error("Error fetching GPU utilization:", error);
+                });
         }
 
         window.onload = function() {
@@ -745,4 +677,4 @@
     </script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
-</html> 
+</html>

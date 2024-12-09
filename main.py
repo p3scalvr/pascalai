@@ -134,11 +134,19 @@ def send_email():
         print(f"An error occurred: {e}")
         return jsonify({'success': False, 'error': 'An unexpected error occurred. Please try again later.'})
 
-def navigateTo(section):
-    # ...existing code...
-    if section == 'contact':
-        url = '/contact'
-    # ...existing code...
+@app.route('/check-mic-permission', methods=['GET'])
+def check_mic_permission():
+    return jsonify({"permission": "granted"})
+
+@app.route('/gpu-utilization', methods=['GET'])
+def gpu_utilization():
+    try:
+        # Simulate GPU utilization data
+        gpu_utilization = 50  # Example value
+        return jsonify({"gpu_utilization": gpu_utilization})
+    except Exception as e:
+        print(f"An error occurred while fetching GPU utilization: {e}")
+        return jsonify({"error": "An error occurred while fetching GPU utilization."})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
