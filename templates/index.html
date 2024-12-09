@@ -541,7 +541,7 @@
             aiMessageDiv.appendChild(aiNameDiv);
             aiMessageDiv.appendChild(messageDiv);
             chatBox.appendChild(aiMessageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
+            chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
     
             // Call the live text rendering function
             liveTextRendering(message, messageDiv);
@@ -572,6 +572,7 @@
                     }
                     index++;
                     setTimeout(type, baseSpeed / speedFactor);
+                    element.parentElement.parentElement.scrollTop = element.parentElement.parentElement.scrollHeight; // Scroll to the bottom
                 }
             }
             type();
@@ -744,4 +745,4 @@
     </script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
-</html>
+</html> 
