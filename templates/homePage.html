@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PascalAI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>PascalAI: Your Personal AI Companion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&family=Poppins:wght@600&display=swap" rel="stylesheet">
     <style>
         /* Global Styles */
         * {
@@ -14,9 +14,9 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: #000000;
-            color: #e1e1e1;
+            color: #ddd;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -24,12 +24,32 @@
             min-height: 100vh;
             overflow-x: hidden;
             opacity: 0;
-            animation: fadeInAll 0.8s forwards;
+            animation: fadeInBody 1.5s forwards;
+            /* Hide scrollbar but still allow scrolling */
+            overflow-y: scroll;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        body {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
 
         a {
             text-decoration: none;
             color: inherit;
+            transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        a:hover {
+            color: #bbbbbb;
+            transform: scale(1.05);
+            text-shadow: 0 0 5px #bbbbbb;
         }
 
         /* Header */
@@ -45,14 +65,14 @@
             z-index: 10;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             opacity: 1;
-            animation: fadeInHeader 1s ease-out;
+            animation: slideDownHeader 1s ease-out forwards;
             transition: opacity 0.5s ease-in-out;
         }
 
         .logo {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #9b4dca;
+            color: #ffffff;
         }
 
         .header-links {
@@ -62,15 +82,16 @@
 
         .header-link {
             font-size: 0.9rem;
-            font-weight: 600;
-            color: #e1e1e1;
+            font-weight: 500;
+            color: #ffffff;
             text-transform: uppercase;
             padding: 5px 10px;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, transform 0.3s ease;
         }
 
         .header-link:hover {
-            color: #bb86fc;
+            color: #bbbbbb;
+            transform: scale(1.1);
         }
 
         /* Hero Section */
@@ -79,23 +100,22 @@
             text-align: center;
             width: 100%;
             padding: 0 20px;
-            animation: fadeInSection 1s ease-out;
+            animation: fadeInSection 1s ease-out forwards;
         }
 
         .hero h1 {
             font-size: 3.5rem;
-            font-weight: bold;
+            font-weight: 700;
             margin-bottom: 20px;
             line-height: 1.2;
-            background: linear-gradient(90deg, #bb86fc, #8e44ad);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #ffffff;
         }
 
         .hero p {
             font-size: 1.2rem;
-            color: #b3b3b3;
+            color: #bbbbbb;
             margin-bottom: 40px;
+            font-weight: 500;
         }
 
         .search-container {
@@ -110,33 +130,37 @@
             max-width: 600px;
             padding: 15px 20px;
             font-size: 1rem;
-            border: 2px solid #bb86fc;
+            border: 2px solid #1e90ff; /* Change border color to blue */
             border-radius: 30px;
             background-color: #1f1f1f;
-            color: #e1e1e1;
+            color: #ffffff;
             outline: none;
-            transition: border-color 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Add transition for animation */
+            box-shadow: 0 0 10px rgba(30, 144, 255, 0.5); /* Add blue glow */
         }
 
         .search-bar:focus {
-            border-color: #8e44ad;
+            border-color: #1e90ff; /* Keep border color blue on focus */
+            box-shadow: 0 0 15px rgba(30, 144, 255, 0.7); /* Enhance blue glow on focus */
         }
 
         .search-btn {
             padding: 15px 30px;
             font-size: 1rem;
             font-weight: 600;
-            background: linear-gradient(135deg, #bb86fc, #8e44ad);
+            background: linear-gradient(135deg, #ffffff, #bbbbbb);
             border: none;
             border-radius: 30px;
-            color: white;
+            color: #000000;
             cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease;
+            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
         .search-btn:hover {
-            background: linear-gradient(135deg, #8e44ad, #bb86fc);
+            background: linear-gradient(135deg, #bbbbbb, #ffffff);
             transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
         }
 
         /* Footer */
@@ -149,14 +173,26 @@
         }
 
         footer a {
-            color: #bb86fc;
+            color: #ffffff;
+            transition: color 0.3s ease, transform 0.3s ease;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
         }
 
         footer a:hover {
             text-decoration: underline;
+            transform: scale(1.05);
         }
 
         /* Animations */
+        @keyframes fadeInBody {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
         @keyframes fadeInAll {
             0% {
                 opacity: 0;
@@ -186,6 +222,17 @@
             }
         }
 
+        @keyframes slideDownHeader {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             .hero h1 {
@@ -204,6 +251,10 @@
             .search-btn {
                 padding: 12px 25px;
                 font-size: 0.9rem;
+            }
+
+            footer {
+                display: none; /* Hide footer on mobile */
             }
         }
 
@@ -224,6 +275,10 @@
                 padding: 10px 20px;
                 font-size: 0.8rem;
             }
+
+            footer {
+                display: none; /* Hide footer on mobile */
+            }
         }
     </style>
 </head>
@@ -231,10 +286,10 @@
     <header id="header" class="visible-header">
         <div class="logo">PascalAI</div>
         <nav class="header-links">
-            <a href="#" class="header-link">Home</a>
-            <a href="#" class="header-link">Features</a>
-            <a href="#" class="header-link">About</a>
-            <a href="#" class="header-link">Contact</a>
+            <a href="#" class="header-link" onclick="navigateTo('home')">Home</a>
+            <a href="#" class="header-link" onclick="navigateTo('features')">Features</a>
+            <a href="#" class="header-link" onclick="navigateTo('about')">About</a>
+            <a href="#" class="header-link" onclick="navigateTo('contact')">Contact</a>
         </nav>
     </header>
 
@@ -243,8 +298,8 @@
             <h1>Ask PascalAI Anything</h1>
             <p>Unlock limitless possibilities with cutting-edge AI technology. Start your journey now!</p>
             <div class="search-container">
-                <input type="text" class="search-bar" placeholder="Ask me anything...">
-                <button class="search-btn" onclick="location.href='/chat-page';">Get Started</button>
+                <input type="text" class="search-bar" id="homepage-input" placeholder="Ask me anything..." onkeydown="checkEnter(event)" autocomplete="off">
+                <button class="search-btn" onclick="redirectToChatPage()">Get Started</button>
             </div>
         </section>
     </main>
@@ -274,7 +329,49 @@
         // Ensure the page fades in top to bottom in a nice order when loaded
         window.onload = function () {
             document.body.style.opacity = 1;
+            const sections = document.querySelectorAll('section');
+            sections.forEach((section, index) => {
+                section.style.animationDelay = `${index * 0.5}s`;
+                section.style.animation = 'fadeInSection 1s ease-out forwards';
+            });
         };
+
+        function redirectToChatPage() {
+            const userInput = document.getElementById('homepage-input').value.trim();
+            if (userInput) {
+                window.location.href = `/chat-page?message-user=${encodeURIComponent(userInput)}`;
+            } else {
+                window.location.href = '/chat-page';
+            }
+        }
+
+        function checkEnter(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent default Enter behavior
+                redirectToChatPage();
+            }
+        }
+
+        function navigateTo(section) {
+            let url;
+            switch(section) {
+                case 'home':
+                    url = '/';
+                    break;
+                case 'features':
+                    url = '/features';
+                    break;
+                case 'about':
+                    url = '/about';
+                    break;
+                case 'contact':
+                    url = '/contact';
+                    break;
+                default:
+                    return;
+            }
+            window.location.href = url;
+        }
     </script>
 </body>
 </html>
