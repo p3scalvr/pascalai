@@ -549,7 +549,7 @@
     
         function liveTextRendering(text, element) {
             let index = 0;
-            const baseSpeed = 50; // Base speed in milliseconds
+            const baseSpeed = text.length < 100 ? 30 : 50; // Faster speed for short responses
             const speedFactor = Math.max(1, Math.floor(text.length / 100)); // Adjust speed based on message length
             let isBold = false;
 
