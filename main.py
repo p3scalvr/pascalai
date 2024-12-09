@@ -66,7 +66,7 @@ def home():
 @app.route('/static/<path:path>')
 def send_static(path):
     # Serve static files
-    return send_from_directory('static', path)
+    return send_from_directory('C:/Users/baboo/Documents/GitHub/pascalai/static', path)
 
 @app.route("/chat", methods=["POST"])
 def chat():
