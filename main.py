@@ -6,7 +6,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-app = Flask(__name__, template_folder='C:/Users/baboo/Documents/GitHub/pascalai/templates')
+app = Flask(__name__, template_folder='C:/Users/baboo/Documents/GitHub/pascalai', static_folder='C:/Users/baboo/Documents/GitHub/pascalai/static')
 
 # Memory storage for interaction history by device ID
 interaction_histories = {}
@@ -60,13 +60,13 @@ def get_ai_response(prompt: str, device_id: str):
 
 @app.route("/")
 def home():
-    # Serves the homepage (homePage.html)
-    return render_template("homePage.html")  
+    # Serves the homepage (index.html)
+    return render_template("index.html")  
 
 @app.route('/static/<path:path>')
 def send_static(path):
     # Serve static files
-    return send_from_directory('C:/Users/baboo/Documents/GitHub/pascalai/static', path)
+    return send_from_directory(app.static_folder, path)
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -79,10 +79,10 @@ def chat():
         return jsonify({"response": response})
     return jsonify({"response": "No prompt received."})
 
-@app.route("/chat-page")
-def chat_page():
-    # Serves the AI chat page (index.html)
-    return render_template("index.html")
+@app.route("/ai-page")
+def ai_page():
+    # Serves the AI chat page (ai.html)
+    return render_template("ai.html")
 
 @app.route("/features")
 def features():
