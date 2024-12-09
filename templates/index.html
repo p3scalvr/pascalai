@@ -33,8 +33,8 @@
             text-align: center;
             font-size: 35px;
             font-weight: 600;
-            color: #9900ff;
-            text-shadow: 0 0 20px #9b4dca;
+            color: #1e90ff;
+            text-shadow: 0 0 20px #1d82e8;
             opacity: 0;
             animation: fadeInHeader 1s ease-out forwards;
             animation-delay: 0.5s;
@@ -63,6 +63,16 @@
             opacity: 0;
             animation: fadeInElement 1s ease-out forwards;
             animation-delay: 1s;
+            scroll-behavior: smooth; /* Add smooth scrolling behavior */
+        }
+
+        /* Hide scrollbar but still allow scrolling */
+        #chat-box::-webkit-scrollbar {
+            display: none;
+        }
+        #chat-box {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
 
         .fade-in {
@@ -98,18 +108,19 @@
             color: #bbb;
             align-self: flex-start;
             max-width: 70%;
-            font-size: 23px;
+            font-size: 18px; /* Reduced font size */
             word-wrap: break-word;
             white-space: normal;
             margin-bottom: 10px;
             line-height: 1.4;
             opacity: 0;
             animation: fadeIn 1s ease-out forwards;
+            font-weight: normal; /* Ensure font is not bold by default */
         }
 
         .ai-name {
         font-weight: bold;
-        background: linear-gradient(135deg, #9b4dca, #5e2ca5);
+        background: linear-gradient(135deg, #1e90ff, #1975d1);
         -webkit-background-clip: text; /* Ensures compatibility with WebKit browsers */
         background-clip: text; /* Standard property for broader browser support */
         color: transparent;
@@ -117,7 +128,7 @@
         margin-bottom: 5px;
         opacity: 0;
         animation: fadeInName 1s ease-out forwards;
-        text-shadow: 0 0 10px #9b4dca;
+        text-shadow: 0 0 10px #1e90ff;
     }
 
         @keyframes fadeInName {
@@ -130,7 +141,7 @@
             align-items: center;
             padding: 10px;
             background-color: #000000;
-            border-top: 1px solid #333;
+            border: 1px solid #444; /* Slight outline around the entire message box */
             position: fixed;
             bottom: 100px;
             left: 50%;
@@ -138,12 +149,46 @@
             width: 90%;
             max-width: 700px;
             border-radius: 25px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Small drop shadow */
             justify-content: space-between;
             opacity: 0;
             animation: fadeInElement 1s ease-out forwards;
             animation-delay: 1.5s;
-            transition: width 0.3s ease;
+            transition: width 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-container:focus-within {
+            border-color: #1e90ff; /* Change border color on focus */
+            box-shadow: 0 0 15px rgba(30, 144, 255, 0.7); /* Cool animation on focus */
+        }
+
+        @media (max-width: 768px) {
+            .input-container {
+                position: absolute; /* Change to absolute for mobile */
+                bottom: 10px; /* Adjust as needed */
+            }
+            footer {
+                position: static; /* Ensure footer does not overlap */
+                margin-top: 20px; /* Add space above footer */
+                display: none; /* Hide footer on mobile */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .input-container {
+                width: 95%; /* Adjust width for smaller screens */
+            }
+            footer {
+                font-size: 12px; /* Adjust font size for smaller screens */
+                display: none; /* Hide footer on mobile */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .input-container {
+                position: absolute; /* Change to absolute for mobile */
+                bottom: 10px; /* Adjust as needed */
+            }
         }
 
         #user-input {
@@ -155,13 +200,13 @@
             border-radius: 25px;
             font-size: 16px;
             outline: none;
-            box-shadow: 0 0 10px rgba(191, 0, 255, 0.3);
-            transition: width 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            box-shadow: none; /* Remove box shadow from input field */
+            transition: height 0.2s ease, width 0.3s ease, background 0.3s ease; /* Smooth height transition */
             resize: none; /* Prevent resizing */
             overflow-wrap: break-word; /* Wrap text */
             white-space: pre-wrap; /* Preserve whitespace and wrap text */
-            height: 50px; /* Initial height */
-            max-height: 150px; /* Maximum height */
+            height: 30px; /* Reduced height */
+            max-height: 50px; /* Adjusted maximum height */
             overflow-y: auto; /* Allow vertical scrolling */
             margin-left: 20px; /* Move to the right */
         }
@@ -184,33 +229,31 @@
         }
 
         #user-input:focus {
-            box-shadow: 0 0 12px rgba(191, 0, 255, 0.7);
             background: #333;
         }
 
-        #send-btn {
-            background: linear-gradient(135deg, #9b4dca, #5e2ca5);
+        .cool-button {
+            background-color: #1e90ff;
             border: none;
-            color: #fff;
-            padding: 15px 20px;
-            font-size: 16px;
-            border-radius: 25px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             cursor: pointer;
-            transition: background-color 0.3s;
             display: flex;
             align-items: center;
-            text-shadow: 0 0 10px #9b4dca;
+            justify-content: center;
+            transition: background-color 0.3s, transform 0.3s;
+            margin-left: 10px; /* Space between buttons */
         }
 
-        #send-btn:hover {
-            background: linear-gradient(135deg, #5e2ca5, #400d60);
+        .cool-button:hover {
+            background-color: #1a7de0;
+            transform: scale(1.1); /* Slightly enlarge on hover */
         }
 
-        #send-btn svg {
-            margin-left: 10px;
-            width: 20px;
-            height: 20px;
-            fill: #fff;
+        .cool-button img {
+            width: 18px;
+            height: 18px;
         }
 
         footer {
@@ -230,7 +273,7 @@
         }
 
         footer a {
-            color: #9b4dca;
+            color: #1e90ff;
             text-decoration: none;
         }
 
@@ -244,11 +287,11 @@
         opacity: 0;
         margin-bottom: 10px;
         animation: fadeInBlue 1s ease-out forwards;
-        background: linear-gradient(135deg, #9b4dca, #5e2ca5);
+        background: linear-gradient(135deg, #1e90ff, #1a7de0);
         -webkit-background-clip: text; /* Ensures compatibility with WebKit browsers */
         background-clip: text; /* Standard property for broader browser support */
         color: transparent;
-        text-shadow: 0 0 10px #9b4dca;
+        text-shadow: 0 0 10px #1e90ff;
     }
 
         @keyframes fadeInBlue {
@@ -314,6 +357,113 @@
                 width: 80%;
             }
         }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1rem;
+            border: 2px solid #1e90ff;
+            border-radius: 30px;
+            background-color: #1f1f1f;
+            color: #ffffff;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 10px rgba(30, 144, 255, 0.5);
+        }
+
+        .search-bar:focus {
+            border-color: #1e90ff;
+            box-shadow: 0 0 15px rgba(30, 144, 255, 0.7);
+        }
+
+        .attach-btn, .mic-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent; /* Change to transparent */
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .attach-btn:hover, .mic-btn:hover {
+            background: rgba(255, 255, 255, 0.1); /* Slight background on hover */
+        }
+
+        .attach-btn {
+            left: -50px;
+        }
+
+        .mic-btn {
+            right: -50px;
+        }
+
+        .mic-btn i, .attach-btn i {
+            font-size: 1.2rem;
+            color: #000000;
+        }
+
+        .hidden-header {
+            transform: translateY(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .visible-header {
+            transform: translateY(0);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .mic-button {
+            background: transparent;
+            border: none;
+            border-radius: 50%;
+            width: 50px; /* Increased width */
+            height: 50px; /* Increased height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            position: absolute;
+            right: 10px; /* Move to the right end */
+            opacity: 1;
+        }
+
+        .mic-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .mic-button img {
+            width: 24px; /* Increased icon size */
+            height: 24px; /* Increased icon size */
+        }
+
+        .recording-indicator {
+            color: red;
+            font-size: 14px;
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -324,40 +474,48 @@
     <div id="chat-box"></div>
     <div class="input-container">
         <textarea id="user-input" placeholder="Message PascalAI" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
-        <button id="send-btn" onclick="sendMessage()">
-            Send
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 12l18-6-6 18-6-18z"/></svg>
+
+        <button class="mic-button" id="mic-btn" onclick="toggleRecording()">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSxKvCL8OSgcyQKZxj32yGj7svRIJcu9fTTg&s" alt="Mic">
         </button>
     </div>
+    <div class="recording-indicator" id="recording-indicator">Recording 0:00</div>
     
     <footer>
         <p>Built by <a href="https://github.com/p3scalvr" target="_blank">Pascal</a></p>
     </footer>
     
+    <div id="hardware-acceleration-notification" style="display: none; background-color: #1e90ff; color: white; padding: 10px; text-align: center;">
+        For better performance, please enable hardware acceleration in your browser settings.
+    </div>
 
     <script>
         let lastUserMessage = null;
         let lastAiMessage = null;
+        let isRecording = false;
+        let recognition;
+        let recordingInterval;
+        let recordingTime = 0;
 
         function sendMessage() {
             const inputField = document.getElementById('user-input');
-            const sendButton = document.getElementById('send-btn');
+            const inputContainer = document.querySelector('.input-container');
             const message = inputField.value.trim();
         
             // If the message is not empty, proceed to send it
             if (message !== '') {
-                // Disable input and send button while waiting for the response
+                // Disable input while waiting for the response
                 inputField.disabled = true;
-                sendButton.disabled = true;
         
                 displayUserMessage(message);
                 inputField.value = '';
-                inputField.style.height = '50px'; // Reset height to initial size
+                inputField.style.height = '30px'; // Reset height to initial size
+                inputContainer.classList.add('shrink'); // Shrink the text box
                 lastUserMessage = message;
                 lastAiMessage = "PascalAI is Thinking...";
         
                 displayThinkingIndicator(lastAiMessage);
-                simulateAiResponse(message, inputField, sendButton);
+                simulateAiResponse(message, inputField);
             }
         }
 
@@ -371,85 +529,85 @@
         }
 
         function displayAiMessage(message) {
-    const chatBox = document.getElementById('chat-box');
-    const aiMessageDiv = document.createElement('div');
-    aiMessageDiv.classList.add('ai-message');
+            const chatBox = document.getElementById('chat-box');
+            const aiMessageDiv = document.createElement('div');
+            aiMessageDiv.classList.add('ai-message');
+    
+            const aiNameDiv = document.createElement('div');
+            aiNameDiv.classList.add('ai-name');
+            aiNameDiv.textContent = 'PascalAI:';
+    
+            const messageDiv = document.createElement('div');
+            aiMessageDiv.appendChild(aiNameDiv);
+            aiMessageDiv.appendChild(messageDiv);
+            chatBox.appendChild(aiMessageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+    
+            // Call the live text rendering function
+            liveTextRendering(message, messageDiv);
+        }
+    
+        function liveTextRendering(text, element) {
+            let index = 0;
+            const baseSpeed = 50; // Base speed in milliseconds
+            const speedFactor = Math.max(1, Math.floor(text.length / 100)); // Adjust speed based on message length
+            let isBold = false;
 
-    const aiNameDiv = document.createElement('div');
-    aiNameDiv.classList.add('ai-name');
-    aiNameDiv.textContent = 'PascalAI:';
-
-    // Enhanced formatting logic
-    const formattedMessage = formatMessage(message);
-
-    const messageDiv = document.createElement('div');
-    messageDiv.innerHTML = formattedMessage;
-
-    aiMessageDiv.appendChild(aiNameDiv);
-    aiMessageDiv.appendChild(messageDiv);
-
-    chatBox.appendChild(aiMessageDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-/**
- * Function to apply advanced formatting to messages.
- * Supports:
- * - **bold**
- * - *italic*
- * - `inline code`
- * - ```multiline code blocks```
- * - Links (e.g., [text](url))
- * @param {string} text
- * @returns {string} HTML-formatted string
- */
-function formatMessage(text) {
-    // Handle bold: **bold text**
-    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-    // Handle italic: *italic text*
-    text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-    // Handle inline code: `inline code`
-    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-    // Handle multiline code blocks: ```code```
-    text = text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-
-    // Handle links: [text](url)
-    text = text.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
-
-    // Replace newlines with <br> for proper line breaks
-    text = text.replace(/\n/g, '<br>');
-
-    return text;
-}
-
-const inputField = document.getElementById('user-input');
-const inputContainer = document.querySelector('.input-container');
-
-// Add an event listener to handle focus and blur
-inputField.addEventListener('focus', () => {
-    inputContainer.classList.remove('shrink');
-});
-
-inputField.addEventListener('blur', () => {
-    if (!inputField.value) {
-        inputContainer.classList.add('shrink');
-    }
-});
-
-// Check when input is not focused
-if (!inputField.value) {
-    inputContainer.classList.add('shrink');
-}
-
-// Adjust the height of the input field based on content
-inputField.addEventListener('input', () => {
-    inputField.style.height = 'auto';
-    inputField.style.height = Math.min(inputField.scrollHeight, 150) + 'px';
-});
-
+            function type() {
+                if (index < text.length) {
+                    let char = text.charAt(index);
+                    if (char === '\n') {
+                        element.innerHTML += '<br>'; // Add line break for new paragraphs
+                    } else if (char === '*' && text.charAt(index + 1) === '*') {
+                        if (isBold) {
+                            element.innerHTML += '</strong>'; // End bold text
+                            isBold = false;
+                        } else {
+                            element.innerHTML += '<strong>'; // Start bold text
+                            isBold = true;
+                        }
+                        index++;
+                    } else {
+                        element.innerHTML += char;
+                    }
+                    index++;
+                    setTimeout(type, baseSpeed / speedFactor);
+                }
+            }
+            type();
+        }
+    
+        const inputField = document.getElementById('user-input');
+        const inputContainer = document.querySelector('.input-container');
+    
+        // Add an event listener to handle focus and blur
+        inputField.addEventListener('focus', () => {
+            inputContainer.classList.remove('shrink');
+        });
+    
+        inputField.addEventListener('blur', () => {
+            if (!inputField.value) {
+                inputContainer.classList.add('shrink');
+                inputField.style.height = '30px'; // Reset height to initial size
+            }
+        });
+    
+        // Check when input is not focused
+        if (!inputField.value) {
+            inputContainer.classList.add('shrink');
+            inputField.style.height = '30px'; // Reset height to initial size
+        }
+    
+        // Adjust the height of the input field based on content
+        inputField.addEventListener('input', () => {
+            if (inputField.value.trim() === "") {
+                inputField.style.height = '30px'; // Reset height to initial size
+            } else {
+                inputField.style.height = '30px'; // Start at 30px when typing
+                inputField.style.height = Math.min(inputField.scrollHeight, 150) + 'px';
+            }
+        });
+    
         function displayThinkingIndicator(message) {
             const chatBox = document.getElementById('chat-box');
             const thinkingDiv = document.createElement('div');
@@ -458,8 +616,8 @@ inputField.addEventListener('input', () => {
             chatBox.appendChild(thinkingDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
         }
-
-        function simulateAiResponse(userMessage, inputField, sendButton) {
+    
+        function simulateAiResponse(userMessage, inputField) {
             fetch("/chat", {
                 method: "POST",
                 headers: {
@@ -478,30 +636,112 @@ inputField.addEventListener('input', () => {
                     thinkingDiv.remove();
                 }
         
-                // Re-enable the input and send button
+                // Re-enable the input
                 inputField.disabled = false;
-                sendButton.disabled = false;
             })
             .catch(error => {
                 console.error("Error fetching AI response:", error);
                 displayAiMessage("An error occurred while communicating with the AI.");
         
-                // Re-enable the input and send button even if there's an error
+                // Re-enable the input even if there's an error
                 inputField.disabled = false;
-                sendButton.disabled = false;
             });
         }
-
+    
         function checkEnter(event) {
             if (event.key === 'Enter' && !event.shiftKey) {
                 event.preventDefault(); // Prevent default Enter behavior
                 sendMessage();
             }
         }
+    
+        function toggleRecording() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+
+        function startRecording() {
+            if (!('webkitSpeechRecognition' in window)) {
+                alert('Your browser does not support speech recognition. Please use Google Chrome.');
+                return;
+            }
+
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            recognition.onstart = function() {
+                isRecording = true;
+                document.getElementById('recording-indicator').style.display = 'block';
+                recordingTime = 0;
+                recordingInterval = setInterval(updateRecordingTime, 1000);
+            };
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[event.results.length - 1][0].transcript;
+                inputField.value += transcript;
+                inputField.style.height = Math.min(inputField.scrollHeight, 150) + 'px';
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+                stopRecording();
+            };
+
+            recognition.onend = function() {
+                stopRecording();
+            };
+
+            recognition.start();
+        }
+
+        function stopRecording() {
+            if (recognition) {
+                recognition.stop();
+            }
+            isRecording = false;
+            document.getElementById('recording-indicator').style.display = 'none';
+            clearInterval(recordingInterval);
+        }
+
+        function updateRecordingTime() {
+            recordingTime++;
+            const minutes = Math.floor(recordingTime / 60);
+            const seconds = recordingTime % 60;
+            document.getElementById('recording-indicator').textContent = `Recording ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        function checkHardwareAcceleration() {
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            if (gl && gl instanceof WebGLRenderingContext) {
+                // Hardware acceleration is enabled
+                console.log('Hardware acceleration is enabled.');
+            } else {
+                // Hardware acceleration is not enabled
+                document.getElementById('hardware-acceleration-notification').style.display = 'block';
+            }
+        }
 
         window.onload = function() {
             document.body.style.opacity = 1;
+            checkHardwareAcceleration();
+            const urlParams = new URLSearchParams(window.location.search);
+            const message = urlParams.get('message-user');
+            if (message) {
+                displayUserMessage(message);
+                displayThinkingIndicator("PascalAI is Thinking...");
+                simulateAiResponse(message, document.getElementById('user-input'));
+            } else {
+                // Clear chat if no message is present in the URL
+                document.getElementById('chat-box').innerHTML = '';
+            }
         };
     </script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>

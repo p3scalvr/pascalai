@@ -1,6 +1,7 @@
 import ollama
 import torch  # PyTorch library, if Ollama internally uses PyTorch/TensorFlow
 import json
+import time
 
 # Check if GPU is available and set device
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -23,10 +24,8 @@ knowledge_base = load_knowledge_base("knowledge_base.txt")
 
 # Function to interact with Ollama's AI model
 def get_ai_response(prompt: str):
-    
     try:
-        # Only include a short context or recent interactions to reduce overhead
-        context_window = 1  # Adjust based on desired history depth
+        # Include the entire interaction history to maintain context
         messages = [{"role": "system", "content": "You are a helpful AI."}]
 
         # Add knowledge base content if available
@@ -34,7 +33,7 @@ def get_ai_response(prompt: str):
             messages.append({"role": "system", "content": f"Reference information: {knowledge_base}"})
 
         # Add past interactions to the context
-        for interaction in interaction_history[-context_window:]:
+        for interaction in interaction_history:
             messages.append({"role": "user", "content": interaction["user"]})
             messages.append({"role": "assistant", "content": interaction["ai"]})
 
@@ -43,8 +42,15 @@ def get_ai_response(prompt: str):
         # Log the payload being sent
         print("Request Payload:", json.dumps(messages, indent=2))
 
+        # Measure start time
+        start_time = time.time()
+
         # Send the request to Ollama for the AI response
-        response = ollama.chat(model="llama3.2:3b", messages=messages)
+        response = ollama.chat(model="llama3.2:1b", messages=messages, device=device)
+
+        # Measure end time
+        end_time = time.time()
+        print(f"AI response time: {end_time - start_time} seconds")
 
         # Validate the response
         if response.get("message") and response["message"].get("content"):
