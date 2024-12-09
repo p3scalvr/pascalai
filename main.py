@@ -6,7 +6,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__, template_folder='C:/Users/baboo/Documents/GitHub/pascalai/templates')
 
 # Memory storage for interaction history by device ID
 interaction_histories = {}
