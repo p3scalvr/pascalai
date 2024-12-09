@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>About Us - PascalAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #000000;
+            color: #ddd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 100vh;
+            overflow-x: hidden;
+            opacity: 0;
+            animation: fadeInBody 1.5s forwards;
+            overflow-y: scroll;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        a:hover {
+            color: #bbbbbb;
+            transform: scale(1.05);
+            text-shadow: 0 0 5px #bbbbbb;
+        }
+
+        header {
+            width: 100%;
+            padding: 15px 30px;
+            background-color: #000000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            opacity: 1;
+            animation: slideDownHeader 1s ease-out forwards;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .header-link {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #ffffff;
+            text-transform: uppercase;
+            padding: 5px 10px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .header-link:hover {
+            color: #bbbbbb;
+            transform: scale(1.1);
+        }
+
+        .about {
+            margin-top: 120px;
+            text-align: center;
+            width: 100%;
+            padding: 0 20px;
+            animation: fadeInSection 1s ease-out forwards;
+        }
+
+        .about h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            color: #ffffff;
+        }
+
+        .about p {
+            font-size: 1.2rem;
+            color: #bbbbbb;
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .about-content h2 {
+            font-size: 2rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .about-content p {
+            font-size: 1rem;
+            color: #bbbbbb;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer a {
+            color: #ffffff;
+            transition: color 0.3s ease, transform 0.3s ease;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeInBody {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInSection {
+            0% {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDownHeader {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .about h1 {
+                font-size: 2.5rem;
+            }
+
+            .about p {
+                font-size: 1rem;
+            }
+
+            footer {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 10px 20px;
+            }
+
+            .about h1 {
+                font-size: 2rem;
+            }
+
+            footer {
+                display: none;
+            }
+        }
+
+        .hidden-header {
+            transform: translateY(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .visible-header {
+            transform: translateY(0);
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header id="header" class="visible-header">
+        <div class="logo">PascalAI</div>
+        <nav class="header-links">
+            <a href="#" class="header-link" onclick="navigateTo('home')">Home</a>
+            <a href="#" class="header-link" onclick="navigateTo('features')">Features</a>
+            <a href="#" class="header-link" onclick="navigateTo('about')">About</a>
+            <a href="#" class="header-link" id="contact-link" onclick="navigateTo('contact')">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="about">
+            <h1>About Us</h1>
+            <p>Learn more about PascalAI and our mission to revolutionize AI technology.</p>
+            <div class="about-content">
+                <h2>Our Mission</h2>
+                <p>At PascalAI, our mission is to harness the power of artificial intelligence to create innovative solutions that enhance productivity and improve lives. We are committed to pushing the boundaries of AI technology and making it accessible to everyone.</p>
+                <h2>Our Team</h2>
+                <p>Our team is composed of experienced AI researchers, engineers, and visionaries who are passionate about technology and its potential to transform the world. We work collaboratively to develop cutting-edge AI models and applications that address real-world challenges.</p>
+                <h2>Our Values</h2>
+                <p>We believe in innovation, integrity, and inclusivity. Our values guide our work and our interactions with our clients, partners, and the broader community. We strive to create AI solutions that are ethical, transparent, and beneficial to society.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2024 PascalAI.</p>
+    </footer>
+
+    <script>
+        let lastScrollTop = 0;
+        const header = document.getElementById('header');
+
+        window.addEventListener('scroll', function () {
+            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (currentScroll > lastScrollTop) {
+                header.classList.add('hidden-header');
+                header.classList.remove('visible-header');
+            } else {
+                header.classList.remove('hidden-header');
+                header.classList.add('visible-header');
+            }
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        });
+
+        window.onload = function () {
+            document.body.style.opacity = 1;
+            const sections = document.querySelectorAll('section');
+            sections.forEach((section, index) => {
+                section.style.animationDelay = `${index * 0.5}s`;
+                section.style.animation = 'fadeInSection 1s ease-out forwards';
+            });
+        };
+
+        function navigateTo(section) {
+            let url;
+            switch(section) {
+                case 'home':
+                    url = '/';
+                    break;
+                case 'features':
+                    url = '/features';
+                    break;
+                case 'about':
+                    url = '/about';
+                    break;
+                case 'contact':
+                    url = '/contact';
+                    break;
+                default:
+                    return;
+            }
+            window.location.href = url;
+        }
+    </script>
+</body>
+</html>
