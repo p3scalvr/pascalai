@@ -5,6 +5,7 @@ import uuid
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from ollama_ai import get_ai_response  # Import the updated get_ai_response function
 
 app = Flask(__name__, template_folder='C:/Users/baboo/Documents/GitHub/pascalai', static_folder='C:/Users/baboo/Documents/GitHub/pascalai/static')
 
@@ -17,46 +18,6 @@ def get_device_id():
     if not device_id:
         device_id = str(uuid.uuid4())
     return device_id
-
-# Function to interact with Ollama's AI model
-def get_ai_response(prompt: str, device_id: str):
-    try:
-        # Retrieve or initialize interaction history for the device ID
-        if (device_id not in interaction_histories):
-            interaction_histories[device_id] = []
-
-        interaction_history = interaction_histories[device_id]
-
-        # Include the entire interaction history to maintain context
-        messages = [{"role": "system", "content": "You are a helpful AI."}]
-
-        # Add past interactions to the context
-        for interaction in interaction_history:
-            messages.append({"role": "user", "content": interaction["user"]})
-            messages.append({"role": "assistant", "content": interaction["ai"]})
-
-        messages.append({"role": "user", "content": prompt})
-
-        # Log the payload being sent
-        print("Request Payload:", json.dumps(messages, indent=2))
-
-        # Send the request to Ollama for the AI response
-        response = ollama.chat(model="llama3.2:1b", messages=messages)
-
-        # Validate the response
-        if response.get("message") and response["message"].get("content"):
-            ai_reply = response["message"]["content"]
-        else:
-            ai_reply = f"Error: Missing 'content' field in response. Full response: {response}"
-        
-        # Store interaction history
-        interaction_history.append({"user": prompt, "ai": ai_reply})
-        return ai_reply
-
-    except Exception as e:
-        # Handle any unexpected errors
-        print(f"An error occurred: {e}")
-        return f"An error occurred: {e}"
 
 @app.route("/")
 def home():
@@ -74,9 +35,11 @@ def chat():
     device_id = get_device_id()
     if user_input:
         print(f"\nUser: {user_input}")  # Print user input to terminal
-        response = get_ai_response(user_input, device_id)
+        response, memory_updated = get_ai_response(user_input, device_id)
         print(f"AI: {response}")  # Print AI response to terminal
-        return jsonify({"response": response})
+        response = jsonify({"response": response, "memory_updated": memory_updated})
+        response.set_cookie('device_id', device_id, max_age=60*60*24*30)  # Set cookie to expire in 30 days
+        return response
     return jsonify({"response": "No prompt received."})
 
 @app.route("/ai-page")

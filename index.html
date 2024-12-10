@@ -72,7 +72,7 @@
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: 2rem; /* Increase font size */
             font-weight: bold;
             color: #ffffff;
         }
@@ -286,9 +286,11 @@
 </head>
 <body>
     <header id="header" class="visible-header">
-        <div class="logo">PascalAI</div>
+        <div class="logo">
+            <a href="/">PascalAI</a>
+        </div>
         <nav class="header-links">
-            <a href="#" class="header-link" onclick="navigateTo('home')">Home</a>
+            <!-- Removed Home button -->
             <a href="#" class="header-link" onclick="navigateTo('features')">Features</a>
             <a href="#" class="header-link" onclick="navigateTo('about')">About</a>
             <a href="#" class="header-link" onclick="navigateTo('contact')">Contact</a>

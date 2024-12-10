@@ -447,6 +447,73 @@
             font-size: 14px;
             display: none;
         }
+
+        .memory-updated {
+            color: #888; /* More gray color */
+            font-size: 14px;
+            margin-top: 5px;
+            display: none; /* Initially hidden */
+        }
+
+        .stop-button {
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s, transform 0.3s;
+            margin-left: 10px; /* Space between buttons */
+            display: none; /* Initially hidden */
+        }
+
+        .stop-button:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.1); /* Slightly enlarge on hover */
+        }
+
+        .stop-button::before {
+            content: "";
+            width: 20px;
+            height: 20px;
+            background-color: #000000;
+        }
+        .action-button {
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s, transform 0.3s;
+            margin-left: 10px; /* Space between buttons */
+            display: flex; /* Initially visible */
+        }
+
+        .action-button:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.1); /* Slightly enlarge on hover */
+        }
+
+        .action-button img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .recording {
+            background-color: #ff0000 !important; /* Red background during recording */
+        }
+
+        .disabled {
+            pointer-events: none;
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
@@ -457,6 +524,7 @@
     <div id="chat-box"></div>
     <div class="input-container">
         <textarea id="user-input" placeholder="Message PascalAI" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+        <div class="action-button" onclick="toggleRecording()"><img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone"></div> <!-- Add action button here -->
     </div>
     <div class="gpu-utilization" id="gpu-utilization">GPU Utilization: 0%</div>
     
@@ -471,6 +539,10 @@
     <script>
         let lastUserMessage = null;
         let lastAiMessage = null;
+        let stopTyping = false;
+        let isRecording = false;
+        let mediaRecorder;
+        let audioChunks = [];
 
         function sendMessage() {
             const inputField = document.getElementById('user-input');
@@ -479,8 +551,12 @@
         
             // If the message is not empty, proceed to send it
             if (message !== '') {
-                // Disable input while waiting for the response
+                // Disable input and send button while waiting for the response
                 inputField.disabled = true;
+                const actionButton = document.querySelector('.action-button');
+                actionButton.onclick = null;
+                actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
+                actionButton.classList.add('disabled');
         
                 displayUserMessage(message);
                 inputField.value = '';
@@ -503,33 +579,44 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        function displayAiMessage(message) {
+        function displayAiMessage(message, memoryUpdated) {
             const chatBox = document.getElementById('chat-box');
             const aiMessageDiv = document.createElement('div');
             aiMessageDiv.classList.add('ai-message');
-    
+        
             const aiNameDiv = document.createElement('div');
             aiNameDiv.classList.add('ai-name');
             aiNameDiv.textContent = 'PascalAI:';
-    
+        
             const messageDiv = document.createElement('div');
             aiMessageDiv.appendChild(aiNameDiv);
             aiMessageDiv.appendChild(messageDiv);
             chatBox.appendChild(aiMessageDiv);
             chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
-    
+        
             // Call the live text rendering function
-            liveTextRendering(message, messageDiv);
+            liveTextRendering(message, messageDiv, memoryUpdated);
         }
     
-        function liveTextRendering(text, element) {
+        function liveTextRendering(text, element, memoryUpdated) {
             let index = 0;
-            const baseSpeed = text.length < 100 ? 30 : 50; // Faster speed for short responses
+            const baseSpeed = text.length < 100 ? 10 : 30; // Faster speed for short responses
             const speedFactor = Math.max(1, Math.floor(text.length / 100)); // Adjust speed based on message length
             let isBold = false;
+            stopTyping = false;
+
+            const actionButton = document.querySelector('.action-button');
+            actionButton.style.display = 'flex';
+            actionButton.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/512/61/61449.png" alt="Pause">'; // Pause button icon
+            actionButton.classList.remove('disabled');
+            actionButton.onclick = () => {
+                stopTyping = true;
+                actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
+                actionButton.onclick = toggleRecording;
+            };
 
             function type() {
-                if (index < text.length) {
+                if (index < text.length && !stopTyping) {
                     let char = text.charAt(index);
                     if (char === '\n') {
                         element.innerHTML += '<br>'; // Add line break for new paragraphs
@@ -548,42 +635,119 @@
                     index++;
                     setTimeout(type, baseSpeed / speedFactor);
                     element.parentElement.parentElement.scrollTop = element.parentElement.parentElement.scrollHeight; // Scroll to the bottom
+                } else {
+                    actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
+                    actionButton.classList.remove('disabled');
+                    actionButton.onclick = toggleRecording;
+                    if (memoryUpdated) {
+                        const memoryUpdatedDiv = document.createElement('div');
+                        memoryUpdatedDiv.classList.add('memory-updated');
+                        memoryUpdatedDiv.textContent = '*Memory Updated*';
+                        element.parentElement.appendChild(memoryUpdatedDiv);
+                        memoryUpdatedDiv.style.display = 'block';
+                    }
+                    inputField.disabled = false; // Re-enable the input
                 }
             }
             type();
         }
-    
+
+        function toggleRecording() {
+            const actionButton = document.querySelector('.action-button');
+            const inputField = document.getElementById('user-input');
+
+            if (isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                actionButton.classList.remove('recording');
+                actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
+                inputField.disabled = false; // Re-enable the input
+            } else {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        mediaRecorder = new MediaRecorder(stream);
+                        mediaRecorder.start();
+                        isRecording = true;
+                        actionButton.classList.add('recording');
+                        actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
+                        inputField.disabled = true; // Disable the input during recording
+                        mediaRecorder.ondataavailable = event => {
+                            audioChunks.push(event.data);
+                        };
+                        mediaRecorder.onstop = () => {
+                            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                            const reader = new FileReader();
+                            reader.onload = () => {
+                                const base64AudioMessage = reader.result.split(',')[1];
+                                fetch('/transcribe', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ audio: base64AudioMessage })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.transcription) {
+                                        inputField.value = data.transcription;
+                                        inputField.style.height = 'auto';
+                                        inputField.style.height = Math.min(inputField.scrollHeight, 150) + 'px';
+                                        actionButton.innerHTML = '<img src="https://cdn1.iconfinder.com/data/icons/wayfinding-signage/100/Arrow_Up-512.png" alt="Send">';
+                                        actionButton.onclick = sendMessage;
+                                        inputField.disabled = false; // Re-enable the input after recording
+                                    } else {
+                                        console.error('Error: No transcription received.');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error transcribing audio:', error);
+                                });
+                            };
+                            reader.readAsDataURL(audioBlob);
+                        };
+                    })
+                    .catch(error => {
+                        console.error('Error accessing microphone:', error);
+                    });
+            }
+        }
+
         const inputField = document.getElementById('user-input');
         const inputContainer = document.querySelector('.input-container');
-    
+        const actionButton = document.querySelector('.action-button');
+
         // Add an event listener to handle focus and blur
         inputField.addEventListener('focus', () => {
             inputContainer.classList.remove('shrink');
         });
-    
+
         inputField.addEventListener('blur', () => {
             if (!inputField.value) {
                 inputContainer.classList.add('shrink');
                 inputField.style.height = '30px'; // Reset height to initial size
             }
         });
-    
+
         // Check when input is not focused
         if (!inputField.value) {
             inputContainer.classList.add('shrink');
             inputField.style.height = '30px'; // Reset height to initial size
         }
-    
+
         // Adjust the height of the input field based on content
         inputField.addEventListener('input', () => {
             if (inputField.value.trim() === "") {
                 inputField.style.height = '30px'; // Reset height to initial size
+                actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
+                actionButton.onclick = toggleRecording;
             } else {
                 inputField.style.height = '30px'; // Start at 30px when typing
                 inputField.style.height = Math.min(inputField.scrollHeight, 150) + 'px';
+                actionButton.innerHTML = '<img src="https://cdn1.iconfinder.com/data/icons/wayfinding-signage/100/Arrow_Up-512.png" alt="Send">';
+                actionButton.onclick = sendMessage;
             }
         });
-    
+
         function displayThinkingIndicator(message) {
             const chatBox = document.getElementById('chat-box');
             const thinkingDiv = document.createElement('div');
@@ -591,8 +755,13 @@
             thinkingDiv.textContent = message;
             chatBox.appendChild(thinkingDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Show disabled send button during thinking phase
+            actionButton.style.display = 'flex';
+            actionButton.innerHTML = '<img src="https://cdn1.iconfinder.com/data/icons/wayfinding-signage/100/Arrow_Up-512.png" alt="Send">';
+            actionButton.classList.add('disabled');
         }
-    
+
         function simulateAiResponse(userMessage, inputField) {
             fetch("/chat", {
                 method: "POST",
@@ -604,7 +773,8 @@
             .then(response => response.json())
             .then(data => {
                 const aiResponse = data.response || "Sorry, I couldn't process your request.";
-                displayAiMessage(aiResponse);
+                const memoryUpdated = data.memory_updated || false;
+                displayAiMessage(aiResponse, memoryUpdated);
         
                 // Remove the "Thinking..." indicator
                 const thinkingDiv = document.querySelector('.thinking');
@@ -620,7 +790,7 @@
             })
             .catch(error => {
                 console.error("Error fetching AI response:", error);
-                displayAiMessage("An error occurred while communicating with the AI.");
+                displayAiMessage("An error occurred while communicating with the AI.", false);
         
                 // Re-enable the input even if there's an error
                 inputField.disabled = false;
