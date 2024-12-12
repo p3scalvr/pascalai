@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>PascalAI: Your Personal AI Companion</title>
-    <!-- Importing Google Font 'Roboto' for a modern look -->
-    <link rel="icon" href="https://pngimg.com/uploads/letter_p/letter_p_PNG14.png" type="image/png">
-
+    <link rel="icon" href="https://i.ibb.co/4p1JTsg/image-1.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&family=Poppins:wght@600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --background-color: #202221; /* Define a CSS variable for the background color */
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #000000;
+            background-color: var(--background-color); /* Use the CSS variable */
             color: #ddd;
             margin: 0;
             padding: 0;
@@ -22,6 +24,7 @@
             overflow: hidden;
             opacity: 0;
             animation: fadeInPage 1s ease-out forwards;
+            overflow-x: hidden; /* Prevent horizontal overflow */
         }
 
         @keyframes fadeInPage {
@@ -30,10 +33,11 @@
         }
 
         header {
-            background-color: #000000;
-            padding: 30px;
+            height: 10px; /* Make header smaller */
+            font-size: 1.2em; /* Adjust font size for smaller header */
+            background-color: var(--background-color); /* Use the CSS variable */
+            padding: 0px;
             text-align: center;
-            font-size: 35px;
             font-weight: 600;
             color: #1e90ff;
             text-shadow: 0 0 20px #1d82e8;
@@ -52,10 +56,9 @@
             padding: 15px;
             overflow-y: auto;
             margin: 20px 0;
-            max-height: 70vh;
-            background-color: #000000;
+            max-height: calc(100vh - 200px); /* Increase height */
+            background-color: var(--background-color); /* Use the CSS variable */
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -66,6 +69,24 @@
             animation: fadeInElement 1s ease-out forwards;
             animation-delay: 1s;
             scroll-behavior: smooth; /* Add smooth scrolling behavior */
+        }
+
+        @media (max-width: 1200px) {
+            #chat-box {
+                max-height: calc(100vh - 150px); /* Adjust height for smaller screens */
+            }
+        }
+
+        @media (max-width: 768px) {
+            #chat-box {
+                max-height: calc(100vh - 100px); /* Adjust height for smaller screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            #chat-box {
+                max-height: calc(100vh - 80px); /* Adjust height for smaller screens */
+            }
         }
 
         /* Hide scrollbar but still allow scrolling */
@@ -94,20 +115,23 @@
             border-radius: 12px;
             font-size: 18px;
             line-height: 1.4;
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
         }
 
         .user-message {
             background-color: #333;
             color: #fff;
             align-self: flex-end;
-            max-width: 70%;
+            max-width: 50%;
             word-wrap: break-word;
             white-space: normal;
+            border-radius: 25px; /* Very rounded corners */
+            padding: 8px 20px; /* Adjust padding for a more rectangular shape */
         }
 
         .ai-message {
             background-color: transparent;
-            color: #bbb;
+            color: #ffffff;
             align-self: flex-start;
             max-width: 70%;
             font-size: 18px; /* Reduced font size */
@@ -142,14 +166,14 @@
             display: flex;
             align-items: center;
             padding: 10px;
-            background-color: #000000;
+            background-color: var(--background-color); /* Use the CSS variable */
             border: 1px solid #444; /* Slight outline around the entire message box */
             position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 700px;
+            bottom: 75px;
+            left: 50%; /* Center horizontally */
+            transform: translateX(-50%); /* Center horizontally */
+            width: calc(100% - 320px); /* Adjust width to fit within viewport */
+            max-width: 700px; /* Ensure max-width is respected */
             border-radius: 25px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Small drop shadow */
             justify-content: space-between;
@@ -157,9 +181,40 @@
             animation: fadeInElement 1s ease-out forwards;
             animation-delay: 1.5s;
             transition: width 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add drop shadow */
         }
 
-        .input-container:focus-within {
+        .input-container.expanded #user-input {
+            width: 90%; /* Expand width when focused */
+        }
+
+        .input-container.shrink #user-input {
+            width: 75%; /* Shrink width when not focused */
+        }
+
+        .input-container {
+            transition: width 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+        }
+
+        @media (max-width: 1200px) {
+            .input-container {
+                width: calc(100% - 270px); /* Adjust width for smaller screens */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .input-container {
+                width: calc(100% - 240px); /* Adjust width for smaller screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .input-container {
+                width: calc(100% - 190px); /* Adjust width for smaller screens */
+            }
+        }
+
+        .input-container:focus-within:not(:has(.logo-container:focus)) {
             border-color: #1e90ff; /* Change border color on focus */
             box-shadow: 0 0 15px rgba(30, 144, 255, 0.7); /* Cool animation on focus */
         }
@@ -168,6 +223,9 @@
             .input-container {
                 position: absolute; /* Change to absolute for mobile */
                 bottom: 10px; /* Adjust as needed */
+                left: 50%; /* Center horizontally */
+                transform: translateX(-50%); /* Center horizontally */
+                width: calc(100% - 40px); /* Adjust width for smaller screens */
             }
             footer {
                 position: static; /* Ensure footer does not overlap */
@@ -179,6 +237,8 @@
         @media (max-width: 480px) {
             .input-container {
                 width: 95%; /* Adjust width for smaller screens */
+                left: 50%; /* Center horizontally */
+                transform: translateX(-50%); /* Center horizontally */
             }
             footer {
                 font-size: 12px; /* Adjust font size for smaller screens */
@@ -186,31 +246,34 @@
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1200px) {
             .input-container {
-                position: absolute; /* Change to absolute for mobile */
-                bottom: 10px; /* Adjust as needed */
+                left: 50%; /* Center horizontally */
+                transform: translateX(-50%); /* Center horizontally */
+                margin-left: 0; /* Remove left margin */
+                width: calc(100% - 320px); /* Adjust width to fit within viewport */
             }
         }
 
         #user-input {
             width: 75%;
             padding: 8px;
-            background: #222;
+            background: #202221;
             border: 1px solid #444;
-            color: #fff;
+            color: #ffffff;
             border-radius: 25px;
             font-size: 16px;
             outline: none;
             box-shadow: none; /* Remove box shadow from input field */
-            transition: height 0.2s ease, width 0.3s ease, background 0.3s ease; /* Smooth height transition */
+            transition: width 0.3s ease, background 0.3s ease; /* Smooth width transition */
             resize: none; /* Prevent resizing */
             overflow-wrap: break-word; /* Wrap text */
             white-space: pre-wrap; /* Preserve whitespace and wrap text */
-            height: 30px; /* Reduced height */
-            max-height: 50px; /* Adjusted maximum height */
-            overflow-y: auto; /* Allow vertical scrolling */
-            margin-left: 20px; /* Move to the right */
+            height: 40px; /* Fixed height */
+            max-height: 40px; /* Fixed maximum height */
+            overflow-y: hidden; /* Prevent vertical scrolling */
+            margin-left: 0px; /* Move to the right */
+            font-family: 'Open Sans', sans-serif; /* Updated font */
         }
 
         /* Hide scrollbar but still allow scrolling */
@@ -259,14 +322,7 @@
         }
 
         footer {
-            background-color: #000000;
-            color: #888;
-            text-align: center;
-            padding: 10px;
-            font-size: 14px;
-            opacity: 0;
-            animation: fadeInFooter 1s ease-out forwards;
-            animation-delay: 2s;
+            display: none; /* Hide footer */
         }
 
         @keyframes fadeInFooter {
@@ -310,53 +366,41 @@
         /* Responsive Styles */
         @media (max-width: 1200px) {
             header {
-                font-size: 2.2em;
+                font-size: 1.8em; /* Adjust font size for smaller screens */
             }
-            #chat-box {
-                padding: 10px;
-                margin-bottom: 100px;
-            }
-            .user-message, .ai-message {
-                font-size: 16px;
-            }
-            #send-btn {
-                font-size: 14px;
+            .input-container {
+                width: calc(100% - 270px); /* Adjust width for smaller screens */
             }
         }
         
         @media (max-width: 768px) {
+            body {
+                margin-left: 0; /* Remove margin for smaller screens */
+            }
+            .sidebar {
+                display: none; /* Hide sidebar on smaller screens */
+            }
             header {
-                font-size: 2em;
+                font-size: 1.5em; /* Adjust font size for smaller screens */
             }
-            .user-message, .ai-message {
-                font-size: 14px;
-                max-width: 85%;
+            .input-container {
+                width: calc(100% - 240px); /* Adjust width for smaller screens */
             }
-            #send-btn {
-                font-size: 14px;
-                padding: 10px 15px;
-            }
-            #user-input {
-                font-size: 14px;
+            footer {
+                left: 0; /* Align to the left */
+                width: 100%; /* Full width */
             }
         }
         
         @media (max-width: 480px) {
             header {
-                font-size: 1.5em;
+                font-size: 1.2em; /* Adjust font size for smaller screens */
             }
-            .user-message, .ai-message {
-                font-size: 12px;
-                max-width: 90%;
+            .input-container {
+                width: calc(100% - 190px); /* Adjust width for smaller screens */
             }
-            #send-btn {
-                font-size: 12px;
-                padding: 8px 12px;
-            }
-            #user-input {
-                font-size: 12px;
-                padding: 12px;
-                width: 80%;
+            footer {
+                font-size: 12px; /* Adjust font size for smaller screens */
             }
         }
 
@@ -436,18 +480,6 @@
             display: none; /* Hide recording indicator */
         }
 
-        .gpu-utilization {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background-color: #1e90ff;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 14px;
-            display: none;
-        }
-
         .memory-updated {
             color: #888; /* More gray color */
             font-size: 14px;
@@ -459,9 +491,6 @@
             background-color: #ffffff;
             border: 2px solid #000000;
             width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -514,6 +543,97 @@
             pointer-events: none;
             opacity: 0.5;
         }
+
+        .scroll-to-bottom {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s, transform 0.3s;
+            display: none; /* Initially hidden */
+        }
+
+        .scroll-to-bottom:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.1); /* Slightly enlarge on hover */
+        }
+
+        .scroll-to-bottom img {
+            width: 20px;
+            height: 20px;
+        }
+        .response-buttons {
+        display: flex;
+        gap: 20px; /* Increase gap between buttons */
+        margin-top: 10px;
+    }
+
+    .response-button {
+        background-color: transparent; /* Change to transparent */
+        border: none; /* Remove border */
+        width: 15px; /* Smaller size */
+        height: 15px; /* Smaller size */
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s;
+    }
+
+    .response-button:hover {
+        transform: scale(1.1); /* Slightly enlarge on hover */
+    }
+
+    .response-button img {
+        width: 15px; /* Adjust size */
+        height: 15px; /* Adjust size */
+    }
+
+    .boo-message {
+        display: none;
+        font-size: 100px;
+        color: red;
+        text-align: center;
+        margin-top: 0%;
+    }
+    .typing-fade {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+    .typing-fade.active {
+        opacity: 1;
+    }
+    .regenerated {
+        color: grey;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    .logo-container {
+        position: absolute;
+        left: -50px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .logo-container img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+
+    .logo-container:hover {
+        transform: translateY(-50%) scale(1.15); /* Ensure it zooms in from the center */
+    }
     </style>
 </head>
 <body>
@@ -521,53 +641,57 @@
          
          
     </header>
+    <div id="boo-message" class="boo-message"></div> <!-- Add BOO message here -->
     <div id="chat-box"></div>
-    <div class="input-container">
-        <textarea id="user-input" placeholder="Message PascalAI" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
-        <div class="action-button" onclick="toggleRecording()"><img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone"></div> <!-- Add action button here -->
+    <div class="input-container shrink" id="input-container">
+        <a href="/" class="logo-container">
+            <img src="https://i.ibb.co/4p1JTsg/image-1.png" alt="Logo">
+        </a>
+        <textarea id="user-input" placeholder="Message PascalAI" onfocus="expandInput()" onblur="shrinkInput()" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+        <div class="action-button" onclick="toggleRecording()"><img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone"></div>
     </div>
-    <div class="gpu-utilization" id="gpu-utilization">GPU Utilization: 0%</div>
-    
-    <footer>
-        <p>Built by <a href="https://github.com/p3scalvr" target="_blank">Pascal</a></p>
-    </footer>
-    
-    <div id="hardware-acceleration-notification" style="display: none; background-color: #1e90ff; color: white; padding: 10px; text-align: center;">
-        For better performance, please enable hardware acceleration in your browser settings.
+    <div class="scroll-to-bottom" id="scroll-to-bottom" onclick="scrollToBottom()">
+        <img src="https://cdn-icons-png.flaticon.com/512/66/66783.png" alt="Scroll to Bottom">
     </div>
-
     <script>
-        let lastUserMessage = null;
-        let lastAiMessage = null;
-        let stopTyping = false;
-        let isRecording = false;
-        let mediaRecorder;
-        let audioChunks = [];
+        let lastUserMessage = ""; // Define the lastUserMessage variable
+        let isRegenerating = false; // Track if a message is being regenerated
+
+        function checkEnter(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault(); // Prevent default Enter behavior
+                sendMessage();
+            } else if (event.key === 'Enter' && event.shiftKey) {
+                event.preventDefault(); // Prevent default Enter behavior
+                const inputField = document.getElementById('user-input');
+                inputField.value += '\n'; // Add a new line
+            }
+        }
+
+        function expandInput() {
+            const inputContainer = document.getElementById('input-container');
+            inputContainer.classList.add('expanded');
+            inputContainer.classList.remove('shrink');
+        }
+
+        function shrinkInput() {
+            const inputContainer = document.getElementById('input-container');
+            inputContainer.classList.add('shrink');
+            inputContainer.classList.remove('expanded');
+        }
 
         function sendMessage() {
             const inputField = document.getElementById('user-input');
-            const inputContainer = document.querySelector('.input-container');
-            const message = inputField.value.trim();
-        
-            // If the message is not empty, proceed to send it
-            if (message !== '') {
-                // Disable input and send button while waiting for the response
-                inputField.disabled = true;
-                const actionButton = document.querySelector('.action-button');
-                actionButton.onclick = null;
-                actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
-                actionButton.classList.add('disabled');
-        
-                displayUserMessage(message);
-                inputField.value = '';
-                inputField.style.height = '30px'; // Reset height to initial size
-                inputContainer.classList.add('shrink'); // Shrink the text box
-                lastUserMessage = message;
-                lastAiMessage = "PascalAI is Thinking...";
-        
-                displayThinkingIndicator(lastAiMessage);
-                simulateAiResponse(message, inputField);
-            }
+            const userMessage = inputField.value.trim();
+            if (userMessage === "") return;
+
+            lastUserMessage = userMessage; // Store the last user message
+            displayUserMessage(userMessage);
+            displayThinkingIndicator("PascalAI is Thinking...");
+            simulateAiResponse(userMessage, inputField);
+
+            inputField.value = "";
+            inputField.disabled = true; // Disable input during AI response generation
         }
 
         function displayUserMessage(message) {
@@ -576,7 +700,29 @@
             userMessageDiv.classList.add('user-message');
             userMessageDiv.textContent = message;
             chatBox.appendChild(userMessageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
+            chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+        }
+
+        function toggleRecording() {
+            // Implement the toggleRecording function
+        }
+
+        function scrollToBottom() {
+            const chatBox = document.getElementById('chat-box');
+            chatBox.scrollTo({
+                top: chatBox.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+
+        function toggleScrollButton() {
+            const chatBox = document.getElementById('chat-box');
+            const scrollButton = document.getElementById('scroll-to-bottom');
+            if (chatBox.scrollTop < chatBox.scrollHeight - chatBox.clientHeight - 100) {
+                scrollButton.style.display = 'flex';
+            } else {
+                scrollButton.style.display = 'none';
+            }
         }
 
         function displayAiMessage(message, memoryUpdated) {
@@ -600,12 +746,13 @@
     
         function liveTextRendering(text, element, memoryUpdated) {
             let index = 0;
-            const baseSpeed = text.length < 100 ? 10 : 30; // Faster speed for short responses
+            const baseSpeed = text.length < 100 ? 50 : 25; // Faster speed for short responses
             const speedFactor = Math.max(1, Math.floor(text.length / 100)); // Adjust speed based on message length
             let isBold = false;
             stopTyping = false;
 
             const actionButton = document.querySelector('.action-button');
+            const inputField = document.getElementById('user-input');
             actionButton.style.display = 'flex';
             actionButton.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/512/61/61449.png" alt="Pause">'; // Pause button icon
             actionButton.classList.remove('disabled');
@@ -613,7 +760,12 @@
                 stopTyping = true;
                 actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
                 actionButton.onclick = toggleRecording;
+                createResponseButtons(element.parentElement); // Show response buttons when paused
             };
+
+            const typingFade = document.createElement('span');
+            typingFade.classList.add('typing-fade');
+            element.appendChild(typingFade);
 
             function type() {
                 if (index < text.length && !stopTyping) {
@@ -633,12 +785,15 @@
                         element.innerHTML += char;
                     }
                     index++;
+                    typingFade.classList.add('active');
                     setTimeout(type, baseSpeed / speedFactor);
                     element.parentElement.parentElement.scrollTop = element.parentElement.parentElement.scrollHeight; // Scroll to the bottom
                 } else {
+                    typingFade.classList.remove('active');
                     actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
                     actionButton.classList.remove('disabled');
                     actionButton.onclick = toggleRecording;
+                    createResponseButtons(element.parentElement); // Show response buttons when finished
                     if (memoryUpdated) {
                         const memoryUpdatedDiv = document.createElement('div');
                         memoryUpdatedDiv.classList.add('memory-updated');
@@ -647,106 +802,11 @@
                         memoryUpdatedDiv.style.display = 'block';
                     }
                     inputField.disabled = false; // Re-enable the input
+                    isRegenerating = false; // Reset regenerating flag
                 }
             }
             type();
         }
-
-        function toggleRecording() {
-            const actionButton = document.querySelector('.action-button');
-            const inputField = document.getElementById('user-input');
-
-            if (isRecording) {
-                mediaRecorder.stop();
-                isRecording = false;
-                actionButton.classList.remove('recording');
-                actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
-                inputField.disabled = false; // Re-enable the input
-            } else {
-                navigator.mediaDevices.getUserMedia({ audio: true })
-                    .then(stream => {
-                        mediaRecorder = new MediaRecorder(stream);
-                        mediaRecorder.start();
-                        isRecording = true;
-                        actionButton.classList.add('recording');
-                        actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
-                        inputField.disabled = true; // Disable the input during recording
-                        mediaRecorder.ondataavailable = event => {
-                            audioChunks.push(event.data);
-                        };
-                        mediaRecorder.onstop = () => {
-                            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                            const reader = new FileReader();
-                            reader.onload = () => {
-                                const base64AudioMessage = reader.result.split(',')[1];
-                                fetch('/transcribe', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({ audio: base64AudioMessage })
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.transcription) {
-                                        inputField.value = data.transcription;
-                                        inputField.style.height = 'auto';
-                                        inputField.style.height = Math.min(inputField.scrollHeight, 150) + 'px';
-                                        actionButton.innerHTML = '<img src="https://cdn1.iconfinder.com/data/icons/wayfinding-signage/100/Arrow_Up-512.png" alt="Send">';
-                                        actionButton.onclick = sendMessage;
-                                        inputField.disabled = false; // Re-enable the input after recording
-                                    } else {
-                                        console.error('Error: No transcription received.');
-                                    }
-                                })
-                                .catch(error => {
-                                    console.error('Error transcribing audio:', error);
-                                });
-                            };
-                            reader.readAsDataURL(audioBlob);
-                        };
-                    })
-                    .catch(error => {
-                        console.error('Error accessing microphone:', error);
-                    });
-            }
-        }
-
-        const inputField = document.getElementById('user-input');
-        const inputContainer = document.querySelector('.input-container');
-        const actionButton = document.querySelector('.action-button');
-
-        // Add an event listener to handle focus and blur
-        inputField.addEventListener('focus', () => {
-            inputContainer.classList.remove('shrink');
-        });
-
-        inputField.addEventListener('blur', () => {
-            if (!inputField.value) {
-                inputContainer.classList.add('shrink');
-                inputField.style.height = '30px'; // Reset height to initial size
-            }
-        });
-
-        // Check when input is not focused
-        if (!inputField.value) {
-            inputContainer.classList.add('shrink');
-            inputField.style.height = '30px'; // Reset height to initial size
-        }
-
-        // Adjust the height of the input field based on content
-        inputField.addEventListener('input', () => {
-            if (inputField.value.trim() === "") {
-                inputField.style.height = '30px'; // Reset height to initial size
-                actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
-                actionButton.onclick = toggleRecording;
-            } else {
-                inputField.style.height = '30px'; // Start at 30px when typing
-                inputField.style.height = Math.min(inputField.scrollHeight, 150) + 'px';
-                actionButton.innerHTML = '<img src="https://cdn1.iconfinder.com/data/icons/wayfinding-signage/100/Arrow_Up-512.png" alt="Send">';
-                actionButton.onclick = sendMessage;
-            }
-        });
 
         function displayThinkingIndicator(message) {
             const chatBox = document.getElementById('chat-box');
@@ -757,13 +817,62 @@
             chatBox.scrollTop = chatBox.scrollHeight;
 
             // Show disabled send button during thinking phase
+            const actionButton = document.querySelector('.action-button');
             actionButton.style.display = 'flex';
             actionButton.innerHTML = '<img src="https://cdn1.iconfinder.com/data/icons/wayfinding-signage/100/Arrow_Up-512.png" alt="Send">';
             actionButton.classList.add('disabled');
         }
 
         function simulateAiResponse(userMessage, inputField) {
-            fetch("/chat", {
+            // Check for specific questions and provide custom responses
+            const customResponses = {
+                "What are you": "I am PascalAI, a virtual assistant.",
+                "What are you?": "I am PascalAI, a virtual assistant.",
+                "what are you": "I am PascalAI, a virtual assistant.",
+                "What are you": "I am PascalAI, a virtual assistant.",
+
+                "who made you": "I was created by Pascal.",
+                "Who made you": "I was created by Pascal.",
+                "who made you?": "I was created by Pascal.",
+                "Who made you?": "I was created by Pascal.",
+
+                "who are you": "I am PascalAI, a virtual assistant.",
+                "Who are you": "I am PascalAI, a virtual assistant.",
+                "who are you?": "I am PascalAI, a virtual assistant.",
+                "Who are you?": "I am PascalAI, a virtual assistant.",
+
+                "who is pascal": "Pascal is the creator of PascalAI.",
+                "Who is Pascal": "Pascal is the creator of PascalAI.",
+                "Who is pascal": "Pascal is the creator of PascalAI.",
+                "Who is Pascal": "Pascal is the creator of PascalAI.",
+                "who is pascal?": "Pascal is the creator of PascalAI.",
+                "Who is Pascal?": "Pascal is the creator of PascalAI.",
+                "Who is pascal?": "Pascal is the creator of PascalAI.",
+                "who is Pascal?": "Pascal is the creator of PascalAI.",
+
+                "what is your name": "My name is PascalAI.",
+                "What is your name": "My name is PascalAI.",
+                "what is your name?": "My name is PascalAI.",
+                "What is your name?": "My name is PascalAI.",
+
+                "satvik": "Satvik loves eating curry",
+                "how much women does pascal pull": "a lot of women beta",
+                "who is akshit": "the biggest dumbass on this planet"
+            };
+
+            if (customResponses[userMessage]) {
+                // Remove the "Thinking..." indicator if it exists
+                const thinkingDiv = document.querySelector('.thinking');
+                if (thinkingDiv) {
+                    thinkingDiv.remove();
+                }
+
+                displayAiMessage(customResponses[userMessage], false);
+                inputField.disabled = false;
+                return Promise.resolve(); // Return a resolved promise for custom responses
+            }
+
+            return fetch("/chat", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -784,9 +893,6 @@
         
                 // Re-enable the input
                 inputField.disabled = false;
-
-                // Update GPU utilization
-                updateGpuUtilization();
             })
             .catch(error => {
                 console.error("Error fetching AI response:", error);
@@ -796,14 +902,62 @@
                 inputField.disabled = false;
             });
         }
-    
-        function checkEnter(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault(); // Prevent default Enter behavior
-                sendMessage();
-            }
+
+        function createResponseButtons(element) {
+            // Prevent button duplication
+            if (element.querySelector('.response-buttons')) return;
+
+            const responseButtonsDiv = document.createElement('div');
+            responseButtonsDiv.classList.add('response-buttons');
+
+            const regenerateButton = document.createElement('div');
+            regenerateButton.classList.add('response-button');
+            regenerateButton.innerHTML = '<img src="https://i.ibb.co/SVKsVqX/regenerate.png" alt="Regenerate">';
+            regenerateButton.onclick = () => {
+                if (lastUserMessage && !isRegenerating) {
+                    isRegenerating = true; // Set regenerating flag
+                    regenerateButton.classList.add('disabled');
+                    const inputField = document.getElementById('user-input');
+                    inputField.disabled = true; // Disable input during regeneration
+                    displayUserMessage(lastUserMessage);
+                    displayThinkingIndicator("PascalAI is Thinking...");
+                    simulateAiResponse(lastUserMessage, inputField).finally(() => {
+                        regenerateButton.classList.remove('disabled');
+                    });
+                }
+            };
+
+            const thumbsUpButton = document.createElement('div');
+            thumbsUpButton.classList.add('response-button');
+            thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Up">';
+            thumbsUpButton.onclick = () => {
+                thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/cD3ZZSn/thumb-2.png" alt="Thumbs Up">';
+                thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
+            };
+
+            const thumbsDownButton = document.createElement('div');
+            thumbsDownButton.classList.add('response-button');
+            thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
+            thumbsDownButton.onclick = () => {
+                thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/Ksh43S1/thumb-1.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
+                thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Up">';
+            };
+
+            responseButtonsDiv.appendChild(regenerateButton);
+            responseButtonsDiv.appendChild(thumbsUpButton);
+            responseButtonsDiv.appendChild(thumbsDownButton);
+
+            element.appendChild(responseButtonsDiv);
         }
-    
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
         function checkHardwareAcceleration() {
             const canvas = document.createElement('canvas');
             const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -816,34 +970,35 @@
             }
         }
 
-        function updateGpuUtilization() {
-            fetch("/gpu-utilization")
-                .then(response => response.json())
-                .then(data => {
-                    const gpuUtilization = data.gpu_utilization;
-                    const gpuUtilizationDiv = document.getElementById('gpu-utilization');
-                    gpuUtilizationDiv.textContent = `GPU Utilization: ${gpuUtilization}%`;
-                    gpuUtilizationDiv.style.display = 'block';
-                })
-                .catch(error => {
-                    console.error("Error fetching GPU utilization:", error);
-                });
-        }
-
         window.onload = function() {
             document.body.style.opacity = 1;
             checkHardwareAcceleration();
             const urlParams = new URLSearchParams(window.location.search);
             const message = urlParams.get('message-user');
-            if (message) {
-                displayUserMessage(message);
-                displayThinkingIndicator("PascalAI is Thinking...");
-                simulateAiResponse(message, document.getElementById('user-input'));
+            const deviceId = getCookie('device_id'); // Function to get the device ID from cookies
+
+            if (deviceId === '94e4ba92-5814-432b-8357-ab3c72a18b68') {
+                document.getElementById('boo-message').style.display = 'block';
             } else {
-                // Clear chat if no message is present in the URL
-                document.getElementById('chat-box').innerHTML = '';
+                if (message) {
+                    displayUserMessage(message);
+                    displayThinkingIndicator("PascalAI is Thinking...");
+                    simulateAiResponse(message, document.getElementById('user-input'));
+                } else {
+                    // Clear chat if no message is present in the URL
+                    document.getElementById('chat-box').innerHTML = '';
+                }
             }
+            toggleScrollButton();
         };
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        document.getElementById('chat-box').addEventListener('scroll', toggleScrollButton);
     </script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>

@@ -17,12 +17,15 @@ def get_device_id():
     device_id = request.cookies.get('device_id')
     if not device_id:
         device_id = str(uuid.uuid4())
+        print(f"New device connected: {device_id}")  # Print new device ID to terminal
     return device_id
 
 @app.route("/")
 def home():
-    # Serves the homepage (index.html)
-    return render_template("index.html")  
+    device_id = get_device_id()
+    response = make_response(render_template("index.html"))
+    response.set_cookie('device_id', device_id, max_age=60*60*24*30)  # Set cookie to expire in 30 days
+    return response
 
 @app.route('/static/<path:path>')
 def send_static(path):
@@ -34,12 +37,16 @@ def chat():
     user_input = request.json.get("prompt")
     device_id = get_device_id()
     if user_input:
-        print(f"\nUser: {user_input}")  # Print user input to terminal
-        response, memory_updated = get_ai_response(user_input, device_id)
-        print(f"AI: {response}")  # Print AI response to terminal
-        response = jsonify({"response": response, "memory_updated": memory_updated})
-        response.set_cookie('device_id', device_id, max_age=60*60*24*30)  # Set cookie to expire in 30 days
-        return response
+        print(f"\n{device_id}: {user_input}")  # Print user input with device ID to terminal
+        try:
+            response, memory_updated = get_ai_response(user_input, device_id)
+            print(f"AI: {response}")  # Print AI response to terminal
+            response = jsonify({"response": response, "memory_updated": memory_updated})
+            response.set_cookie('device_id', device_id, max_age=60*60*24*30)  # Set cookie to expire in 30 days
+            return response
+        except Exception as e:
+            print(f"Error fetching AI response: {e}")
+            return jsonify({"response": "An error occurred while fetching the AI response."})
     return jsonify({"response": "No prompt received."})
 
 @app.route("/ai-page")
@@ -100,16 +107,6 @@ def send_email():
 @app.route('/check-mic-permission', methods=['GET'])
 def check_mic_permission():
     return jsonify({"permission": "granted"})
-
-@app.route('/gpu-utilization', methods=['GET'])
-def gpu_utilization():
-    try:
-        # Simulate GPU utilization data
-        gpu_utilization = 50  # Example value
-        return jsonify({"gpu_utilization": gpu_utilization})
-    except Exception as e:
-        print(f"An error occurred while fetching GPU utilization: {e}")
-        return jsonify({"error": "An error occurred while fetching GPU utilization."})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

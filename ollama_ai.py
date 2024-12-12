@@ -3,17 +3,8 @@ import torch  # PyTorch library, if Ollama internally uses PyTorch/TensorFlow
 import json
 import time
 import requests
-
-# Check if GPU is available and set device
-def get_device():
-    if torch.cuda.is_available():
-        gpu_properties = torch.cuda.get_device_properties(0)
-        if gpu_properties.total_memory >= 4 * 1024 * 1024 * 1024:  # Check if GPU has at least 4GB of memory
-            return "cuda"
-    return "cpu"
-
-device = get_device()
-print(f"Using device: {device}")  # Prints "cuda" if GPU is available and sufficient, otherwise "cpu"
+from datetime import datetime
+import pytz
 
 # Memory storage for interaction history by device ID
 interaction_histories = {}
@@ -43,9 +34,33 @@ def verify_response(response: str):
         print(f"Verification error: {e}")
         return response
 
+# Function to get the current date and time based on the user's timezone
+def get_current_datetime():
+    user_timezone = pytz.timezone('America/New_York')  # Replace with the user's actual timezone
+    now = datetime.now(user_timezone)
+    return now.strftime("%A, %B %d, %Y %I:%M:%S %p")
+
+# Function to check for easter eggs
+def check_easter_eggs(prompt: str):
+    easter_eggs = {
+        "who is pascal": "Pascal is a very hot man",
+        "who is joe biden": "'J' This is a very common question Pascal asked PascalAI for debugging and testing",
+        "what day is it": f"Today is {get_current_datetime().split(',')[0]}, {get_current_datetime().split(',')[1].strip()}.",
+        "what time is it": f"The current time is {get_current_datetime().split()[-2]} {get_current_datetime().split()[-1]}."
+    }
+    for key, value in easter_eggs.items():
+        if key in prompt.lower():
+            return value
+    return None
+    
 # Function to interact with Ollama's AI model
 def get_ai_response(prompt: str, device_id: str):
     try:
+        # Check for easter eggs
+        easter_egg_response = check_easter_eggs(prompt)
+        if easter_egg_response:
+            return easter_egg_response, False
+
         # Retrieve or initialize interaction history for the device ID
         if device_id not in interaction_histories:
             interaction_histories[device_id] = []
@@ -66,8 +81,6 @@ def get_ai_response(prompt: str, device_id: str):
 
         messages.append({"role": "user", "content": prompt})
 
-        # Log the payload being sent
-        print("Request Payload:", json.dumps(messages, indent=2))
 
         # Measure start time
         start_time = time.time()
@@ -77,7 +90,7 @@ def get_ai_response(prompt: str, device_id: str):
 
         # Measure end time
         end_time = time.time()
-        print(f"AI response time: {end_time - start_time} seconds")
+        print(f"AI response time: {end_time - start_time:.2f} seconds")
 
         # Validate the response
         if response.get("message") and response["message"].get("content"):
@@ -90,7 +103,7 @@ def get_ai_response(prompt: str, device_id: str):
 
         # Check if the response contains important information (e.g., a name) and the user wants it to be remembered
         memory_updated = False
-        if "remember" in prompt.lower() or "my name is" in prompt.lower():
+        if "remember" in prompt.lower() or "my name is" in prompt.lower() or "don't forget" in prompt.lower() or "i like" in prompt.lower():
             memory_updated = True
 
         # Store interaction history
