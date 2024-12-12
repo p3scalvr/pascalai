@@ -33,7 +33,7 @@
         }
 
         header {
-            height: 10px; /* Make header smaller */
+            height: -50px; /* Make header smaller */
             font-size: 1.2em; /* Adjust font size for smaller header */
             background-color: var(--background-color); /* Use the CSS variable */
             padding: 0px;
@@ -57,18 +57,20 @@
             overflow-y: auto;
             margin: 20px 0;
             max-height: calc(100vh - 200px); /* Increase height */
-            background-color: var(--background-color); /* Use the CSS variable */
+            background-color: #191A1A; /* Change background color */
             border-radius: 10px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            margin-bottom: 120px;
+            margin-bottom: 200px; /* Move down by increasing bottom margin */
             word-wrap: break-word;
             white-space: normal;
             opacity: 0;
             animation: fadeInElement 1s ease-out forwards;
             animation-delay: 1s;
             scroll-behavior: smooth; /* Add smooth scrolling behavior */
+            margin-left: 20px; /* Move to the right a bit */
+            position: relative; /* Ensure input container is positioned correctly */
         }
 
         @media (max-width: 1200px) {
@@ -182,6 +184,7 @@
             animation-delay: 1.5s;
             transition: width 0.3s ease, box-shadow 0.3s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add drop shadow */
+            z-index: 1001; /* Ensure input container is above sidebar */
         }
 
         .input-container.expanded #user-input {
@@ -204,33 +207,11 @@
 
         @media (max-width: 768px) {
             .input-container {
-                width: calc(100% - 240px); /* Adjust width for smaller screens */
-            }
-        }
-
-        @media (max-width: 480px) {
-            .input-container {
-                width: calc(100% - 190px); /* Adjust width for smaller screens */
-            }
-        }
-
-        .input-container:focus-within:not(:has(.logo-container:focus)) {
-            border-color: #1e90ff; /* Change border color on focus */
-            box-shadow: 0 0 15px rgba(30, 144, 255, 0.7); /* Cool animation on focus */
-        }
-
-        @media (max-width: 768px) {
-            .input-container {
                 position: absolute; /* Change to absolute for mobile */
                 bottom: 10px; /* Adjust as needed */
                 left: 50%; /* Center horizontally */
                 transform: translateX(-50%); /* Center horizontally */
                 width: calc(100% - 40px); /* Adjust width for smaller screens */
-            }
-            footer {
-                position: static; /* Ensure footer does not overlap */
-                margin-top: 20px; /* Add space above footer */
-                display: none; /* Hide footer on mobile */
             }
         }
 
@@ -239,10 +220,6 @@
                 width: 95%; /* Adjust width for smaller screens */
                 left: 50%; /* Center horizontally */
                 transform: translateX(-50%); /* Center horizontally */
-            }
-            footer {
-                font-size: 12px; /* Adjust font size for smaller screens */
-                display: none; /* Hide footer on mobile */
             }
         }
 
@@ -616,390 +593,502 @@
         font-size: 12px;
         margin-bottom: 5px;
     }
-    .logo-container {
-        position: absolute;
-        left: -50px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        transition: transform 0.3s ease;
+
+    .sidebar {
+        width: 150px; /* Make sidebar smaller */
+        height: 100vh;
+        background: #202222; /* Change sidebar color */
+        position: fixed;
+        left: 0;
+        top: 0;
+        padding: 20px;
+        z-index: 1000; /* Ensure sidebar is above other elements */
     }
 
-    .logo-container img {
+    .main-content {
+        margin-left: 250px; /* Adjust margin to account for sidebar width */
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 20px;
+        background-color: #191A1A; /* Change background color */
+        color: #000;
+    }
+
+    .input-wrapper {
+        position: fixed; /* Ensure it stays fixed at the bottom */
+        bottom: -50px;
+        left: calc(50% + 80px); /* Adjust to account for sidebar width */
+        transform: translateX(-50%);
+        width: calc(100% - 250px); /* Ensure it doesn't overlap the sidebar */
+        display: flex;
+        justify-content: center;
+        z-index: 1002; /* Ensure input wrapper is above chat messages */
+    }
+
+    .input-container {
+        width: 100%; /* Adjust width to fit within viewport */
+        max-width: 700px; /* Ensure max-width is respected */
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        background-color: var(--background-color); /* Use the CSS variable */
+        border: 1px solid #444; /* Slight outline around the entire message box */
+        border-radius: 25px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Small drop shadow */
+        justify-content: space-between;
+        transition: width 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add drop shadow */;
+    }
+
+    .sidebar-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .sidebar-header img {
         width: 40px;
         height: 40px;
         border-radius: 50%;
+        margin-right: 10px;
     }
 
-    .logo-container:hover {
-        transform: translateY(-50%) scale(1.15); /* Ensure it zooms in from the center */
+    .sidebar-header h1 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.5em;
+        color: #1e90ff;
+        margin: 0;
+        text-decoration: none; /* Remove underline */
+    }
+
+    .circle-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px; /* Make button smaller */
+        height: 40px; /* Make button smaller */
+        background-color: #2D2F2F; /* Change color to #2D2F2F */
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        margin: 20px auto; /* Center horizontally and add margin */
+        position: relative;
+        left: 10px; /* Move slightly to the right */
+        transition: background-color 0.3s ease; /* Smooth transition for background color */
+    }
+
+    .circle-button img {
+        width: 20px; /* Adjust icon size */
+        height: 20px; /* Adjust icon size */
+    }
+
+    .circle-button:hover {
+        background-color: #3a3b3b; /* Slightly lighter grey color on hover */
+    }
+
+    @media (max-width: 1200px) {
+        .input-wrapper {
+            left: calc(50% + 110px); /* Adjust to account for sidebar width */
+            width: calc(100% - 220px); /* Adjust width for smaller screens */
+        }
+    }
+
+    @media (max-width: 768px) {
+        .input-wrapper {
+            left: calc(50% + 100px); /* Adjust to account for sidebar width */
+            width: calc(100% - 200px); /* Adjust width for smaller screens */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .input-wrapper {
+            left: calc(50% + 75px); /* Adjust to account for sidebar width */
+            width: calc(100% - 150px); /* Adjust width for smaller screens */
+        }
     }
     </style>
 </head>
 <body>
-    <header>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <a href="/" onclick="location.reload(); return false;" style="display: flex; align-items: center; text-decoration: none;">
+                <img src="https://i.ibb.co/4p1JTsg/image-1.png" alt="Logo">
+                <h1>PascalAI</h1>
+            </a>
+        </div>
+        <button class="circle-button">
+            <img src="https://i.ibb.co/2qJKqp8/image-4.png" alt="Icon">
+        </button>
+        <!-- Sidebar content -->
+    </div>
+    <div class="main-content">
+        <header>
          
          
     </header>
     <div id="boo-message" class="boo-message"></div> <!-- Add BOO message here -->
-    <div id="chat-box"></div>
-    <div class="input-container shrink" id="input-container">
-        <a href="/" class="logo-container">
-            <img src="https://i.ibb.co/4p1JTsg/image-1.png" alt="Logo">
-        </a>
-        <textarea id="user-input" placeholder="Message PascalAI" onfocus="expandInput()" onblur="shrinkInput()" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
-        <div class="action-button" onclick="toggleRecording()"><img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone"></div>
+    <div id="chat-box">
+        
+    </div>
+    <div class="input-wrapper">
+        <div class="input-container shrink" id="input-container">
+            <textarea id="user-input" placeholder="Message PascalAI" onfocus="expandInput()" onblur="shrinkInput()" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+            <div class="action-button" onclick="toggleRecording()"><img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone"></div>
+        </div>
+    </div>
     </div>
     <div class="scroll-to-bottom" id="scroll-to-bottom" onclick="scrollToBottom()">
         <img src="https://cdn-icons-png.flaticon.com/512/66/66783.png" alt="Scroll to Bottom">
     </div>
     <script>
-        let lastUserMessage = ""; // Define the lastUserMessage variable
-        let isRegenerating = false; // Track if a message is being regenerated
+    let lastUserMessage = ""; // Define the lastUserMessage variable
+    let isRegenerating = false; // Track if a message is being regenerated
 
-        function checkEnter(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault(); // Prevent default Enter behavior
-                sendMessage();
-            } else if (event.key === 'Enter' && event.shiftKey) {
-                event.preventDefault(); // Prevent default Enter behavior
-                const inputField = document.getElementById('user-input');
-                inputField.value += '\n'; // Add a new line
-            }
-        }
-
-        function expandInput() {
-            const inputContainer = document.getElementById('input-container');
-            inputContainer.classList.add('expanded');
-            inputContainer.classList.remove('shrink');
-        }
-
-        function shrinkInput() {
-            const inputContainer = document.getElementById('input-container');
-            inputContainer.classList.add('shrink');
-            inputContainer.classList.remove('expanded');
-        }
-
-        function sendMessage() {
+    function checkEnter(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault(); // Prevent default Enter behavior
+            sendMessage();
+        } else if (event.key === 'Enter' && event.shiftKey) {
+            event.preventDefault(); // Prevent default Enter behavior
             const inputField = document.getElementById('user-input');
-            const userMessage = inputField.value.trim();
-            if (userMessage === "") return;
-
-            lastUserMessage = userMessage; // Store the last user message
-            displayUserMessage(userMessage);
-            displayThinkingIndicator("PascalAI is Thinking...");
-            simulateAiResponse(userMessage, inputField);
-
-            inputField.value = "";
-            inputField.disabled = true; // Disable input during AI response generation
+            inputField.value += '\n'; // Add a new line
         }
+    }
 
-        function displayUserMessage(message) {
-            const chatBox = document.getElementById('chat-box');
-            const userMessageDiv = document.createElement('div');
-            userMessageDiv.classList.add('user-message');
-            userMessageDiv.textContent = message;
-            chatBox.appendChild(userMessageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
-        }
+    function expandInput() {
+        const inputContainer = document.getElementById('input-container');
+        inputContainer.classList.add('expanded');
+        inputContainer.classList.remove('shrink');
+    }
 
-        function toggleRecording() {
-            // Implement the toggleRecording function
-        }
+    function shrinkInput() {
+        const inputContainer = document.getElementById('input-container');
+        inputContainer.classList.add('shrink');
+        inputContainer.classList.remove('expanded');
+    }
 
-        function scrollToBottom() {
-            const chatBox = document.getElementById('chat-box');
-            chatBox.scrollTo({
-                top: chatBox.scrollHeight,
-                behavior: 'smooth'
-            });
-        }
+    function sendMessage() {
+        const inputField = document.getElementById('user-input');
+        const userMessage = inputField.value.trim();
+        if (userMessage === "") return;
 
-        function toggleScrollButton() {
-            const chatBox = document.getElementById('chat-box');
-            const scrollButton = document.getElementById('scroll-to-bottom');
-            if (chatBox.scrollTop < chatBox.scrollHeight - chatBox.clientHeight - 100) {
-                scrollButton.style.display = 'flex';
-            } else {
-                scrollButton.style.display = 'none';
-            }
-        }
+        lastUserMessage = userMessage; // Store the last user message
+        displayUserMessage(userMessage);
+        displayThinkingIndicator("PascalAI is Thinking...");
+        simulateAiResponse(userMessage, inputField);
 
-        function displayAiMessage(message, memoryUpdated) {
-            const chatBox = document.getElementById('chat-box');
-            const aiMessageDiv = document.createElement('div');
-            aiMessageDiv.classList.add('ai-message');
-        
-            const aiNameDiv = document.createElement('div');
-            aiNameDiv.classList.add('ai-name');
-            aiNameDiv.textContent = 'PascalAI:';
-        
-            const messageDiv = document.createElement('div');
-            aiMessageDiv.appendChild(aiNameDiv);
-            aiMessageDiv.appendChild(messageDiv);
-            chatBox.appendChild(aiMessageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
-        
-            // Call the live text rendering function
-            liveTextRendering(message, messageDiv, memoryUpdated);
+        inputField.value = "";
+        inputField.disabled = true; // Disable input during AI response generation
+    }
+
+    function displayUserMessage(message) {
+        const chatBox = document.getElementById('chat-box');
+        const userMessageDiv = document.createElement('div');
+        userMessageDiv.classList.add('user-message');
+        userMessageDiv.textContent = message;
+        chatBox.appendChild(userMessageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+    }
+
+    function toggleRecording() {
+        // Implement the toggleRecording function
+    }
+
+    function scrollToBottom() {
+        const chatBox = document.getElementById('chat-box');
+        chatBox.scrollTo({
+            top: chatBox.scrollHeight,
+            behavior: 'smooth'
+        });
+    }
+
+    function toggleScrollButton() {
+        const chatBox = document.getElementById('chat-box');
+        const scrollButton = document.getElementById('scroll-to-bottom');
+        if (chatBox.scrollTop < chatBox.scrollHeight - chatBox.clientHeight - 100) {
+            scrollButton.style.display = 'flex';
+        } else {
+            scrollButton.style.display = 'none';
         }
+    }
+
+    function displayAiMessage(message, memoryUpdated) {
+        const chatBox = document.getElementById('chat-box');
+        const aiMessageDiv = document.createElement('div');
+        aiMessageDiv.classList.add('ai-message');
     
-        function liveTextRendering(text, element, memoryUpdated) {
-            let index = 0;
-            const baseSpeed = text.length < 100 ? 50 : 25; // Faster speed for short responses
-            const speedFactor = Math.max(1, Math.floor(text.length / 100)); // Adjust speed based on message length
-            let isBold = false;
-            stopTyping = false;
+        const aiNameDiv = document.createElement('div');
+        aiNameDiv.classList.add('ai-name');
+        aiNameDiv.textContent = 'PascalAI:';
+    
+        const messageDiv = document.createElement('div');
+        aiMessageDiv.appendChild(aiNameDiv);
+        aiMessageDiv.appendChild(messageDiv);
+        chatBox.appendChild(aiMessageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+    
+        // Call the live text rendering function
+        liveTextRendering(message, messageDiv, memoryUpdated);
+    }
 
-            const actionButton = document.querySelector('.action-button');
-            const inputField = document.getElementById('user-input');
-            actionButton.style.display = 'flex';
-            actionButton.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/512/61/61449.png" alt="Pause">'; // Pause button icon
-            actionButton.classList.remove('disabled');
-            actionButton.onclick = () => {
-                stopTyping = true;
-                actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
-                actionButton.onclick = toggleRecording;
-                createResponseButtons(element.parentElement); // Show response buttons when paused
-            };
+    function liveTextRendering(text, element, memoryUpdated) {
+        let index = 0;
+        const baseSpeed = text.length < 100 ? 20 : 10; // Faster speed for short responses
+        const speedFactor = Math.max(1, Math.floor(text.length / 100)); // Adjust speed based on message length
+        let isBold = false;
+        stopTyping = false;
 
-            const typingFade = document.createElement('span');
-            typingFade.classList.add('typing-fade');
-            element.appendChild(typingFade);
-
-            function type() {
-                if (index < text.length && !stopTyping) {
-                    let char = text.charAt(index);
-                    if (char === '\n') {
-                        element.innerHTML += '<br>'; // Add line break for new paragraphs
-                    } else if (char === '*' && text.charAt(index + 1) === '*') {
-                        if (isBold) {
-                            element.innerHTML += '</strong>'; // End bold text
-                            isBold = false;
-                        } else {
-                            element.innerHTML += '<strong>'; // Start bold text
-                            isBold = true;
-                        }
-                        index++;
-                    } else {
-                        element.innerHTML += char;
-                    }
-                    index++;
-                    typingFade.classList.add('active');
-                    setTimeout(type, baseSpeed / speedFactor);
-                    element.parentElement.parentElement.scrollTop = element.parentElement.parentElement.scrollHeight; // Scroll to the bottom
-                } else {
-                    typingFade.classList.remove('active');
-                    actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
-                    actionButton.classList.remove('disabled');
-                    actionButton.onclick = toggleRecording;
-                    createResponseButtons(element.parentElement); // Show response buttons when finished
-                    if (memoryUpdated) {
-                        const memoryUpdatedDiv = document.createElement('div');
-                        memoryUpdatedDiv.classList.add('memory-updated');
-                        memoryUpdatedDiv.textContent = '*Memory Updated*';
-                        element.parentElement.appendChild(memoryUpdatedDiv);
-                        memoryUpdatedDiv.style.display = 'block';
-                    }
-                    inputField.disabled = false; // Re-enable the input
-                    isRegenerating = false; // Reset regenerating flag
-                }
-            }
-            type();
-        }
-
-        function displayThinkingIndicator(message) {
-            const chatBox = document.getElementById('chat-box');
-            const thinkingDiv = document.createElement('div');
-            thinkingDiv.classList.add('thinking');
-            thinkingDiv.textContent = message;
-            chatBox.appendChild(thinkingDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            // Show disabled send button during thinking phase
-            const actionButton = document.querySelector('.action-button');
-            actionButton.style.display = 'flex';
-            actionButton.innerHTML = '<img src="https://cdn1.iconfinder.com/data/icons/wayfinding-signage/100/Arrow_Up-512.png" alt="Send">';
-            actionButton.classList.add('disabled');
-        }
-
-        function simulateAiResponse(userMessage, inputField) {
-            // Check for specific questions and provide custom responses
-            const customResponses = {
-                "What are you": "I am PascalAI, a virtual assistant.",
-                "What are you?": "I am PascalAI, a virtual assistant.",
-                "what are you": "I am PascalAI, a virtual assistant.",
-                "What are you": "I am PascalAI, a virtual assistant.",
-
-                "who made you": "I was created by Pascal.",
-                "Who made you": "I was created by Pascal.",
-                "who made you?": "I was created by Pascal.",
-                "Who made you?": "I was created by Pascal.",
-
-                "who are you": "I am PascalAI, a virtual assistant.",
-                "Who are you": "I am PascalAI, a virtual assistant.",
-                "who are you?": "I am PascalAI, a virtual assistant.",
-                "Who are you?": "I am PascalAI, a virtual assistant.",
-
-                "who is pascal": "Pascal is the creator of PascalAI.",
-                "Who is Pascal": "Pascal is the creator of PascalAI.",
-                "Who is pascal": "Pascal is the creator of PascalAI.",
-                "Who is Pascal": "Pascal is the creator of PascalAI.",
-                "who is pascal?": "Pascal is the creator of PascalAI.",
-                "Who is Pascal?": "Pascal is the creator of PascalAI.",
-                "Who is pascal?": "Pascal is the creator of PascalAI.",
-                "who is Pascal?": "Pascal is the creator of PascalAI.",
-
-                "what is your name": "My name is PascalAI.",
-                "What is your name": "My name is PascalAI.",
-                "what is your name?": "My name is PascalAI.",
-                "What is your name?": "My name is PascalAI.",
-
-                "satvik": "Satvik loves eating curry",
-                "how much women does pascal pull": "a lot of women beta",
-                "who is akshit": "the biggest dumbass on this planet"
-            };
-
-            if (customResponses[userMessage]) {
-                // Remove the "Thinking..." indicator if it exists
-                const thinkingDiv = document.querySelector('.thinking');
-                if (thinkingDiv) {
-                    thinkingDiv.remove();
-                }
-
-                displayAiMessage(customResponses[userMessage], false);
-                inputField.disabled = false;
-                return Promise.resolve(); // Return a resolved promise for custom responses
-            }
-
-            return fetch("/chat", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ prompt: userMessage })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const aiResponse = data.response || "Sorry, I couldn't process your request.";
-                const memoryUpdated = data.memory_updated || false;
-                displayAiMessage(aiResponse, memoryUpdated);
-        
-                // Remove the "Thinking..." indicator
-                const thinkingDiv = document.querySelector('.thinking');
-                if (thinkingDiv) {
-                    thinkingDiv.remove();
-                }
-        
-                // Re-enable the input
-                inputField.disabled = false;
-            })
-            .catch(error => {
-                console.error("Error fetching AI response:", error);
-                displayAiMessage("An error occurred while communicating with the AI.", false);
-        
-                // Re-enable the input even if there's an error
-                inputField.disabled = false;
-            });
-        }
-
-        function createResponseButtons(element) {
-            // Prevent button duplication
-            if (element.querySelector('.response-buttons')) return;
-
-            const responseButtonsDiv = document.createElement('div');
-            responseButtonsDiv.classList.add('response-buttons');
-
-            const regenerateButton = document.createElement('div');
-            regenerateButton.classList.add('response-button');
-            regenerateButton.innerHTML = '<img src="https://i.ibb.co/SVKsVqX/regenerate.png" alt="Regenerate">';
-            regenerateButton.onclick = () => {
-                if (lastUserMessage && !isRegenerating) {
-                    isRegenerating = true; // Set regenerating flag
-                    regenerateButton.classList.add('disabled');
-                    const inputField = document.getElementById('user-input');
-                    inputField.disabled = true; // Disable input during regeneration
-                    displayUserMessage(lastUserMessage);
-                    displayThinkingIndicator("PascalAI is Thinking...");
-                    simulateAiResponse(lastUserMessage, inputField).finally(() => {
-                        regenerateButton.classList.remove('disabled');
-                    });
-                }
-            };
-
-            const thumbsUpButton = document.createElement('div');
-            thumbsUpButton.classList.add('response-button');
-            thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Up">';
-            thumbsUpButton.onclick = () => {
-                thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/cD3ZZSn/thumb-2.png" alt="Thumbs Up">';
-                thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
-            };
-
-            const thumbsDownButton = document.createElement('div');
-            thumbsDownButton.classList.add('response-button');
-            thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
-            thumbsDownButton.onclick = () => {
-                thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/Ksh43S1/thumb-1.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
-                thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Up">';
-            };
-
-            responseButtonsDiv.appendChild(regenerateButton);
-            responseButtonsDiv.appendChild(thumbsUpButton);
-            responseButtonsDiv.appendChild(thumbsDownButton);
-
-            element.appendChild(responseButtonsDiv);
-        }
-
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Copied to clipboard');
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-            });
-        }
-
-        function checkHardwareAcceleration() {
-            const canvas = document.createElement('canvas');
-            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-            if (gl && gl instanceof WebGLRenderingContext) {
-                // Hardware acceleration is enabled
-                console.log('Hardware acceleration is enabled.');
-            } else {
-                // Hardware acceleration is not enabled
-                document.getElementById('hardware-acceleration-notification').style.display = 'block';
-            }
-        }
-
-        window.onload = function() {
-            document.body.style.opacity = 1;
-            checkHardwareAcceleration();
-            const urlParams = new URLSearchParams(window.location.search);
-            const message = urlParams.get('message-user');
-            const deviceId = getCookie('device_id'); // Function to get the device ID from cookies
-
-            if (deviceId === '94e4ba92-5814-432b-8357-ab3c72a18b68') {
-                document.getElementById('boo-message').style.display = 'block';
-            } else {
-                if (message) {
-                    displayUserMessage(message);
-                    displayThinkingIndicator("PascalAI is Thinking...");
-                    simulateAiResponse(message, document.getElementById('user-input'));
-                } else {
-                    // Clear chat if no message is present in the URL
-                    document.getElementById('chat-box').innerHTML = '';
-                }
-            }
-            toggleScrollButton();
+        const actionButton = document.querySelector('.action-button');
+        const inputField = document.getElementById('user-input');
+        actionButton.style.display = 'flex';
+        actionButton.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/512/61/61449.png" alt="Pause">'; // Pause button icon
+        actionButton.classList.remove('disabled');
+        actionButton.onclick = () => {
+            stopTyping = true;
+            actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
+            actionButton.onclick = toggleRecording;
+            createResponseButtons(element.parentElement); // Show response buttons when paused
         };
 
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
+        const typingFade = document.createElement('span');
+        typingFade.classList.add('typing-fade');
+        element.appendChild(typingFade);
+
+        function type() {
+            if (index < text.length && !stopTyping) {
+                let char = text.charAt(index);
+                if (char === '\n') {
+                    element.innerHTML += '<br>'; // Add line break for new paragraphs
+                } else if (char === '*' && text.charAt(index + 1) === '*') {
+                    if (isBold) {
+                        element.innerHTML += '</strong>'; // End bold text
+                        isBold = false;
+                    } else {
+                        element.innerHTML += '<strong>'; // Start bold text
+                        isBold = true;
+                    }
+                    index++;
+                } else {
+                    element.innerHTML += char;
+                }
+                index++;
+                typingFade.classList.add('active');
+                setTimeout(type, baseSpeed / speedFactor);
+                element.parentElement.parentElement.scrollTop = element.parentElement.parentElement.scrollHeight; // Scroll to the bottom
+            } else {
+                typingFade.classList.remove('active');
+                actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
+                actionButton.classList.remove('disabled');
+                actionButton.onclick = toggleRecording;
+                createResponseButtons(element.parentElement); // Show response buttons when finished
+                if (memoryUpdated) {
+                    const memoryUpdatedDiv = document.createElement('div');
+                    memoryUpdatedDiv.classList.add('memory-updated');
+                    memoryUpdatedDiv.textContent = '*Memory Updated*';
+                    element.parentElement.appendChild(memoryUpdatedDiv);
+                    memoryUpdatedDiv.style.display = 'block';
+                }
+                inputField.disabled = false; // Re-enable the input
+                isRegenerating = false; // Reset regenerating flag
+            }
+        }
+        type();
+    }
+
+    function displayThinkingIndicator(message) {
+        const chatBox = document.getElementById('chat-box');
+        const thinkingDiv = document.createElement('div');
+        thinkingDiv.classList.add('thinking');
+        thinkingDiv.textContent = message;
+        chatBox.appendChild(thinkingDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Show disabled send button during thinking phase
+        const actionButton = document.querySelector('.action-button');
+        actionButton.style.display = 'flex';
+        actionButton.innerHTML = '<img src="https://cdn1.iconfinder.com/data/icons/wayfinding-signage/100/Arrow_Up-512.png" alt="Send">';
+        actionButton.classList.add('disabled');
+    }
+
+    function simulateAiResponse(userMessage, inputField) {
+        // Check for specific questions and provide custom responses
+        const customResponses = {
+            "What are you": "I am PascalAI, a virtual assistant.",
+            "What are you?": "I am PascalAI, a virtual assistant.",
+            "what are you": "I am PascalAI, a virtual assistant.",
+            "What are you": "I am PascalAI, a virtual assistant.",
+
+            "who made you": "I was created by Pascal.",
+            "Who made you": "I was created by Pascal.",
+            "who made you?": "I was created by Pascal.",
+            "Who made you?": "I was created by Pascal.",
+
+            "who are you": "I am PascalAI, a virtual assistant.",
+            "Who are you": "I am PascalAI, a virtual assistant.",
+            "who are you?": "I am PascalAI, a virtual assistant.",
+            "Who are you?": "I am PascalAI, a virtual assistant.",
+
+            "who is pascal": "Pascal is the creator of PascalAI.",
+            "Who is Pascal": "Pascal is the creator of PascalAI.",
+            "Who is pascal": "Pascal is the creator of PascalAI.",
+            "Who is Pascal": "Pascal is the creator of PascalAI.",
+            "who is pascal?": "Pascal is the creator of PascalAI.",
+            "Who is Pascal?": "Pascal is the creator of PascalAI.",
+            "Who is pascal?": "Pascal is the creator of PascalAI.",
+            "who is Pascal?": "Pascal is the creator of PascalAI.",
+
+            "what is your name": "My name is PascalAI.",
+            "What is your name": "My name is PascalAI.",
+            "what is your name?": "My name is PascalAI.",
+            "What is your name?": "My name is PascalAI.",
+
+            "satvik": "Satvik loves eating curry",
+            "how much women does pascal pull": "a lot of women beta",
+            "who is akshit": "the biggest dumbass on this planet"
+        };
+
+        if (customResponses[userMessage]) {
+            // Remove the "Thinking..." indicator if it exists
+            const thinkingDiv = document.querySelector('.thinking');
+            if (thinkingDiv) {
+                thinkingDiv.remove();
+            }
+
+            displayAiMessage(customResponses[userMessage], false);
+            inputField.disabled = false;
+            return Promise.resolve(); // Return a resolved promise for custom responses
         }
 
-        document.getElementById('chat-box').addEventListener('scroll', toggleScrollButton);
-    </script>
+        return fetch("/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ prompt: userMessage })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const aiResponse = data.response || "Sorry, I couldn't process your request.";
+            const memoryUpdated = data.memory_updated || false;
+            displayAiMessage(aiResponse, memoryUpdated);
+    
+            // Remove the "Thinking..." indicator
+            const thinkingDiv = document.querySelector('.thinking');
+            if (thinkingDiv) {
+                thinkingDiv.remove();
+            }
+    
+            // Re-enable the input
+            inputField.disabled = false;
+        })
+        .catch(error => {
+            console.error("Error fetching AI response:", error);
+            displayAiMessage("Sorry, I couldn't process your request. Please try again.", false);
+    
+            // Re-enable the input even if there's an error
+            inputField.disabled = false;
+        });
+    }
+
+    function createResponseButtons(element) {
+        // Prevent button duplication
+        if (element.querySelector('.response-buttons')) return;
+
+        const responseButtonsDiv = document.createElement('div');
+        responseButtonsDiv.classList.add('response-buttons');
+
+        const regenerateButton = document.createElement('div');
+        regenerateButton.classList.add('response-button');
+        regenerateButton.innerHTML = '<img src="https://i.ibb.co/SVKsVqX/regenerate.png" alt="Regenerate">';
+        regenerateButton.onclick = () => {
+            if (lastUserMessage && !isRegenerating) {
+                isRegenerating = true; // Set regenerating flag
+                regenerateButton.classList.add('disabled');
+                const inputField = document.getElementById('user-input');
+                inputField.disabled = true; // Disable input during regeneration
+                displayUserMessage(lastUserMessage);
+                displayThinkingIndicator("PascalAI is Thinking...");
+                simulateAiResponse(lastUserMessage, inputField).finally(() => {
+                    regenerateButton.classList.remove('disabled');
+                });
+            }
+        };
+
+        const thumbsUpButton = document.createElement('div');
+        thumbsUpButton.classList.add('response-button');
+        thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Up">';
+        thumbsUpButton.onclick = () => {
+            thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/cD3ZZSn/thumb-2.png" alt="Thumbs Up">';
+            thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
+        };
+
+        const thumbsDownButton = document.createElement('div');
+        thumbsDownButton.classList.add('response-button');
+        thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
+        thumbsDownButton.onclick = () => {
+            thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/Ksh43S1/thumb-1.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
+            thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Up">';
+        };
+
+        responseButtonsDiv.appendChild(regenerateButton);
+        responseButtonsDiv.appendChild(thumbsUpButton);
+        responseButtonsDiv.appendChild(thumbsDownButton);
+
+        element.appendChild(responseButtonsDiv);
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Copied to clipboard');
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    }
+
+    function checkHardwareAcceleration() {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (gl && gl instanceof WebGLRenderingContext) {
+            // Hardware acceleration is enabled
+            console.log('Hardware acceleration is enabled.');
+        } else {
+            // Hardware acceleration is not enabled
+            document.getElementById('hardware-acceleration-notification').style.display = 'block';
+        }
+    }
+
+    window.onload = function() {
+        document.body.style.opacity = 1;
+        checkHardwareAcceleration();
+        const urlParams = new URLSearchParams(window.location.search);
+        const message = urlParams.get('message-user');
+        const deviceId = getCookie('device_id'); // Function to get the device ID from cookies
+
+        if (deviceId === '94e4ba92-5814-432b-8357-ab3c72a18b68') {
+            document.getElementById('boo-message').style.display = 'block';
+        } else {
+            if (message) {
+                displayUserMessage(message);
+                displayThinkingIndicator("PascalAI is Thinking...");
+                simulateAiResponse(message, document.getElementById('user-input'));
+            } else {
+                // Clear chat if no message is present in the URL
+                document.getElementById('chat-box').innerHTML = '';
+            }
+        }
+        toggleScrollButton();
+    };
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    document.getElementById('chat-box').addEventListener('scroll', toggleScrollButton);
+</script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>

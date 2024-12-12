@@ -74,8 +74,8 @@ def get_ai_response(prompt: str, device_id: str):
         if knowledge_base:
             messages.append({"role": "system", "content": f"Reference information: {knowledge_base}"})
 
-        # Add past interactions to the context
-        for interaction in interaction_history:
+        # Add only the last few interactions to the context to reduce processing time
+        for interaction in interaction_history[-5:]:
             messages.append({"role": "user", "content": interaction["user"]})
             messages.append({"role": "assistant", "content": interaction["ai"]})
 
@@ -86,7 +86,7 @@ def get_ai_response(prompt: str, device_id: str):
         start_time = time.time()
 
         # Send the request to Ollama for the AI response
-        response = ollama.chat(model="llama3.2:1b", messages=messages)
+        response = ollama.chat(model="gemma2:2b", messages=messages)
 
         # Measure end time
         end_time = time.time()

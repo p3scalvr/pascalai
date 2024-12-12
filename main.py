@@ -1,5 +1,4 @@
-from flask import Flask, render_template, request, jsonify, send_from_directory, make_response, Response, stream_with_context
-import ollama
+from flask import Flask, render_template, request, jsonify, send_from_directory, make_response
 import json
 import uuid
 import smtplib
