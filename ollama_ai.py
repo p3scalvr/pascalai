@@ -5,7 +5,6 @@ import time
 import requests
 from datetime import datetime
 import pytz
-from googleapiclient.discovery import build
 
 # Memory storage for interaction history by device ID and chat ID
 interaction_histories = {}
@@ -22,32 +21,7 @@ def load_knowledge_base(file_path: str):
 # Initialize knowledge base
 knowledge_base = load_knowledge_base("knowledge_base.txt")
 
-# Add YouTube API configuration
-YOUTUBE_API_KEY = 'YOUR_YOUTUBE_API_KEY'  # Replace with your actual API key
-youtube = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
-
-def search_youtube_video(query):
-    try:
-        request = youtube.search().list(
-            part="snippet",
-            maxResults=1,
-            q=query,
-            type="video"
-        )
-        response = request.execute()
-        
-        if response['items']:
-            video_id = response['items'][0]['id']['videoId']
-            title = response['items'][0]['snippet']['title']
-            return {
-                'videoId': video_id,
-                'title': title,
-                'url': f"https://www.youtube.com/watch?v={video_id}"
-            }
-        return None
-    except Exception as e:
-        print(f"YouTube search error: {e}")
-        return None
+# Remove YouTube API configuration and related functions
 
 # Function to verify AI response using an external API (e.g., Wikipedia API)
 def verify_response(response: str):
@@ -98,21 +72,7 @@ def get_interaction_history(device_id: str, chat_id: str):
 # Function to interact with Ollama's AI model
 def get_ai_response(prompt: str, device_id: str, chat_id: str = None):
     try:
-        # Check for video-related keywords
-        video_keywords = ['video', 'youtube', 'watch', 'show me', 'play']
-        is_video_request = any(keyword in prompt.lower() for keyword in video_keywords)
-        
-        if is_video_request:
-            # Extract search query from prompt
-            search_query = prompt.lower()
-            for keyword in video_keywords:
-                search_query = search_query.replace(keyword, '').strip()
-            
-            # Search for video
-            video_result = search_youtube_video(search_query)
-            if video_result:
-                response = f"I found this video for you: {video_result['title']}\n{video_result['url']}\n[VIDEO_EMBED:{video_result['videoId']}]"
-                return response, False, chat_id
+        # Remove video-related code
 
         # Check for easter eggs
         easter_egg_response = check_easter_eggs(prompt)
