@@ -22,8 +22,8 @@
             flex-direction: column;
             justify-content: space-between;
             overflow: hidden;
-            opacity: 0;
-            animation: fadeInPage 1s ease-out forwards;
+            opacity: 0; /* Start with opacity 0 */
+            animation: fadeInPage 0.3s ease-out forwards; /* Quick 0.3s fade in */
             overflow-x: hidden; /* Prevent horizontal overflow */
         }
 
@@ -65,9 +65,8 @@
             margin-bottom: 200px; /* Move down by increasing bottom margin */
             word-wrap: break-word;
             white-space: normal;
-            opacity: 0;
-            animation: fadeInElement 1s ease-out forwards;
-            animation-delay: 1s;
+            opacity: 1; /* Remove fade in */
+            animation: none; /* Remove fade in animation */
             scroll-behavior: smooth; /* Add smooth scrolling behavior */
             margin-left: 20px; /* Move to the right a bit */
             position: relative; /* Ensure input container is positioned correctly */
@@ -112,7 +111,7 @@
         .user-message,
         .ai-message {
             padding: 12px;
-            margin: 8px 0;
+            margin: 10px 0;
             max-width: 75%;
             border-radius: 12px;
             font-size: 18px;
@@ -129,6 +128,8 @@
             white-space: normal;
             border-radius: 25px; /* Very rounded corners */
             padding: 8px 20px; /* Adjust padding for a more rectangular shape */
+            font-weight: 300; /* Add this to make text less bold */
+            font-family: 'Poppins', sans-serif; /* Add this to ensure consistent font */
         }
 
         .ai-message {
@@ -144,6 +145,9 @@
             opacity: 0;
             animation: fadeIn 1s ease-out forwards;
             font-weight: normal; /* Ensure font is not bold by default */
+            margin-left: 10px; /* Move to the right */
+            display: flex; /* Add flex display */
+            flex-direction: column; /* Ensure text is below name tag */
         }
 
         .ai-name {
@@ -157,6 +161,7 @@
         opacity: 0;
         animation: fadeInName 1s ease-out forwards;
         text-shadow: 0 0 10px #1e90ff;
+        margin-left: 0; /* Move to the left a bit */
     }
 
         @keyframes fadeInName {
@@ -179,10 +184,9 @@
             border-radius: 25px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Small drop shadow */
             justify-content: space-between;
-            opacity: 0;
-            animation: fadeInElement 1s ease-out forwards;
-            animation-delay: 1.5s;
-            transition: width 0.3s ease, box-shadow 0.3s ease;
+            opacity: 1; /* Remove fade in */
+            animation: none; /* Remove fade in animation */
+            transition: box-shadow 0.3s ease; /* Remove shrink-related transitions */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add drop shadow */
             z-index: 1001; /* Ensure input container is above sidebar */
         }
@@ -191,12 +195,8 @@
             width: 90%; /* Expand width when focused */
         }
 
-        .input-container.shrink #user-input {
-            width: 75%; /* Shrink width when not focused */
-        }
-
         .input-container {
-            transition: width 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+            transition: box-shadow 0.3s ease; /* Smooth transition */
         }
 
         @media (max-width: 1200px) {
@@ -233,25 +233,29 @@
         }
 
         #user-input {
-            width: 75%;
-            padding: 8px;
-            background: #202221;
-            border: 1px solid #444;
-            color: #ffffff;
-            border-radius: 25px;
-            font-size: 16px;
-            outline: none;
-            box-shadow: none; /* Remove box shadow from input field */
-            transition: width 0.3s ease, background 0.3s ease; /* Smooth width transition */
-            resize: none; /* Prevent resizing */
-            overflow-wrap: break-word; /* Wrap text */
-            white-space: pre-wrap; /* Preserve whitespace and wrap text */
-            height: 40px; /* Fixed height */
-            max-height: 40px; /* Fixed maximum height */
-            overflow-y: hidden; /* Prevent vertical scrolling */
-            margin-left: 0px; /* Move to the right */
-            font-family: 'Open Sans', sans-serif; /* Updated font */
-        }
+    width: 90%; /* Increase default width */
+    padding: 8px;
+    background: #202221;
+    border: none; /* Remove border */
+    color: #ffffff;
+    border-radius: 25px;
+    font-size: 16px;
+    outline: none;
+    box-shadow: none; /* Remove box shadow from input field */
+    transition: width 0.3s ease, background 0.3s ease; /* Smooth width transition */
+    resize: none; /* Prevent resizing */
+    overflow-wrap: break-word; /* Wrap text */
+    white-space: pre-wrap; /* Preserve whitespace and wrap text */
+    height: 40px; /* Fixed height */
+    max-height: 40px; /* Fixed maximum height */
+    min-height: 40px; /* Add min-height to maintain consistent size */
+    line-height: 24px; /* Adjust line height for vertical centering */
+    overflow-y: hidden; /* Prevent vertical scrolling */
+    margin-left: 0px; /* Move to the right */
+    font-family: 'Open Sans', sans-serif; /* Updated font */
+    display: flex;
+    align-items: center;
+}
 
         /* Hide scrollbar but still allow scrolling */
         #user-input::-webkit-scrollbar {
@@ -262,16 +266,12 @@
             scrollbar-width: none;  /* Firefox */
         }
 
-        .input-container.shrink #user-input {
-            width: 50%;
-        }
-
         #user-input::placeholder {
             color: #bbb;
         }
 
         #user-input:focus {
-            background: #333;
+            background: #202221;
         }
 
         .cool-button {
@@ -284,13 +284,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.3s, transform 0.3s;
+            transition: background-color 0.3s;
             margin-left: 10px; /* Space between buttons */
         }
 
         .cool-button:hover {
             background-color: #1a7de0;
-            transform: scale(1.1); /* Slightly enlarge on hover */
         }
 
         .cool-button img {
@@ -327,6 +326,7 @@
         background-clip: text; /* Standard property for broader browser support */
         color: transparent;
         text-shadow: 0 0 10px #1e90ff;
+        margin-left: 20px;
     }
 
         @keyframes fadeInBlue {
@@ -497,14 +497,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.3s, transform 0.3s;
+            transition: background-color 0.3s;
             margin-left: 10px; /* Space between buttons */
             display: flex; /* Initially visible */
         }
 
         .action-button:hover {
             background-color: #f0f0f0;
-            transform: scale(1.1); /* Slightly enlarge on hover */
         }
 
         .action-button img {
@@ -595,14 +594,15 @@
     }
 
     .sidebar {
-        width: 150px; /* Make sidebar smaller */
+        width: 250px;
         height: 100vh;
-        background: #202222; /* Change sidebar color */
+        background: #202222;
         position: fixed;
         left: 0;
         top: 0;
         padding: 20px;
-        z-index: 1000; /* Ensure sidebar is above other elements */
+        z-index: 1000;
+        box-sizing: border-box; /* Add this to include padding in width calculation */
     }
 
     .main-content {
@@ -646,13 +646,21 @@
         display: flex;
         align-items: center;
         margin-bottom: 20px;
+        padding-left: 10px; /* Add padding to move content to the right */
+    }
+
+    .sidebar-header a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        padding: 5px; /* Add some padding around the link */
     }
 
     .sidebar-header img {
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        margin-right: 10px;
+        margin-right: 12px; /* Increase spacing between logo and text */
     }
 
     .sidebar-header h1 {
@@ -660,7 +668,7 @@
         font-size: 1.5em;
         color: #1e90ff;
         margin: 0;
-        text-decoration: none; /* Remove underline */
+        white-space: nowrap; /* Prevent text from wrapping */
     }
 
     .circle-button {
@@ -675,7 +683,7 @@
         cursor: pointer;
         margin: 20px auto; /* Center horizontally and add margin */
         position: relative;
-        left: 10px; /* Move slightly to the right */
+        left: 0; /* Reset left position */
         transition: background-color 0.3s ease; /* Smooth transition for background color */
     }
 
@@ -686,6 +694,95 @@
 
     .circle-button:hover {
         background-color: #3a3b3b; /* Slightly lighter grey color on hover */
+    }
+
+    .chat-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        margin-top: 20px; /* Add margin to move chats under the + button */
+        padding-left: 0; /* Remove left padding */
+        position: relative;
+        z-index: 1;
+        width: 100%; /* Ensure list takes full width of sidebar */
+    }
+    .chat-list-item {
+        padding: 10px 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        border-radius: 12px; /* Rounded corners */
+        margin-bottom: 10px; /* Space between chat items */
+        background-color: #2D2F2F; /* Default background color */
+        color: #fff; /* Text color */
+        text-align: center; /* Center text */
+        width: 100%; /* Adjust width */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        position: relative;
+        overflow: hidden;
+        border-left: none; /* Remove the blue accent line */
+        position: relative; /* Ensure proper positioning */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        width: calc(100% - 0px); /* Adjust width to fit sidebar */
+        box-sizing: border-box; /* Include padding in width calculation */
+        padding-right: 40px; /* Make room for the trash icon */
+        margin-left: 0; /* Remove left margin */
+        margin-right: 0; /* Remove right margin */
+    }
+    .chat-list-item::before {
+        display: none;
+    }
+    .chat-list-item:hover::before {
+        display: none;
+    }
+    .chat-list-item.active::before {
+        display: none;
+    }
+
+    .trash-icon {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+
+    .chat-list-item:hover .trash-icon {
+        opacity: 0.7;
+        visibility: visible;
+    }
+
+    @keyframes gentleWobble {
+        0% { transform: translateY(-50%) rotate(0deg); }
+        25% { transform: translateY(-50%) rotate(-8deg); }
+        75% { transform: translateY(-50%) rotate(8deg); }
+        100% { transform: translateY(-50%) rotate(0deg); }
+    }
+
+    .trash-icon:hover {
+        opacity: 1;
+        animation: gentleWobble 0.5s ease-in-out;
+    }
+
+    @keyframes shakeError {
+        0%, 100% { transform: translateX(0); background-color: #2D2F2F; }
+        25% { transform: translateX(-5px); background-color: #ff4444; }
+        75% { transform: translateX(5px); background-color: #ff4444; }
+    }
+
+    .chat-list-item.error {
+        animation: shakeError 0.5s ease-in-out;
     }
 
     @media (max-width: 1200px) {
@@ -708,33 +805,406 @@
             width: calc(100% - 150px); /* Adjust width for smaller screens */
         }
     }
-    </style>
+
+    .chat-list-item {
+        padding: 10px 15px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        background-color: #2D2F2F;
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: calc(100% - 10px); /* Changed from calc(100% - 20px) to make wider */
+        position: relative;
+        padding-right: 40px; /* Make room for the trash icon */
+    }
+
+    .trash-icon {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+
+    .chat-list-item:hover .trash-icon {
+        opacity: 0.7;
+        visibility: visible;
+    }
+
+    @keyframes gentleWobble {
+        0% { transform: translateY(-50%) rotate(0deg); }
+        25% { transform: translateY(-50%) rotate(-8deg); }
+        75% { transform: translateY(-50%) rotate(8deg); }
+        100% { transform: translateY(-50%) rotate(0deg); }
+    }
+
+    .trash-icon:hover {
+        opacity: 1;
+        animation: gentleWobble 0.5s ease-in-out;
+    }
+
+    .trash-icon:hover {
+        opacity: 1;
+    }
+    .welcome-message {
+        color: #ffffff;
+        font-size: 34px;
+        text-align: center;
+        position: absolute;
+        top: 42%; /* Adjusted down from 50% */
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        font-family: 'Poppins', sans-serif;
+        width: 100%;
+        max-width: 700px;
+        padding: 0 20px;
+        box-sizing: border-box;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center; /* Added for vertical alignment */
+    }
+
+    .input-wrapper.welcome-state {
+        bottom: 42% !important; /* Match with welcome message position */
+        transform: translateX(-50%);
+        transition: all 0.3s ease;
+    }
+
+    /* Responsive adjustments for consistent alignment */
+    @media (max-width: 768px) {
+        .welcome-message {
+            top: 42%; /* Keep consistent across devices */
+            font-size: 28px;
+        }
+
+        .input-wrapper.welcome-state {
+            bottom: 42% !important; /* Keep consistent across devices */
+        }
+    }
+
+    @media (max-height: 600px) {
+        .welcome-message {
+            top: 42%; /* Keep consistent even on short screens */
+        }
+
+        .input-wrapper.welcome-state {
+            bottom: 42% !important; /* Keep consistent even on short screens */
+        }
+    }
+    .welcome-text {
+        display: inline-block;
+        overflow: visible; /* Changed from hidden to visible */
+        white-space: nowrap;
+        width: 0;
+        position: relative; /* Add position relative */
+    }
+
+    .welcome-text::after {
+        content: "";
+        position: absolute;
+        right: -3px; /* Position the cursor right after the text */
+        top: 0;
+        height: 100%;
+        border-right: 3px solid #fff;
+        animation: blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes blink-caret {
+        from, to { border-color: transparent; }
+        50% { border-color: #fff; }
+    }
+
+    @keyframes typing {
+        from { width: 0; }
+        to { width: 100%; }
+    }
+
+    .welcome-text {
+        animation: 
+            typing 1.5s steps(20, end) forwards;
+    }
+
+    .input-wrapper.welcome-state {
+        bottom: 35% !important;  /* Force the welcome state position */
+        transition: bottom 0.3s ease;
+    }
+
+    .welcome-message {
+        transition: opacity 0.3s ease-out;
+    }
+
+    .info-button {
+        display: flex;
+        align-items: center;
+        background-color: transparent;
+        border: none;
+        padding: 12px 16px; /* Increase padding */
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 0; /* Remove margin */
+        transition: background-color 0.3s ease;
+        position: fixed; /* Change from absolute to fixed */
+        top: 20px; /* Add some top spacing */
+        left: 270px; /* Position after sidebar (150px + 20px padding + additional space) */
+        z-index: 1002; /* Ensure it's above other elements */
+    }
+
+    .info-button:hover {
+        background-color: #2D2F2F;
+    }
+
+    .info-button span {
+        color: #ffffff;
+        font-size: 20px; /* Increase font size */
+        font-weight: 600;
+        margin-right: 10px; /* Increase spacing */
+    }
+
+    .info-button img {
+        width: 18px; /* Increase image size */
+        height: 18px; /* Increase image size */
+        filter: brightness(0) invert(1);
+    }
+    .info-button {
+        display: flex;
+        align-items: center;
+        background-color: transparent;
+        border: none;
+        padding: 12px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 0;
+        transition: background-color 0.3s ease;
+        position: fixed;
+        top: 20px;
+        left: 272px;
+        z-index: 1010; /* Increase z-index to be above everything */
+    }
+
+    /* Add responsive styles for info button */
+    @media (max-width: 768px) {
+        .info-button {
+            left: 20px; /* Move to left edge when sidebar is hidden */
+        }
+    }
+
+    /* Adjust main content margins */
+    .main-content {
+        margin-left: 190px;
+        padding: 20px;
+        padding-top: 60px; /* Add space for the fixed info button */
+        width: calc(100% - 190px);
+        box-sizing: border-box;
+    }
+
+    @media (max-width: 768px) {
+        .main-content {
+            margin-left: 0;
+            width: 100%;
+        }
+    }
+    /* Update welcome message positioning */
+    .welcome-message {
+        color: #ffffff;
+        font-size: 34px;
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        left: calc(50% - 15px); /* Moved 15px to the left from center */
+        transform: translate(-50%, -130px);
+        pointer-events: none;
+        font-family: 'Poppins', sans-serif;
+        width: 100%;
+        max-width: 700px;
+        padding: 0 20px;
+        box-sizing: border-box;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Update welcome text container */
+    .welcome-text {
+        display: inline-block;
+        position: relative;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 0;
+        animation: typing 1.5s steps(20, end) forwards;
+        margin: 0 auto;
+    }
+
+    /* Add blinking cursor */
+    .welcome-text::after {
+        content: '';
+        position: absolute;
+        right: -3px;
+        top: 0;
+        height: 100%;
+        width: 3px;
+        background: #fff;
+        animation: blink 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+        from { width: 0 }
+        to { width: 220px } /* Fixed width based on text content */
+    }
+
+    @keyframes blink {
+        from, to { background: transparent }
+        50% { background: #fff }
+    }
+    .welcome-text {
+        display: inline-block;
+        position: relative;
+        white-space: nowrap;
+        overflow: hidden;
+        animation: typing 2s steps(30, end) forwards;
+        width: 0;
+        top: 100px;
+        left: -10px;
+    }
+
+    .welcome-text::after {
+        content: '';
+        position: absolute;
+        right: -3px;
+        top: 0;
+        height: 100%;
+        width: 3px;
+        background: #fff;
+        animation: blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+        from { width: 0 }
+        to { width: 275px } /* Adjust this value based on your text width */
+    }
+
+    @keyframes blink-caret {
+        from, to { background: transparent }
+        50% { background: #fff }
+    }
+    /* Update welcome text styles */
+    .welcome-text {
+        display: inline-block;
+        position: relative;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 0;
+        animation: typing 1s steps(22, end) forwards; /* Faster animation with more steps */
+    }
+
+    .welcome-text::after {
+        content: '';
+        position: absolute;
+        right: -3px;
+        top: 0;
+        height: 100%;
+        width: 3px;
+        background: #fff;
+        animation: blink-caret 0.5s step-end infinite; /* Faster cursor blink */
+    }
+
+    @keyframes typing {
+        from { width: 0 }
+        to { width: 300px } /* Increased width to show full text including ? */
+    }
+
+    @keyframes blink-caret {
+        from, to { background: transparent }
+        50% { background: #fff }
+    }
+    .welcome-text {
+        display: inline-block;
+        position: relative;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 0;
+        animation: typing 0.8s steps(25, end) forwards; /* Faster animation with more steps */
+    }
+
+    @keyframes typing {
+        from { width: 0 }
+        to { width: 380px } /* Increased width to show full text */
+    }
+    .welcome-text {
+        display: inline-block;
+        position: relative;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 0;
+        animation: typing 0.8s steps(25, end) forwards;
+    }
+
+    .welcome-text::after {
+        content: '';
+        position: absolute;
+        right: -3px;
+        top: 0;
+        height: 100%;
+        width: 3px;
+        background: #fff;
+        animation: blinkcursor 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+        from { width: 0 }
+        to { width: 380px } /* Increased width to show full text */
+    }
+
+    @keyframes blinkcursor {
+        from, to { background-color: transparent }
+        50% { background-color: #fff }
+    }
+</style>
 </head>
 <body>
     <div class="sidebar">
         <div class="sidebar-header">
-            <a href="/" onclick="location.reload(); return false;" style="display: flex; align-items: center; text-decoration: none;">
+            <a href="javascript:void(0)" onclick="window.location.reload(true);" style="display: flex; align-items: center; text-decoration: none;">
                 <img src="https://i.ibb.co/4p1JTsg/image-1.png" alt="Logo">
                 <h1>PascalAI</h1>
             </a>
         </div>
-        <button class="circle-button">
+        <button class="circle-button" onclick="createNewChat()">
             <img src="https://i.ibb.co/2qJKqp8/image-4.png" alt="Icon">
         </button>
+        <ul class="chat-list" id="chat-list">
+            <!-- Chat items will be dynamically added here -->
+        </ul>
         <!-- Sidebar content -->
     </div>
     <div class="main-content">
+        <button class="info-button">
+            <span>PascalAI</span>
+            <img src="https://i.ibb.co/2FmJnFY/image-7.png" alt="Info">
+        </button>
         <header>
          
          
     </header>
     <div id="boo-message" class="boo-message"></div> <!-- Add BOO message here -->
     <div id="chat-box">
-        
+        <div id="welcome-message" class="welcome-message">
+            <span class="welcome-text">What can I help with?</span>
+        </div>
     </div>
     <div class="input-wrapper">
-        <div class="input-container shrink" id="input-container">
-            <textarea id="user-input" placeholder="Message PascalAI" onfocus="expandInput()" onblur="shrinkInput()" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+        <div class="input-container" id="input-container">
+            <textarea id="user-input" placeholder="Message PascalAI" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
             <div class="action-button" onclick="toggleRecording()"><img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone"></div>
         </div>
     </div>
@@ -745,6 +1215,10 @@
     <script>
     let lastUserMessage = ""; // Define the lastUserMessage variable
     let isRegenerating = false; // Track if a message is being regenerated
+    let currentChatId = null;
+    let chatHistories = {}; // Store chat histories locally
+    let chatCreationCooldown = false; // Prevent chat spam creation
+    let isGenerating = false;
 
     function checkEnter(event) {
         if (event.key === 'Enter' && !event.shiftKey) {
@@ -757,16 +1231,74 @@
         }
     }
 
-    function expandInput() {
-        const inputContainer = document.getElementById('input-container');
-        inputContainer.classList.add('expanded');
-        inputContainer.classList.remove('shrink');
-    }
+    function selectChat(chatId) {
+        if (isGenerating) {
+            const selectedChat = Array.from(document.querySelectorAll('.chat-list-item'))
+                .find(item => item.firstChild.textContent === chatId);
+            if (selectedChat) {
+                selectedChat.classList.add('error');
+                setTimeout(() => selectedChat.classList.remove('error'), 500);
+            }
+            return;
+        }
 
-    function shrinkInput() {
-        const inputContainer = document.getElementById('input-container');
-        inputContainer.classList.add('shrink');
-        inputContainer.classList.remove('expanded');
+        const chatItems = document.querySelectorAll('.chat-list-item');
+        chatItems.forEach(item => item.classList.remove('active'));
+
+        const selectedChat = Array.from(chatItems).find(item => item.firstChild.textContent === chatId);
+        if (selectedChat) {
+            selectedChat.classList.add('active');
+        }
+
+        currentChatId = chatId;
+        const chatBox = document.getElementById('chat-box');
+        const inputWrapper = document.querySelector('.input-wrapper');
+        chatBox.innerHTML = '';
+        addInfoButton(chatBox); // Add this line after clearing chat box
+
+        // Reset input wrapper position immediately
+        inputWrapper.classList.remove('welcome-state');
+        inputWrapper.style.bottom = '-50px';
+        inputWrapper.style.transition = 'none';
+
+        const welcomeMessage = document.getElementById('welcome-message');
+        if (chatHistories[chatId] && chatHistories[chatId].length > 0) {
+            // Hide welcome message if chat has messages
+            if (welcomeMessage) welcomeMessage.remove();
+            inputWrapper.classList.remove('welcome-state');
+        } else {
+            // Show welcome message and raise input box if chat is empty
+            if (!welcomeMessage) {
+                const newWelcomeMessage = document.createElement('div');
+                newWelcomeMessage.id = 'welcome-message';
+                newWelcomeMessage.className = 'welcome-message';
+                const welcomeText = document.createElement('span');
+                welcomeText.className = 'welcome-text';
+                welcomeText.textContent = 'What can I help with?';
+                newWelcomeMessage.appendChild(welcomeText);
+                chatBox.appendChild(newWelcomeMessage);
+            }
+            inputWrapper.classList.add('welcome-state');
+            inputWrapper.style.transition = 'bottom 0.3s ease';
+        }
+
+        if (chatHistories[chatId]) {
+            // Load chat history and update lastUserMessage
+            chatHistories[chatId].forEach((message, index) => {
+                if (message.role === 'user') {
+                    displayUserMessage(message.content);
+                    // Update lastUserMessage with the most recent user message
+                    lastUserMessage = message.content;
+                } else if (message.role === 'assistant') {
+                    displayAiMessage(message.content, false);
+                }
+            });
+        }
+
+        // Store the last active chat ID
+        if (chatId) {
+            localStorage.setItem('lastActiveChatId', chatId);
+        }
     }
 
     function sendMessage() {
@@ -774,23 +1306,108 @@
         const userMessage = inputField.value.trim();
         if (userMessage === "") return;
 
-        lastUserMessage = userMessage; // Store the last user message
+        const welcomeMessage = document.getElementById('welcome-message');
+        const inputWrapper = document.querySelector('.input-wrapper');
+        const chatBox = document.getElementById('chat-box');
+        
+        // Create a new chat if none is active
+        if (!currentChatId) {
+            createNewChat(true); // Pass true to indicate this is an auto-created chat
+            // First clear any welcome messages
+            chatBox.innerHTML = '';
+            // Force input wrapper to move down immediately after auto-creating chat
+            inputWrapper.style.transition = 'bottom 0.3s ease';
+            inputWrapper.classList.remove('welcome-state');
+            inputWrapper.style.bottom = '-50px';
+        } else if (welcomeMessage) {
+            welcomeMessage.remove();
+            // Clear any other welcome messages that might be in the chat box
+            const welcomeMessages = chatBox.querySelectorAll('.welcome-message');
+            welcomeMessages.forEach(msg => msg.remove());
+            // Move input wrapper down
+            inputWrapper.style.transition = 'bottom 0.3s ease';
+            inputWrapper.classList.remove('welcome-state');
+            inputWrapper.style.bottom = '-50px';
+        }
+
+        lastUserMessage = userMessage;
         displayUserMessage(userMessage);
         displayThinkingIndicator("PascalAI is Thinking...");
         simulateAiResponse(userMessage, inputField);
 
         inputField.value = "";
-        inputField.disabled = true; // Disable input during AI response generation
+        inputField.disabled = true;
     }
 
-    function displayUserMessage(message) {
-        const chatBox = document.getElementById('chat-box');
-        const userMessageDiv = document.createElement('div');
-        userMessageDiv.classList.add('user-message');
-        userMessageDiv.textContent = message;
-        chatBox.appendChild(userMessageDiv);
-        chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+    function createChatItem(chatId) {
+        const chatItem = document.createElement('li');
+        chatItem.classList.add('chat-list-item');
+        
+        const chatText = document.createElement('span');
+        chatText.textContent = chatId;
+        
+        const trashIcon = document.createElement('img');
+        trashIcon.src = 'https://i.ibb.co/0JdKvBF/image-5.png';
+        trashIcon.classList.add('trash-icon');
+        trashIcon.alt = 'Delete';
+        trashIcon.onclick = (e) => {
+            e.stopPropagation();
+            deleteChat(chatId);
+        };
+        
+        chatItem.appendChild(chatText);
+        chatItem.appendChild(trashIcon);
+        chatItem.onclick = () => selectChat(chatId);
+        
+        return chatItem;
     }
+
+// Add this new function to check if a chat is empty
+function isCurrentChatEmpty() {
+    return !currentChatId || 
+           !chatHistories[currentChatId] || 
+           chatHistories[currentChatId].length === 0;
+}
+
+// Modify the createNewChat function
+function createNewChat(isAutoCreated = false) {
+    // Check if current chat is empty and not auto-created
+    if (!isAutoCreated && isCurrentChatEmpty()) {
+        // Find the empty chat item and make it shake
+        const currentChat = document.querySelector('.chat-list-item.active');
+        if (currentChat) {
+            currentChat.classList.add('error');
+            setTimeout(() => currentChat.classList.remove('error'), 500);
+        }
+        return;
+    }
+
+    if (chatCreationCooldown) return;
+    chatCreationCooldown = true;
+    setTimeout(() => chatCreationCooldown = false, 1000);
+
+    // Rest of the existing createNewChat function
+    const chatList = document.getElementById('chat-list');
+    const chatId = `Chat ${chatList.children.length + 1}`;
+    const chatItem = createChatItem(chatId);
+    chatList.appendChild(chatItem);
+
+    // Initialize chat history
+    if (!chatHistories[chatId]) {
+        chatHistories[chatId] = [];
+    }
+
+    // Only clear chat and select new chat if it's not auto-created
+    if (!isAutoCreated) {
+        selectChat(chatId);
+    } else {
+        currentChatId = chatId;
+        chatItem.classList.add('active');
+    }
+
+    // Save to local storage
+    localStorage.setItem('chatHistories', JSON.stringify(chatHistories));
+}
 
     function toggleRecording() {
         // Implement the toggleRecording function
@@ -812,6 +1429,15 @@
         } else {
             scrollButton.style.display = 'none';
         }
+    }
+
+    function displayUserMessage(message) {
+        const chatBox = document.getElementById('chat-box');
+        const userMessageDiv = document.createElement('div');
+        userMessageDiv.classList.add('user-message');
+        userMessageDiv.textContent = message;
+        chatBox.appendChild(userMessageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
     }
 
     function displayAiMessage(message, memoryUpdated) {
@@ -857,32 +1483,36 @@
         element.appendChild(typingFade);
 
         function type() {
+            if (!element || !element.parentElement || !element.parentElement.parentElement) return;
+    
             if (index < text.length && !stopTyping) {
                 let char = text.charAt(index);
                 if (char === '\n') {
-                    element.innerHTML += '<br>'; // Add line break for new paragraphs
+                    element.innerHTML += '<br>';
                 } else if (char === '*' && text.charAt(index + 1) === '*') {
-                    if (isBold) {
-                        element.innerHTML += '</strong>'; // End bold text
-                        isBold = false;
-                    } else {
-                        element.innerHTML += '<strong>'; // Start bold text
-                        isBold = true;
-                    }
-                    index++;
+                    isBold = !isBold;
+                    index += 2;
+                    type();
+                    return;
                 } else {
-                    element.innerHTML += char;
+                    if (isBold) {
+                        element.innerHTML += `<strong>${char}</strong>`;
+                    } else {
+                        element.innerHTML += char;
+                    }
                 }
                 index++;
                 typingFade.classList.add('active');
                 setTimeout(type, baseSpeed / speedFactor);
-                element.parentElement.parentElement.scrollTop = element.parentElement.parentElement.scrollHeight; // Scroll to the bottom
+                
+                const chatBox = document.getElementById('chat-box');
+                if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
             } else {
                 typingFade.classList.remove('active');
                 actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
                 actionButton.classList.remove('disabled');
                 actionButton.onclick = toggleRecording;
-                createResponseButtons(element.parentElement); // Show response buttons when finished
+                createResponseButtons(element.parentElement);
                 if (memoryUpdated) {
                     const memoryUpdatedDiv = document.createElement('div');
                     memoryUpdatedDiv.classList.add('memory-updated');
@@ -890,8 +1520,9 @@
                     element.parentElement.appendChild(memoryUpdatedDiv);
                     memoryUpdatedDiv.style.display = 'block';
                 }
-                inputField.disabled = false; // Re-enable the input
-                isRegenerating = false; // Reset regenerating flag
+                inputField.disabled = false;
+                isRegenerating = false;
+                isGenerating = false;
             }
         }
         type();
@@ -913,6 +1544,7 @@
     }
 
     function simulateAiResponse(userMessage, inputField) {
+        isGenerating = true;
         // Check for specific questions and provide custom responses
         const customResponses = {
             "What are you": "I am PascalAI, a virtual assistant.",
@@ -966,78 +1598,194 @@
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ prompt: userMessage })
+            body: JSON.stringify({ prompt: userMessage, chat_id: currentChatId })
         })
         .then(response => response.json())
         .then(data => {
             const aiResponse = data.response || "Sorry, I couldn't process your request.";
             const memoryUpdated = data.memory_updated || false;
+            currentChatId = data.chat_id;
             displayAiMessage(aiResponse, memoryUpdated);
-    
-            // Remove the "Thinking..." indicator
+
+            // Remove thinking indicator
             const thinkingDiv = document.querySelector('.thinking');
             if (thinkingDiv) {
                 thinkingDiv.remove();
             }
-    
-            // Re-enable the input
+
+            // Re-enable input
             inputField.disabled = false;
+
+            // Store messages in chat history
+            if (!chatHistories[currentChatId]) {
+                chatHistories[currentChatId] = [];
+            }
+            chatHistories[currentChatId].push({ role: 'user', content: userMessage });
+            chatHistories[currentChatId].push({ role: 'assistant', content: aiResponse });
+
+            // Save to local storage immediately after updating
+            localStorage.setItem('chatHistories', JSON.stringify(chatHistories));
+            isGenerating = false;
         })
         .catch(error => {
             console.error("Error fetching AI response:", error);
             displayAiMessage("Sorry, I couldn't process your request. Please try again.", false);
-    
-            // Re-enable the input even if there's an error
             inputField.disabled = false;
+            isGenerating = false;
         });
     }
 
-    function createResponseButtons(element) {
-        // Prevent button duplication
-        if (element.querySelector('.response-buttons')) return;
+    async function speak(text) {
+    // Cancel any ongoing native speech
+    window.speechSynthesis.cancel();
 
-        const responseButtonsDiv = document.createElement('div');
-        responseButtonsDiv.classList.add('response-buttons');
+    // Remove emojis from text
+    const cleanText = text.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2700}-\u{27BF}]|[\u{1F000}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2300}-\u{23FF}]|[\u{2B50}]|[\u{E000}-\u{F8FF}]/gu, '');
 
-        const regenerateButton = document.createElement('div');
-        regenerateButton.classList.add('response-button');
-        regenerateButton.innerHTML = '<img src="https://i.ibb.co/SVKsVqX/regenerate.png" alt="Regenerate">';
-        regenerateButton.onclick = () => {
-            if (lastUserMessage && !isRegenerating) {
-                isRegenerating = true; // Set regenerating flag
-                regenerateButton.classList.add('disabled');
-                const inputField = document.getElementById('user-input');
-                inputField.disabled = true; // Disable input during regeneration
-                displayUserMessage(lastUserMessage);
-                displayThinkingIndicator("PascalAI is Thinking...");
-                simulateAiResponse(lastUserMessage, inputField).finally(() => {
-                    regenerateButton.classList.remove('disabled');
+    try {
+        // Show loading indicator
+        const audioPlayer = document.getElementById('tts-audio') || document.createElement('audio');
+        audioPlayer.id = 'tts-audio';
+        document.body.appendChild(audioPlayer);
+
+        const response = await fetch('https://api.speechgen.io/v1/speech', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer YOUR_SPEECHGEN_API_KEY' // Replace with your API key
+            },
+            body: JSON.stringify({
+                text: cleanText,
+                voice_id: 'female_voice_1', // Choose an appropriate voice ID
+                language: 'en-US',
+                speed: 1.0,
+                pitch: 1.0,
+                format: 'mp3',
+                quality: 'high'
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Speech generation failed');
+        }
+
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        
+        audioPlayer.src = audioUrl;
+        audioPlayer.play();
+
+        // Clean up URL after playback
+        audioPlayer.onended = () => {
+            URL.revokeObjectURL(audioUrl);
+        };
+    } catch (error) {
+        console.error('SpeechGen API error:', error);
+        // Fallback to native speech synthesis
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        let voices = speechSynthesis.getVoices();
+        const femaleVoice = voices.find(voice => 
+            voice.name.includes('Female') && voice.lang.includes('en')
+        ) || voices[0];
+        utterance.voice = femaleVoice;
+        utterance.rate = 0.95;
+        utterance.pitch = 1.1;
+        window.speechSynthesis.speak(utterance);
+    }
+}
+
+function createResponseButtons(element) {
+    // Prevent button duplication
+    if (element.querySelector('.response-buttons')) return;
+
+    const responseButtonsDiv = document.createElement('div');
+    responseButtonsDiv.classList.add('response-buttons');
+
+    // Create speech button first
+    const speechButton = document.createElement('div');
+    speechButton.classList.add('response-button');
+    speechButton.innerHTML = '<img src="https://i.ibb.co/qBH8ywV/image-7.png" alt="Text to Speech">';
+    speechButton.onclick = () => {
+        const aiText = element.querySelector(':not(.ai-name):not(.response-buttons)').textContent;
+        speak(aiText);
+    };
+
+    // Add buttons in desired order
+    responseButtonsDiv.appendChild(speechButton); // Speech button first
+
+    const regenerateButton = document.createElement('div');
+    regenerateButton.classList.add('response-button');
+    regenerateButton.innerHTML = '<img src="https://i.ibb.co/SVKsVqX/regenerate.png" alt="Regenerate">';
+    regenerateButton.onclick = () => {
+        if (lastUserMessage && !isRegenerating && !isGenerating) {
+            isRegenerating = true;
+            isGenerating = true;
+            regenerateButton.classList.add('disabled');
+            const inputField = document.getElementById('user-input');
+            inputField.disabled = true;
+            
+            // Remove the last user-AI message pair from chat history
+            if (chatHistories[currentChatId] && chatHistories[currentChatId].length >= 2) {
+                chatHistories[currentChatId].pop(); // Remove last AI message
+                chatHistories[currentChatId].pop(); // Remove last user message
+            }
+            
+            // Clear chat box and redisplay all messages except the last pair
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML = '';
+            if (chatHistories[currentChatId]) {
+                chatHistories[currentChatId].forEach(message => {
+                    if (message.role === 'user') {
+                        displayUserMessage(message.content);
+                    } else if (message.role === 'assistant') {
+                        displayAiMessage(message.content, false);
+                    }
                 });
             }
-        };
 
-        const thumbsUpButton = document.createElement('div');
-        thumbsUpButton.classList.add('response-button');
-        thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Up">';
-        thumbsUpButton.onclick = () => {
-            thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/cD3ZZSn/thumb-2.png" alt="Thumbs Up">';
-            thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
-        };
+            // Display the last user message again and generate new response
+            displayUserMessage(lastUserMessage);
+            displayThinkingIndicator("PascalAI is Thinking...");
+            simulateAiResponse(lastUserMessage, inputField).finally(() => {
+                regenerateButton.classList.remove('disabled');
+                isGenerating = false;
+                isRegenerating = false;
+            });
+        }
+    };
 
-        const thumbsDownButton = document.createElement('div');
-        thumbsDownButton.classList.add('response-button');
+    const thumbsUpButton = document.createElement('div');
+    thumbsUpButton.classList.add('response-button');
+    thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Up">';
+    thumbsUpButton.onclick = () => {
+        thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/cD3ZZSn/thumb-2.png" alt="Thumbs Up">';
         thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
-        thumbsDownButton.onclick = () => {
-            thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/Ksh43S1/thumb-1.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
-            thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Up">';
-        };
+    };
 
-        responseButtonsDiv.appendChild(regenerateButton);
-        responseButtonsDiv.appendChild(thumbsUpButton);
-        responseButtonsDiv.appendChild(thumbsDownButton);
+    const thumbsDownButton = document.createElement('div');
+    thumbsDownButton.classList.add('response-button');
+    thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
+    thumbsDownButton.onclick = () => {
+        thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/Ksh43S1/thumb-1.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
+        thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Up">';
+    };
 
-        element.appendChild(responseButtonsDiv);
+    responseButtonsDiv.appendChild(regenerateButton);
+    responseButtonsDiv.appendChild(thumbsUpButton);
+    responseButtonsDiv.appendChild(thumbsDownButton);
+    responseButtonsDiv.appendChild(speechButton); // Add speech button to response buttons
+
+    element.appendChild(responseButtonsDiv);
+}
+
+// Add styles for audio player
+const style = document.createElement('style');
+style.textContent = `
+    #tts-audio {
+        display: none;
     }
+`;
+document.head.appendChild(style);
 
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => {
@@ -1059,26 +1807,169 @@
         }
     }
 
+    function deleteChat(chatId) {
+        // Check if trying to delete current chat while generating
+        if (isGenerating && chatId === currentChatId) {
+            const chatItem = Array.from(document.querySelectorAll('.chat-list-item'))
+                .find(item => item.firstChild.textContent === chatId);
+            if (chatItem) {
+                chatItem.classList.add('error');
+                setTimeout(() => chatItem.classList.remove('error'), 500);
+            }
+            return;
+        }
+        
+        // Remove from local storage
+        delete chatHistories[chatId];
+        localStorage.setItem('chatHistories', JSON.stringify(chatHistories));
+        
+        // Remove from UI
+        const chatItems = document.querySelectorAll('.chat-list-item');
+        chatItems.forEach(item => {
+            if (item.firstChild.textContent === chatId) {
+                item.remove();
+            }
+        });
+        
+        // If the deleted chat was active, clear the chat box and show welcome state
+        if (currentChatId === chatId) {
+            currentChatId = null;
+            const chatBox = document.getElementById('chat-box');
+            const inputWrapper = document.querySelector('.input-wrapper');
+            chatBox.innerHTML = '';
+            inputWrapper.style.transition = 'bottom 0.3s ease'; // Add smooth transition
+            inputWrapper.classList.add('welcome-state');
+            setTimeout(() => {
+                showWelcomeMessage();
+                inputWrapper.style.bottom = '35%';  // Explicitly set bottom position
+            }, 0);
+        }
+    }
+
+    function showWelcomeMessage() {
+        const chatBox = document.getElementById('chat-box');
+        chatBox.innerHTML = '';
+        addInfoButton(chatBox);
+        
+        const welcomeDiv = document.createElement('div');
+        welcomeDiv.id = 'welcome-message';
+        welcomeDiv.className = 'welcome-message';
+        
+        const welcomeText = document.createElement('span');
+        welcomeText.className = 'welcome-text';
+        welcomeText.textContent = 'What can I help with?'; // Ensure question mark is included
+        
+        welcomeDiv.appendChild(welcomeText);
+        chatBox.appendChild(welcomeDiv);
+        
+        const inputWrapper = document.querySelector('.input-wrapper');
+        inputWrapper.classList.add('welcome-state');
+    }
+
+    function cleanupEmptyChats() {
+        const chatIds = Object.keys(chatHistories);
+        chatIds.forEach(chatId => {
+            if (!chatHistories[chatId] || chatHistories[chatId].length === 0) {
+                // Remove from local storage
+                delete chatHistories[chatId];
+                
+                // Remove from UI
+                const chatItems = document.querySelectorAll('.chat-list-item');
+                chatItems.forEach(item => {
+                    if (item.firstChild.textContent === chatId) {
+                        item.remove();
+                    }
+                });
+            }
+        });
+        localStorage.setItem('chatHistories', JSON.stringify(chatHistories));
+        
+        // If no chats remain, show welcome state
+        const remainingChats = Object.keys(chatHistories).length;
+        if (remainingChats === 0) {
+            const inputWrapper = document.querySelector('.input-wrapper');
+            inputWrapper.classList.add('welcome-state');
+            showWelcomeMessage();
+        }
+    }
+
+    // Modify createNewChat function
+    function createNewChat(isAutoCreated = false) {
+        // Clean up empty chats before creating a new one
+        cleanupEmptyChats();
+        
+        // Check if current chat is empty and not auto-created
+        if (!isAutoCreated && isCurrentChatEmpty()) {
+            // Find the empty chat item and make it shake
+            const currentChat = document.querySelector('.chat-list-item.active');
+            if (currentChat) {
+                currentChat.classList.add('error');
+                setTimeout(() => currentChat.classList.remove('error'), 500);
+            }
+            return;
+        }
+
+        if (chatCreationCooldown) return;
+        chatCreationCooldown = true;
+        setTimeout(() => chatCreationCooldown = false, 1000);
+
+        // Rest of the existing createNewChat function
+        const chatList = document.getElementById('chat-list');
+        const chatId = `Chat ${chatList.children.length + 1}`;
+        const chatItem = createChatItem(chatId);
+        chatList.appendChild(chatItem);
+
+        // Initialize chat history
+        if (!chatHistories[chatId]) {
+            chatHistories[chatId] = [];
+        }
+
+        // Only clear chat and select new chat if it's not auto-created
+        if (!isAutoCreated) {
+            selectChat(chatId);
+        } else {
+            currentChatId = chatId;
+            chatItem.classList.add('active');
+        }
+
+        // Save to local storage
+        localStorage.setItem('chatHistories', JSON.stringify(chatHistories));
+    }
+
+    // Modify window.onload
     window.onload = function() {
         document.body.style.opacity = 1;
         checkHardwareAcceleration();
+        
+        // Clean up empty chats on page load
+        const storedChatHistories = localStorage.getItem('chatHistories');
+        if (storedChatHistories) {
+            chatHistories = JSON.parse(storedChatHistories);
+            cleanupEmptyChats();
+            
+            const chatList = document.getElementById('chat-list');
+            chatList.innerHTML = '';
+            
+            // Add remaining chats to sidebar
+            Object.keys(chatHistories).forEach(chatId => {
+                const chatItem = createChatItem(chatId);
+                chatList.appendChild(chatItem);
+            });
+        }
+
+        showWelcomeMessage();
+        
         const urlParams = new URLSearchParams(window.location.search);
         const message = urlParams.get('message-user');
-        const deviceId = getCookie('device_id'); // Function to get the device ID from cookies
+        const deviceId = getCookie('device_id');
 
         if (deviceId === '94e4ba92-5814-432b-8357-ab3c72a18b68') {
             document.getElementById('boo-message').style.display = 'block';
-        } else {
-            if (message) {
-                displayUserMessage(message);
-                displayThinkingIndicator("PascalAI is Thinking...");
-                simulateAiResponse(message, document.getElementById('user-input'));
-            } else {
-                // Clear chat if no message is present in the URL
-                document.getElementById('chat-box').innerHTML = '';
-            }
         }
+
         toggleScrollButton();
+        const chatBox = document.getElementById('chat-box');
+        addInfoButton(chatBox); // Add this line
     };
 
     function getCookie(name) {
@@ -1088,7 +1979,32 @@
     }
 
     document.getElementById('chat-box').addEventListener('scroll', toggleScrollButton);
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatBox = document.getElementById('chat-box');
+        const scrollButton = document.getElementById('scroll-to-bottom');
+        
+        chatBox.addEventListener('scroll', toggleScrollButton);
+        window.addEventListener('resize', toggleScrollButton);
+    });
+
+    // Add this helper function at the start of your JavaScript code
+    function addInfoButton(chatBox) {
+        // Remove existing info button if any
+        const existingButton = chatBox.querySelector('.info-button');
+        if (existingButton) {
+            existingButton.remove();
+        }
+        
+        // Create and add new info button
+        const infoButton = document.createElement('button');
+        infoButton.className = 'info-button';
+        infoButton.innerHTML = `
+            <span>PascalAI</span>
+            <img src="https://i.ibb.co/2FmJnFY/image-7.png" alt="Info">
+        `;
+        chatBox.insertBefore(infoButton, chatBox.firstChild);
+    }
 </script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
