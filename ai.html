@@ -239,7 +239,7 @@
         #user-input {
     width: 90%; /* Increase default width */
     padding: 8px;
-    background: #202221;
+    background: #191A1A;
     border: none; /* Remove border */
     color: #ffffff;
     border-radius: 25px;
@@ -542,35 +542,35 @@
 
         .scroll-to-bottom {
             position: fixed;
-            bottom: 80px;
+            bottom: 140px; /* Move above input container */
             right: 20px;
-            background-color: #ffffff;
-            border: 2px solid #000000;
-            width: 40px;
-            height: 40px;
+            background-color: #00CCFF;
+            border: none; /* Remove border */
+            width: 32px; /* Make smaller */
+            height: 32px; /* Make smaller */
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.3s, transform 0.3s;
+            transition: opacity 0.3s ease, transform 0.3s ease;
             display: none; /* Initially hidden */
-            z-index: 1000; /* Lower z-index than dropdown */
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 204, 255, 0.3); /* Add subtle shadow */
         }
 
         .scroll-to-bottom:hover {
-            background-color: #f0f0f0;
-            transform: scale(1.1); /* Slightly enlarge on hover */
+            background-color: #00b3e6; /* Slightly darker on hover */
+            transform: translateY(-1px); /* Slight lift effect */
         }
 
         .scroll-to-bottom img {
-            width: 20px;
-            height: 20px;
+            width: 16px; /* Make icon smaller */
+            height: 16px; /* Make icon smaller */
+            filter: brightness(0) invert(1); /* Make icon white */
         }
         .boo-message {
         display: none;
-        font-size: 100px;
-        color: red;
         text-align: center;
         margin-top: 0%;
     }
@@ -991,7 +991,8 @@
     background-color: #2D2F2F;
     border-radius: 12px;
     padding: 12px 0;
-    min-width: 450px;
+    min-width: 300px; /* Reduced from 450px */
+    max-width: 320px; /* Reduced from 600px */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     opacity: 0;
     visibility: hidden;
@@ -1282,6 +1283,10 @@
     }
 }
 
+.chat-list-item.deleting {
+    animation: slideOutLeft 0.2s ease-in-out forwards; /* Reduced duration from 0.5s to 0.3s */
+}
+
 .chat-list-item {
     /* ...existing chat-list-item styles... */
     transition: transform 0.3s ease, opacity 0.3s ease, filter 0.3s ease;
@@ -1386,12 +1391,13 @@
     width: 20px; /* Increased from 16px */
     height: 20px; /* Increased from 16px */
     border-radius: 50%;
-    margin-top: 4px; /* Add margin to move down */
+    margin-top: 3px; /* Add margin to move down */
 }
 .loading-text {
     color: #ffffff; /* Change to white */
     font-size: 14px;
     font-family: 'Poppins', sans-serif;
+    margin-left: 3px;
 }
     .model-notification {
         position: fixed;

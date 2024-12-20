@@ -157,23 +157,21 @@ def get_ai_response(prompt: str, device_id: str, chat_id: str = None):
         
         # Performance optimization settings
         response = ollama.chat(
-            model=selected_model,  # Use the selected model
+            model=selected_model,
             messages=messages,
             options={
-                "num_predict": 30 if not is_complex_query else 75,  # Reduce token limit
-                "temperature": 0.7,  # Balance between creativity and speed
-                "top_k": 20,  # Reduce to speed up token selection
-                "top_p": 0.7,  # Reduce to speed up token selection
-                "num_ctx": 512,  # Reduced context window
-                "num_thread": 4,  # Use 4 threads for good balance
-                "repeat_penalty": 1.1,  # Slight penalty for repetition
-                "num_gpu": 1,  # Use GPU if available
-                "seed": 42,  # Fixed seed for consistent responses
-                "batch_size": 8,  # Smaller batch size for faster processing
-                "mirostat": 1,  # Enable adaptive sampling
-                "mirostat_eta": 0.1,  # Lower learning rate
-                "mirostat_tau": 3.0,  # Lower creativity
-                "stop": ["\n\n", "Human:", "Assistant:"]  # Stop tokens for shorter responses
+                "num_predict": 512 if is_complex_query else 256,  # Increased from 30/75
+                "temperature": 0.7,
+                "top_k": 40,  # Increased from 20
+                "top_p": 0.9,  # Increased from 0.7
+                "num_ctx": 4096,  # Increased context window
+                "num_thread": 4,
+                "repeat_penalty": 1.1,
+                "num_gpu": 1,
+                "seed": 42,
+                "batch_size": 8,
+                "mirostat": 0,  # Disabled adaptive sampling for more consistent completions
+                "stop": ["Human:", "Assistant:", "\n\nHuman:", "\n\nAssistant:"]  # Updated stop tokens
             }
         )
 
