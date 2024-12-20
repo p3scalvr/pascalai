@@ -343,7 +343,9 @@
         function redirectToChatPage() {
             const userInput = document.getElementById('homepage-input').value.trim();
             if (userInput) {
-                window.location.href = `/ai-page?message-user=${encodeURIComponent(userInput)}`;
+                // Store the message in localStorage to be picked up by ai.html
+                localStorage.setItem('pendingMessage', userInput);
+                window.location.href = '/ai-page?q=' + encodeURIComponent(userInput);  // Changed from 'message-user' to 'q'
             } else {
                 window.location.href = '/ai-page';
             }

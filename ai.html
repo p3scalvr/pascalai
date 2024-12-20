@@ -53,7 +53,7 @@
 
         #chat-box {
             flex-grow: 1;
-            padding: 15px;
+            padding: 15px 20% !important; /* Add 20% padding on both sides */
             overflow-y: auto;
             margin: 20px 0;
             max-height: calc(100vh - 200px); /* Increase height */
@@ -68,7 +68,7 @@
             opacity: 1; /* Remove fade in */
             animation: none; /* Remove fade in animation */
             scroll-behavior: smooth; /* Add smooth scrolling behavior */
-            margin-left: 20px; /* Move to the right a bit */
+            margin-left: 0 !important; /* Remove left margin */
             position: relative; /* Ensure input container is positioned correctly */
         }
 
@@ -81,6 +81,7 @@
         @media (max-width: 768px) {
             #chat-box {
                 max-height: calc(100vh - 100px); /* Adjust height for smaller screens */
+                padding: 15px 10% !important; /* Reduce padding on smaller screens */
             }
         }
 
@@ -123,21 +124,23 @@
             background-color: #333;
             color: #fff;
             align-self: flex-end;
-            max-width: 50%;
+            max-width: 65%; /* Reduced from 70% */
             word-wrap: break-word;
             white-space: normal;
             border-radius: 25px; /* Very rounded corners */
-            padding: 8px 20px; /* Adjust padding for a more rectangular shape */
+            padding: 6px 16px; /* Reduced padding */
             font-weight: 300; /* Add this to make text less bold */
             font-family: 'Poppins', sans-serif; /* Add this to ensure consistent font */
+            margin-right: 15%; /* Add right margin for centering */
+            font-size: 16px; /* Reduced from 18px */
         }
 
         .ai-message {
             background-color: transparent;
             color: #ffffff;
             align-self: flex-start;
-            max-width: 70%;
-            font-size: 18px; /* Reduced font size */
+            max-width: 65%; /* Reduced from 70% */
+            font-size: 16px; /* Reduced from 18px */
             word-wrap: break-word;
             white-space: normal;
             margin-bottom: 10px;
@@ -145,9 +148,10 @@
             opacity: 0;
             animation: fadeIn 1s ease-out forwards;
             font-weight: normal; /* Ensure font is not bold by default */
-            margin-left: 10px; /* Move to the right */
+            margin-left: calc(15% - 25px); /* Moved further left */
             display: flex; /* Add flex display */
-            flex-direction: column; /* Ensure text is below name tag */
+            flex-direction: row; /* Ensure text is below name tag */
+            gap: 8px; /* Reduced gap between logo and text */
         }
 
         .ai-name {
@@ -326,7 +330,7 @@
         background-clip: text; /* Standard property for broader browser support */
         color: transparent;
         text-shadow: 0 0 10px #1e90ff;
-        margin-left: 20px;
+        margin-left: 15%; /* Add left margin to match other elements */
     }
 
         @keyframes fadeInBlue {
@@ -488,8 +492,8 @@
             background-color: #000000;
         }
         .action-button {
-            background-color: #ffffff;
-            border: 2px solid #000000;
+            background-color: #808080;
+            border: none;
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -497,18 +501,34 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.3s;
+            transition: opacity 0.3s;
             margin-left: 10px; /* Space between buttons */
             display: flex; /* Initially visible */
         }
 
-        .action-button:hover {
-            background-color: #f0f0f0;
+        .action-button:not(.disabled) {
+            opacity: 1;
+        }
+
+        .action-button.disabled {
+            background-color: #808080;
+            cursor: not-allowed;
+            opacity: 0.5;
         }
 
         .action-button img {
             width: 20px;
             height: 20px;
+            filter: brightness(0) invert(1); /* Make icon white by default */
+            transition: filter 0.3s;
+        }
+
+        .action-button.active {
+            background-color: #00CCFF;
+        }
+
+        .action-button.active img {
+            filter: brightness(0); /* Make icon black when active */
         }
 
         .recording {
@@ -535,6 +555,7 @@
             justify-content: center;
             transition: background-color 0.3s, transform 0.3s;
             display: none; /* Initially hidden */
+            z-index: 1000; /* Lower z-index than dropdown */
         }
 
         .scroll-to-bottom:hover {
@@ -546,34 +567,7 @@
             width: 20px;
             height: 20px;
         }
-        .response-buttons {
-        display: flex;
-        gap: 20px; /* Increase gap between buttons */
-        margin-top: 10px;
-    }
-
-    .response-button {
-        background-color: transparent; /* Change to transparent */
-        border: none; /* Remove border */
-        width: 15px; /* Smaller size */
-        height: 15px; /* Smaller size */
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: transform 0.3s;
-    }
-
-    .response-button:hover {
-        transform: scale(1.1); /* Slightly enlarge on hover */
-    }
-
-    .response-button img {
-        width: 15px; /* Adjust size */
-        height: 15px; /* Adjust size */
-    }
-
-    .boo-message {
+        .boo-message {
         display: none;
         font-size: 100px;
         color: red;
@@ -877,8 +871,7 @@
 
     .input-wrapper.welcome-state {
         bottom: 42% !important; /* Match with welcome message position */
-        transform: translateX(-50%);
-        transition: all 0.3s ease;
+        transition: bottom 0.3s ease;
     }
 
     /* Responsive adjustments for consistent alignment */
@@ -957,7 +950,7 @@
         position: fixed; /* Change from absolute to fixed */
         top: 20px; /* Add some top spacing */
         left: 270px; /* Position after sidebar (150px + 20px padding + additional space) */
-        z-index: 1002; /* Ensure it's above other elements */
+        z-index: 10001; /* Ensure it's above other elements */
     }
 
     .info-button:hover {
@@ -977,6 +970,42 @@
         filter: brightness(0) invert(1);
     }
     .info-button {
+    position: fixed;
+    top: 20px;
+    left: 270px;
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    z-index: 10001;
+}
+
+.dropdown-menu {
+    position: fixed;
+    top: 70px; /* Position below the info button */
+    left: 270px;
+    background-color: #2D2F2F;
+    border-radius: 12px;
+    padding: 12px 0;
+    min-width: 450px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 10000; /* Increase z-index to be above everything */
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+    .info-button {
         display: flex;
         align-items: center;
         background-color: transparent;
@@ -989,7 +1018,7 @@
         position: fixed;
         top: 20px;
         left: 272px;
-        z-index: 1010; /* Increase z-index to be above everything */
+        z-index: 10001; /* Increase z-index to be above everything */
     }
 
     /* Add responsive styles for info button */
@@ -1097,7 +1126,6 @@
         from, to { background: transparent }
         50% { background: #fff }
     }
-    /* Update welcome text styles */
     .welcome-text {
         display: inline-block;
         position: relative;
@@ -1169,7 +1197,203 @@
         from, to { background-color: transparent }
         50% { background-color: #fff }
     }
-</style>
+
+/* Add these new styles for the dropdown menu */
+.dropdown-menu {
+    position: fixed;
+    top: 70px;
+    left: 270px;
+    background-color: #2D2F2F;
+    border-radius: 12px;
+    padding: 20px 0; /* Increased padding */
+    min-width: 450px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    z-index: 10000; /* Increase z-index to be above everything */
+}
+
+.dropdown-item {
+    padding: 20px; /* Added padding */
+    margin: 0 15px; /* Added margin */
+    border-bottom: 1px solid #3a3b3b; /* Added separator */
+}
+
+.dropdown-item:last-child {
+    border-bottom: none; /* Remove border from last item */
+}
+
+.model-info {
+    margin-right: 15px; /* Added space between info and button */
+}
+
+.model-name {
+    color: #fff; /* Changed to white */
+    font-size: 16px;
+    margin-bottom: 8px; /* Added space between name and description */
+}
+
+.model-description {
+    color: #888;
+    font-size: 13px;
+    line-height: 1.4; /* Improved line height for readability */
+}
+
+.model-description {
+    color: #888;
+    font-size: 13px;
+}
+
+.model-button {
+    background-color: #00e5ff;
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: opacity 0.3s ease;
+    margin-left: 16px;
+}
+
+.model-button.active {
+    background-color: #2D2F2F;
+    color: #00e5ff;
+    border: 1px solid #00e5ff;
+}
+
+.model-button:hover {
+    opacity: 0.9;
+}
+
+/* Update the chat deletion animation */
+@keyframes slideOutLeft {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+        filter: blur(0);
+    }
+    100% {
+        transform: translateX(-100%);
+        opacity: 0;
+        filter: blur(4px);
+    }
+}
+
+.chat-list-item {
+    /* ...existing chat-list-item styles... */
+    transition: transform 0.3s ease, opacity 0.3s ease, filter 0.3s ease;
+    backface-visibility: hidden; /* Improve animation performance */
+    will-change: transform, opacity, filter; /* Optimize for animations */
+}
+
+.chat-list-item.deleting {
+    animation: slideOutLeft 0.5s ease-in-out forwards;
+}
+
+/* Auth buttons styles */
+.auth-buttons {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Individual auth button styles */
+.auth-button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    transition: transform 0.2s ease, background-color 0.3s;
+    color: #fff;
+}
+
+/* Login button specific styles */
+.auth-button:first-child {
+    background-color: #2ecc71;
+}
+
+.auth-button:first-child:hover {
+    background-color: #27ae60;
+    transform: translateY(-1px);
+}
+
+/* Sign up button specific styles */
+.auth-button:last-child {
+    background-color: #2D2F2F;
+}
+
+.auth-button:last-child:hover {
+    background-color: #3a3b3b;
+    transform: translateY(-1px);
+}
+.loading-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    margin: 10px 0;
+    opacity: 0;
+    animation: fadeIn 0.3s ease-out forwards;
+    margin-left: calc(15% - 25px);
+    margin-right: 15%;
+}
+
+.logo-container {
+    position: relative;
+    width: 20px; /* Increased from 16px */
+    height: 20px; /* Increased from 16px */
+    margin-top: 4px; /* Add margin to move down */
+}
+
+.ai-logo {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.spinner {
+    position: absolute;
+    top: -4px; /* Adjusted position */
+    left: -4px; /* Adjusted position */
+    width: calc(100% + 6px); /* Increased size of spinner */
+    height: calc(100% + 6px); /* Increased size of spinner */
+    border: 2px solid transparent;
+    border-top-color: #1ed6ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Also update the AI message logo size for consistency */
+.ai-message img.message-logo {
+    width: 20px; /* Increased from 16px */
+    height: 20px; /* Increased from 16px */
+    border-radius: 50%;
+    margin-top: 4px; /* Add margin to move down */
+}
+.loading-text {
+    color: #ffffff; /* Change to white */
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+}
+    </style>
 </head>
 <body>
     <div class="sidebar">
@@ -1185,13 +1409,41 @@
         <ul class="chat-list" id="chat-list">
             <!-- Chat items will be dynamically added here -->
         </ul>
+        <div class="auth-buttons">
+            <button class="auth-button">Login</button>
+            <button class="auth-button">Sign Up</button>
+        </div>
         <!-- Sidebar content -->
     </div>
     <div class="main-content">
-        <button class="info-button">
+        <button class="info-button" id="info-button" data-dropdown-trigger>
             <span>PascalAI</span>
             <img src="https://i.ibb.co/2FmJnFY/image-7.png" alt="Info">
         </button>
+
+        <div class="dropdown-menu" id="model-dropdown">
+            <div class="dropdown-item">
+                <div class="model-info">
+                    <div class="model-name">Llama 3.2 (1B)</div>
+                    <div class="model-description">Fast and efficient language model. Perfect for everyday tasks and quick responses.</div>
+                </div>
+                <button class="model-button active" data-model="llama3.2:1b">Active</button>
+            </div>
+            <div class="dropdown-item">
+                <div class="model-info">
+                    <div class="model-name">Gemma 2 (2B)</div>
+                    <div class="model-description">Google's latest model. Good balance of speed and capability.</div>
+                </div>
+                <button class="model-button" data-model="gemma2:2b">Enable</button>
+            </div>
+            <div class="dropdown-item">
+                <div class="model-info">
+                    <div class="model-name">Llava-Llama 3 (8B)</div>
+                    <div class="model-description">Advanced multimodal model. Can analyze images and handle complex tasks.</div>
+                </div>
+                <button class="model-button" data-model="llava-llama3:8b">Enable</button>
+            </div>
+        </div>
         <header>
          
          
@@ -1205,7 +1457,9 @@
     <div class="input-wrapper">
         <div class="input-container" id="input-container">
             <textarea id="user-input" placeholder="Message PascalAI" onkeydown="checkEnter(event)" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
-            <div class="action-button" onclick="toggleRecording()"><img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone"></div>
+            <div class="action-button">
+                <img src="https://cdn1.iconfinder.com/data/icons/wayfinding-signage/100/Arrow_Up-512.png" alt="Send">
+            </div>
         </div>
     </div>
     </div>
@@ -1306,6 +1560,13 @@
         const userMessage = inputField.value.trim();
         if (userMessage === "") return;
 
+        // Reset action button to gray state
+        const actionButton = document.querySelector('.action-button');
+        actionButton.classList.remove('active');
+        const actionImage = actionButton.querySelector('img');
+        actionImage.style.filter = 'brightness(0) invert(1)'; // White icon
+
+        // Rest of the existing sendMessage code...
         const welcomeMessage = document.getElementById('welcome-message');
         const inputWrapper = document.querySelector('.input-wrapper');
         const chatBox = document.getElementById('chat-box');
@@ -1424,8 +1685,14 @@ function createNewChat(isAutoCreated = false) {
     function toggleScrollButton() {
         const chatBox = document.getElementById('chat-box');
         const scrollButton = document.getElementById('scroll-to-bottom');
+        const dropdown = document.getElementById('model-dropdown');
+        
         if (chatBox.scrollTop < chatBox.scrollHeight - chatBox.clientHeight - 100) {
             scrollButton.style.display = 'flex';
+            // Hide scroll button if dropdown is visible
+            if (dropdown.classList.contains('show')) {
+                scrollButton.style.display = 'none';
+            }
         } else {
             scrollButton.style.display = 'none';
         }
@@ -1442,21 +1709,31 @@ function createNewChat(isAutoCreated = false) {
 
     function displayAiMessage(message, memoryUpdated) {
         const chatBox = document.getElementById('chat-box');
+        
+        // Remove loading indicator if exists
+        const loadingIndicator = chatBox.querySelector('.loading-indicator');
+        if (loadingIndicator) {
+            loadingIndicator.remove();
+        }
+
         const aiMessageDiv = document.createElement('div');
         aiMessageDiv.classList.add('ai-message');
-    
-        const aiNameDiv = document.createElement('div');
-        aiNameDiv.classList.add('ai-name');
-        aiNameDiv.textContent = 'PascalAI:';
-    
-        const messageDiv = document.createElement('div');
-        aiMessageDiv.appendChild(aiNameDiv);
-        aiMessageDiv.appendChild(messageDiv);
+        
+        // Add logo to message
+        const logoImg = document.createElement('img');
+        logoImg.src = 'https://i.ibb.co/4p1JTsg/image-1.png';
+        logoImg.alt = 'AI';
+        logoImg.classList.add('message-logo');
+        
+        const messageContent = document.createElement('div');
+        messageContent.classList.add('message-content');
+        
+        aiMessageDiv.appendChild(logoImg);
+        aiMessageDiv.appendChild(messageContent);
         chatBox.appendChild(aiMessageDiv);
-        chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
-    
+        
         // Call the live text rendering function
-        liveTextRendering(message, messageDiv, memoryUpdated);
+        liveTextRendering(message, messageContent, memoryUpdated);
     }
 
     function liveTextRendering(text, element, memoryUpdated) {
@@ -1473,9 +1750,8 @@ function createNewChat(isAutoCreated = false) {
         actionButton.classList.remove('disabled');
         actionButton.onclick = () => {
             stopTyping = true;
-            actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
-            actionButton.onclick = toggleRecording;
-            createResponseButtons(element.parentElement); // Show response buttons when paused
+            actionButton.innerHTML = '<img src="https://cdn1.iconfinder.com/data/icons/wayfinding-signage/100/Arrow_Up-512.png" alt="Send">';
+            actionButton.onclick = sendMessage;
         };
 
         const typingFade = document.createElement('span');
@@ -1509,10 +1785,9 @@ function createNewChat(isAutoCreated = false) {
                 if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
             } else {
                 typingFade.classList.remove('active');
-                actionButton.innerHTML = '<img src="https://www.iconpacks.net/icons/1/free-microphone-icon-342-thumb.png" alt="Microphone">';
+                actionButton.innerHTML = '<img src="https://cdn1.iconfinder.com/data/icons/wayfinding-signage/100/Arrow_Up-512.png" alt="Send">';
                 actionButton.classList.remove('disabled');
-                actionButton.onclick = toggleRecording;
-                createResponseButtons(element.parentElement);
+                actionButton.onclick = sendMessage;
                 if (memoryUpdated) {
                     const memoryUpdatedDiv = document.createElement('div');
                     memoryUpdatedDiv.classList.add('memory-updated');
@@ -1530,13 +1805,20 @@ function createNewChat(isAutoCreated = false) {
 
     function displayThinkingIndicator(message) {
         const chatBox = document.getElementById('chat-box');
-        const thinkingDiv = document.createElement('div');
-        thinkingDiv.classList.add('thinking');
-        thinkingDiv.textContent = message;
-        chatBox.appendChild(thinkingDiv);
+        const loadingDiv = document.createElement('div');
+        loadingDiv.classList.add('loading-indicator');
+        
+        loadingDiv.innerHTML = `
+            <div class="logo-container">
+                <img src="https://i.ibb.co/4p1JTsg/image-1.png" alt="AI" class="ai-logo">
+                <div class="spinner"></div>
+            </div>
+            <span class="loading-text">Just a sec...</span>
+        `;
+        
+        chatBox.appendChild(loadingDiv);
         chatBox.scrollTop = chatBox.scrollHeight;
 
-        // Show disabled send button during thinking phase
         const actionButton = document.querySelector('.action-button');
         actionButton.style.display = 'flex';
         actionButton.innerHTML = '<img src="https://cdn1.iconfinder.com/data/icons/wayfinding-signage/100/Arrow_Up-512.png" alt="Send">';
@@ -1596,9 +1878,14 @@ function createNewChat(isAutoCreated = false) {
         return fetch("/chat", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "X-Selected-Model": currentModel
             },
-            body: JSON.stringify({ prompt: userMessage, chat_id: currentChatId })
+            body: JSON.stringify({ 
+                prompt: userMessage, 
+                chat_id: currentChatId,
+                model: currentModel
+            })
         })
         .then(response => response.json())
         .then(data => {
@@ -1694,90 +1981,6 @@ function createNewChat(isAutoCreated = false) {
     }
 }
 
-function createResponseButtons(element) {
-    // Prevent button duplication
-    if (element.querySelector('.response-buttons')) return;
-
-    const responseButtonsDiv = document.createElement('div');
-    responseButtonsDiv.classList.add('response-buttons');
-
-    // Create speech button first
-    const speechButton = document.createElement('div');
-    speechButton.classList.add('response-button');
-    speechButton.innerHTML = '<img src="https://i.ibb.co/qBH8ywV/image-7.png" alt="Text to Speech">';
-    speechButton.onclick = () => {
-        const aiText = element.querySelector(':not(.ai-name):not(.response-buttons)').textContent;
-        speak(aiText);
-    };
-
-    // Add buttons in desired order
-    responseButtonsDiv.appendChild(speechButton); // Speech button first
-
-    const regenerateButton = document.createElement('div');
-    regenerateButton.classList.add('response-button');
-    regenerateButton.innerHTML = '<img src="https://i.ibb.co/SVKsVqX/regenerate.png" alt="Regenerate">';
-    regenerateButton.onclick = () => {
-        if (lastUserMessage && !isRegenerating && !isGenerating) {
-            isRegenerating = true;
-            isGenerating = true;
-            regenerateButton.classList.add('disabled');
-            const inputField = document.getElementById('user-input');
-            inputField.disabled = true;
-            
-            // Remove the last user-AI message pair from chat history
-            if (chatHistories[currentChatId] && chatHistories[currentChatId].length >= 2) {
-                chatHistories[currentChatId].pop(); // Remove last AI message
-                chatHistories[currentChatId].pop(); // Remove last user message
-            }
-            
-            // Clear chat box and redisplay all messages except the last pair
-            const chatBox = document.getElementById('chat-box');
-            chatBox.innerHTML = '';
-            if (chatHistories[currentChatId]) {
-                chatHistories[currentChatId].forEach(message => {
-                    if (message.role === 'user') {
-                        displayUserMessage(message.content);
-                    } else if (message.role === 'assistant') {
-                        displayAiMessage(message.content, false);
-                    }
-                });
-            }
-
-            // Display the last user message again and generate new response
-            displayUserMessage(lastUserMessage);
-            displayThinkingIndicator("PascalAI is Thinking...");
-            simulateAiResponse(lastUserMessage, inputField).finally(() => {
-                regenerateButton.classList.remove('disabled');
-                isGenerating = false;
-                isRegenerating = false;
-            });
-        }
-    };
-
-    const thumbsUpButton = document.createElement('div');
-    thumbsUpButton.classList.add('response-button');
-    thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Up">';
-    thumbsUpButton.onclick = () => {
-        thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/cD3ZZSn/thumb-2.png" alt="Thumbs Up">';
-        thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
-    };
-
-    const thumbsDownButton = document.createElement('div');
-    thumbsDownButton.classList.add('response-button');
-    thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
-    thumbsDownButton.onclick = () => {
-        thumbsDownButton.innerHTML = '<img src="https://i.ibb.co/Ksh43S1/thumb-1.png" alt="Thumbs Down" style="transform: rotate(180deg);">';
-        thumbsUpButton.innerHTML = '<img src="https://i.ibb.co/NNFtYwV/thumb.png" alt="Thumbs Up">';
-    };
-
-    responseButtonsDiv.appendChild(regenerateButton);
-    responseButtonsDiv.appendChild(thumbsUpButton);
-    responseButtonsDiv.appendChild(thumbsDownButton);
-    responseButtonsDiv.appendChild(speechButton); // Add speech button to response buttons
-
-    element.appendChild(responseButtonsDiv);
-}
-
 // Add styles for audio player
 const style = document.createElement('style');
 style.textContent = `
@@ -1819,15 +2022,18 @@ document.head.appendChild(style);
             return;
         }
         
-        // Remove from local storage
-        delete chatHistories[chatId];
-        localStorage.setItem('chatHistories', JSON.stringify(chatHistories));
-        
-        // Remove from UI
         const chatItems = document.querySelectorAll('.chat-list-item');
         chatItems.forEach(item => {
             if (item.firstChild.textContent === chatId) {
-                item.remove();
+                // Add deletion animation
+                item.classList.add('deleting');
+                // Wait for animation to complete before removing
+                setTimeout(() => {
+                    item.remove();
+                    // Remove from local storage
+                    delete chatHistories[chatId];
+                    localStorage.setItem('chatHistories', JSON.stringify(chatHistories));
+                }, 500); // Match animation duration
             }
         });
         
@@ -1837,12 +2043,11 @@ document.head.appendChild(style);
             const chatBox = document.getElementById('chat-box');
             const inputWrapper = document.querySelector('.input-wrapper');
             chatBox.innerHTML = '';
-            inputWrapper.style.transition = 'bottom 0.3s ease'; // Add smooth transition
+            inputWrapper.style.transition = 'bottom 0.3s ease';
             inputWrapper.classList.add('welcome-state');
             setTimeout(() => {
                 showWelcomeMessage();
-                inputWrapper.style.bottom = '35%';  // Explicitly set bottom position
-            }, 0);
+            }, 300);
         }
     }
 
@@ -1992,19 +2197,173 @@ document.head.appendChild(style);
     function addInfoButton(chatBox) {
         // Remove existing info button if any
         const existingButton = chatBox.querySelector('.info-button');
-        if (existingButton) {
-            existingButton.remove();
-        }
+        const existingDropdown = chatBox.querySelector('.dropdown-menu');
+        if (existingButton) existingButton.remove();
+        if (existingDropdown) existingDropdown.remove();
         
-        // Create and add new info button
-        const infoButton = document.createElement('button');
-        infoButton.className = 'info-button';
-        infoButton.innerHTML = `
-            <span>PascalAI</span>
-            <img src="https://i.ibb.co/2FmJnFY/image-7.png" alt="Info">
+        // Create the info button and dropdown structure
+        const buttonContainer = document.createElement('div');
+        buttonContainer.innerHTML = `
+            <button class="info-button" id="info-button">
+                <span>PascalAI</span>
+                <img src="https://i.ibb.co/2FmJnFY/image-7.png" alt="Info">
+            </button>
+            <div class="dropdown-menu" id="model-dropdown">
+                <div class="dropdown-item">
+                    <div class="model-info">
+                        <div class="model-name">Llama 3.2 (1B)</div>
+                        <div class="model-description">Fast and efficient language model. Perfect for everyday tasks.</div>
+                    </div>
+                    <button class="model-button active" data-model="llama3.2:1b">Active</button>
+                </div>
+                <div class="dropdown-item">
+                    <div class="model-info">
+                        <div class="model-name">Gemma 2 (2B)</div>
+                        <div class="model-description">Google's latest model. Good balance of speed and capability.</div>
+                    </div>
+                    <button class="model-button" data-model="gemma2:2b">Enable</button>
+                </div>
+                <div class="dropdown-item">
+                    <div class="model-info">
+                        <div class="model-name">Llava-Llama 3 (8B)</div>
+                        <div class="model-description">Advanced multimodal model. Can analyze images and handle complex tasks.</div>
+                    </div>
+                    <button class="model-button" data-model="llava-llama3:8b">Enable</button>
+                </div>
+            </div>
         `;
-        chatBox.insertBefore(infoButton, chatBox.firstChild);
+        
+        chatBox.insertBefore(buttonContainer, chatBox.firstChild);
+        
+        // Add click handlers
+        const infoButton = buttonContainer.querySelector('#info-button');
+        const dropdown = buttonContainer.querySelector('#model-dropdown');
+        
+        infoButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('show');
+        });
+        
+        // Model selection handling
+        buttonContainer.querySelectorAll('.model-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const modelName = this.dataset.model;
+                setActiveModel(modelName);
+                showModelNotification(modelName);
+                
+                setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            });
+        });
     }
+
+    // Update the click outside handler
+    document.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('model-dropdown');
+        const infoButton = document.getElementById('info-button');
+        if (dropdown && !dropdown.contains(e.target) && !infoButton.contains(e.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+
+    // Update the input event handler to change button state
+    document.getElementById('user-input').addEventListener('input', function() {
+        const actionButton = document.querySelector('.action-button');
+        const actionImage = actionButton.querySelector('img');
+        if (this.value.trim()) {
+            actionButton.classList.add('active');
+            actionImage.style.filter = 'brightness(0)'; // Black icon
+        } else {
+            actionButton.classList.remove('active');
+            actionImage.style.filter = 'brightness(0) invert(1)'; // White icon
+        }
+    });
+
+    // Initial button state
+    window.addEventListener('load', function() {
+        const actionButton = document.querySelector('.action-button');
+        const actionImage = actionButton.querySelector('img');
+        actionImage.style.filter = 'brightness(0) invert(1)'; // Start with white icon
+    });
+
+// Add this near your other JavaScript code
+let currentModel = localStorage.getItem('selectedModel') || 'llama3.2:1b';
+
+document.addEventListener('DOMContentLoaded', function() {
+    const infoButton = document.getElementById('info-button');
+    const dropdown = document.getElementById('model-dropdown');
+    
+    // Initialize the active model
+    const storedModel = localStorage.getItem('selectedModel');
+    if (storedModel) {
+        setActiveModel(storedModel);
+    }
+    
+    infoButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('show');
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target) && !infoButton.contains(e.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+    
+    // Model selection handling
+    document.querySelectorAll('.model-button').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const modelName = this.dataset.model;
+            setActiveModel(modelName);
+            
+            // Show notification
+            showModelNotification(modelName);
+            
+            // Close dropdown
+            setTimeout(() => {
+                dropdown.classList.remove('show');
+            }, 300);
+        });
+    });
+});
+
+function setActiveModel(modelName) {
+    // Update UI
+    document.querySelectorAll('.model-button').forEach(btn => {
+        const isActive = btn.dataset.model === modelName;
+        btn.classList.toggle('active', isActive);
+        btn.textContent = isActive ? 'Active' : 'Enable';
+    });
+
+    // Store selection
+    localStorage.setItem('selectedModel', modelName);
+    currentModel = modelName;
+
+    // Log model change to console
+    console.log(`Switched AI model to: ${modelName}`);
+    
+    // Show formatted model info in console
+    console.log('%cAI Model Changed', 'color: #39d4ff; font-size: 14px; font-weight: bold;');
+    console.log('%cModel:', 'color: #888', modelName);
+    console.log('%cStatus:', 'color: #888', 'Active');
+    
+    // Update API requests to include model info
+}
+
+function showModelNotification(modelName) {
+    const notification = document.createElement('div');
+    notification.className = 'model-notification';
+    notification.textContent = `Switched to ${modelName}`;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.remove();
+    }, 2000);
+}
 </script>
 </body>
 </html>

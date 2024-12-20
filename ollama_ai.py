@@ -3,6 +3,7 @@ import torch  # PyTorch library, if Ollama internally uses PyTorch/TensorFlow
 import json
 import time
 import requests
+from flask import request
 from datetime import datetime
 import pytz
 
@@ -38,21 +39,21 @@ def verify_response(response: str):
 
 # Function to get the current date and time based on the user's timezone
 def get_current_datetime():
-    user_timezone = pytz.timezone('America/New_York')  # Replace with the user's actual timezone
+    user_timezone = pytz.timezone('America/New_York')  # You can adjust the timezone as needed
     now = datetime.now(user_timezone)
     return now.strftime("%A, %B %d, %Y %I:%M:%S %p")
 
 # Function to check for easter eggs
 def check_easter_eggs(prompt: str):
     easter_eggs = {
-        "who is pascal": "Pascal is a very hot man",
-        "who is joe biden": "'J' This is a very common question Pascal asked PascalAI for debugging and testing",
-        "what day is it": f"Today is {get_current_datetime().split(',')[0]}, {get_current_datetime().split(',')[1].strip()}.",
-        "what time is it": f"The current time is {get_current_datetime().split()[-2]} {get_current_datetime().split()[-1]}."
+        "what day is it": f"Today is {get_current_datetime().split(',')[0]}.",
+        "what time is it": f"The current time is {get_current_datetime().split()[-2]} {get_current_datetime().split()[-1]}.",
+        "what is the time": f"The current time is {get_current_datetime().split()[-2]} {get_current_datetime().split()[-1]}.",
+        "what's the time": f"The current time is {get_current_datetime().split()[-2]} {get_current_datetime().split()[-1]}."
     }
     for key, value in easter_eggs.items():
-        if key in prompt.lower():
-            return value
+        if key.lower() in prompt.lower():
+            return value, False, None  # Return tuple of (response, memory_updated, chat_id)
     return None
 
 # Function to get or create a new chat ID
@@ -72,12 +73,29 @@ def get_interaction_history(device_id: str, chat_id: str):
 # Function to interact with Ollama's AI model
 def get_ai_response(prompt: str, device_id: str, chat_id: str = None):
     try:
-        # Remove video-related code
+        # Get the selected model from request headers
+        selected_model = request.headers.get('X-Selected-Model')
+        
+        # If not in headers, try to get from request body
+        if not selected_model and request.is_json:
+            selected_model = request.json.get('model')
+        
+        # Default to llama3.2:1b if still no model specified
+        if not selected_model:
+            selected_model = 'llama3.2:1b'
+            
+        print(f"Using AI Model: {selected_model}")  # Debug log
 
-        # Check for easter eggs
+        # If model changed during chat, force new chat creation
+        if chat_id and 'previous_model' in request.headers:
+            previous_model = request.headers.get('previous_model')
+            if previous_model != selected_model:
+                chat_id = None  # This will trigger creation of new chat
+
+        # Check for easter eggs first
         easter_egg_response = check_easter_eggs(prompt)
         if easter_egg_response:
-            return easter_egg_response, False
+            return easter_egg_response
 
         # Retrieve or initialize interaction history for the device ID and chat ID
         if device_id not in interaction_histories:
@@ -98,19 +116,24 @@ def get_ai_response(prompt: str, device_id: str, chat_id: str = None):
         is_complex_query = any(word in prompt.lower() for word in 
             ['explain', 'detail', 'elaborate', 'how to', 'describe', 'what is'])
 
-        # Add length hint based on query type
+        # Optimize system messages for performance
+        messages = [
+            {"role": "system", "content": "You are a helpful AI. Be concise."}
+        ]
+
+        # Only add length hint for simple queries
         if not is_complex_query:
             messages.append({
                 "role": "system", 
-                "content": "Provide a single short sentence response unless specifically asked for more detail."
+                "content": "Keep responses under 50 words."
             })
 
         # Continue with existing message history logic
         if knowledge_base:
             messages.append({"role": "system", "content": f"Reference information: {knowledge_base}"})
 
-        # Only include last 3 interactions to reduce context
-        for interaction in interaction_history[-10:]:
+        # Only include last 5 interactions to reduce context
+        for interaction in interaction_history[-5:]:
             messages.append({"role": "user", "content": interaction["user"]})
             messages.append({"role": "assistant", "content": interaction["ai"]})
 
@@ -119,15 +142,38 @@ def get_ai_response(prompt: str, device_id: str, chat_id: str = None):
         # Measure start time
         start_time = time.time()
 
-        # Send request to Ollama with optimized parameters for faster generation
+        # Get the selected model from request headers or localStorage
+        selected_model = request.headers.get('X-Selected-Model')
+        
+        # If no model specified in headers, try to get from request JSON
+        if not selected_model and request.is_json:
+            selected_model = request.json.get('model')
+        
+        # Default to gemma2:2b if no model specified
+        if not selected_model:
+            selected_model = 'gemma2:2b'
+            
+        print(f"Using AI Model: {selected_model}")  # Log the model being used
+        
+        # Performance optimization settings
         response = ollama.chat(
-            model="gemma2:2b",
+            model=selected_model,  # Use the selected model
             messages=messages,
             options={
-                "num_predict": 50 if not is_complex_query else 100,  # Reduce token limit
-                "temperature": 0.5,  # Further reduce randomness
-                "top_k": 30,  # Further reduce to focus on more likely tokens
-                "top_p": 0.8  # Further reduce to focus on more likely completions
+                "num_predict": 30 if not is_complex_query else 75,  # Reduce token limit
+                "temperature": 0.7,  # Balance between creativity and speed
+                "top_k": 20,  # Reduce to speed up token selection
+                "top_p": 0.7,  # Reduce to speed up token selection
+                "num_ctx": 512,  # Reduced context window
+                "num_thread": 4,  # Use 4 threads for good balance
+                "repeat_penalty": 1.1,  # Slight penalty for repetition
+                "num_gpu": 1,  # Use GPU if available
+                "seed": 42,  # Fixed seed for consistent responses
+                "batch_size": 8,  # Smaller batch size for faster processing
+                "mirostat": 1,  # Enable adaptive sampling
+                "mirostat_eta": 0.1,  # Lower learning rate
+                "mirostat_tau": 3.0,  # Lower creativity
+                "stop": ["\n\n", "Human:", "Assistant:"]  # Stop tokens for shorter responses
             }
         )
 

@@ -38,35 +38,30 @@ def chat():
     device_id = get_device_id()
     
     if user_input:
-        print(f"\n{device_id}: {user_input}")
         try:
-            # Add response type hint based on input length
-            if len(user_input) < 50 and not any(word in user_input.lower() for word 
-                in ['explain', 'detail', 'elaborate', 'how to', 'describe', 'what is']):
-                # Short query - expect concise response
-                response_type = "concise"
-            else:
-                # Longer or complex query - allow detailed response
-                response_type = "detailed"
-
-            response, memory_updated, chat_id = get_ai_response(
-                user_input, device_id, chat_id
-            )
-
-            # Truncate extremely long responses if not a complex query
-            if response_type == "concise" and len(response) > 150:
-                response = response.split('.')[0] + '.'  # Keep first sentence only
-
-            print(f"AI: {response}")
+            # Get response
+            response = get_ai_response(user_input, device_id, chat_id)
+            
+            # If it's a tuple (from easter eggs), unpack it
+            if isinstance(response, tuple):
+                return jsonify({
+                    "response": response[0],
+                    "memory_updated": response[1],
+                    "chat_id": response[2] or chat_id
+                })
+            
+            # Regular response handling
             return jsonify({
-                "response": response,
-                "memory_updated": memory_updated,
-                "chat_id": chat_id
+                "response": response[0],
+                "memory_updated": response[1],
+                "chat_id": response[2]
             })
+
         except Exception as e:
-            print(f"Error fetching AI response: {e}")
-            return jsonify({"response": "Sorry, I'll keep it brief: An error occurred."})
-    return jsonify({"response": "No prompt received."})
+            print(f"Error: {e}")
+            return jsonify({"response": "An error occurred. Please try again."})
+
+    return jsonify({"response": "No input received."})
 
 @app.route("/ai-page")
 def ai_page():
