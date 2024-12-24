@@ -7,8 +7,11 @@ from flask import request
 from datetime import datetime
 import pytz
 
-# Memory storage for interaction history by device ID and chat ID
-interaction_histories = {}
+# Modify the interaction histories structure to include memory
+interaction_histories = {
+    'chats': {},
+    'memories': {}
+}
 
 # Load external knowledge base from a text file
 def load_knowledge_base(file_path: str):
@@ -58,21 +61,41 @@ def check_easter_eggs(prompt: str):
 
 # Function to get or create a new chat ID
 def get_or_create_chat_id(device_id: str):
-    if device_id not in interaction_histories:
-        interaction_histories[device_id] = {}
-    chat_id = f"Chat {len(interaction_histories[device_id]) + 1}"
-    interaction_histories[device_id][chat_id] = []
+    if device_id not in interaction_histories['chats']:
+        interaction_histories['chats'][device_id] = {}
+    chat_id = f"Chat {len(interaction_histories['chats'][device_id]) + 1}"
+    interaction_histories['chats'][device_id][chat_id] = []
     return chat_id
 
 # Function to get the current interaction history
 def get_interaction_history(device_id: str, chat_id: str):
-    if device_id in interaction_histories and chat_id in interaction_histories[device_id]:
-        return interaction_histories[device_id][chat_id]
+    if device_id in interaction_histories['chats'] and chat_id in interaction_histories['chats'][device_id]:
+        return interaction_histories['chats'][device_id][chat_id]
     return []
 
 # Function to interact with Ollama's AI model
 def get_ai_response(prompt: str, device_id: str, chat_id: str = None):
     try:
+        # Initialize memory_updated at the start
+        memory_updated = False
+        
+        selected_model = request.headers.get('X-Selected-Model')
+        
+        # Handle image analysis for Llava-Llama 3
+        if prompt.startswith("Analyze image:") and selected_model == 'llava-llama3:8b':
+            image_path = prompt.split(": ")[1]
+            with open(image_path, "rb") as image_file:
+                response = ollama.chat(
+                    model='llava-llama3:8b',
+                    messages=[{
+                        "role": "user",
+                        "content": "Analyze this image and describe what you see:",
+                        "images": [image_file.read()]
+                    }],
+                    stream=False
+                )
+                return response["message"]["content"], False, chat_id
+
         # Get the selected model from request headers
         selected_model = request.headers.get('X-Selected-Model')
         
@@ -98,14 +121,14 @@ def get_ai_response(prompt: str, device_id: str, chat_id: str = None):
             return easter_egg_response
 
         # Retrieve or initialize interaction history for the device ID and chat ID
-        if device_id not in interaction_histories:
-            interaction_histories[device_id] = {}
+        if device_id not in interaction_histories['chats']:
+            interaction_histories['chats'][device_id] = {}
         if not chat_id:
             chat_id = get_or_create_chat_id(device_id)
-        if chat_id not in interaction_histories[device_id]:
-            interaction_histories[device_id][chat_id] = []
+        if chat_id not in interaction_histories['chats'][device_id]:
+            interaction_histories['chats'][device_id][chat_id] = []
 
-        interaction_history = interaction_histories[device_id][chat_id]
+        interaction_history = interaction_histories['chats'][device_id][chat_id]
 
         # Add response length guidance to system message
         messages = [
@@ -188,10 +211,31 @@ def get_ai_response(prompt: str, device_id: str, chat_id: str = None):
         # Verify the AI response
         verified_reply = verify_response(ai_reply)
 
-        # Check if the response contains important information (e.g., a name) and the user wants it to be remembered
-        memory_updated = False
-        if "remember" in prompt.lower() or "my name is" in prompt.lower() or "don't forget" in prompt.lower() or "i like" in prompt.lower():
-            memory_updated = True
+        # Check for memory-related keywords in prompt
+        memory_keywords = ["my name is", "remember", "don't forget", "i like", "i am", "i'm"]
+        should_remember = any(keyword in prompt.lower() for keyword in memory_keywords)
+
+        # Initialize device memories if not exists
+        if device_id not in interaction_histories['memories']:
+            interaction_histories['memories'][device_id] = {}
+
+        # Store memory if needed
+        if should_remember:
+            # Extract the relevant information from the prompt
+            memory_content = prompt.lower()
+            for keyword in memory_keywords:
+                if keyword in memory_content:
+                    memory_value = memory_content.split(keyword)[1].strip()
+                    interaction_histories['memories'][device_id][keyword] = memory_value
+                    memory_updated = True
+                    print(f"Memory stored for {device_id}: {keyword} -> {memory_value}")
+
+        # Include memories in context for responses
+        if device_id in interaction_histories['memories']:
+            memories = interaction_histories['memories'][device_id]
+            if memories:
+                memory_context = "Previous information: " + ", ".join([f"{k}: {v}" for k, v in memories.items()])
+                messages.append({"role": "system", "content": memory_context})
 
         # Store interaction history
         interaction_history.append({"user": prompt, "ai": verified_reply, "memory_updated": memory_updated})
@@ -202,7 +246,7 @@ def get_ai_response(prompt: str, device_id: str, chat_id: str = None):
         return "Error: The response from the server was not valid JSON.", False
     except Exception as e:
         print(f"An error occurred: {e}")
-        return f"Error: {e}", False
+        return f"Error: {e}", False, chat_id
 
 # Example usage
 if __name__ == "__main__":

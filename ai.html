@@ -740,8 +740,8 @@
     }
 
     .trash-icon {
-        width: 20px;
-        height: 20px;
+        width: 16px;
+        height: 16px;
         cursor: pointer;
         position: absolute;
         right: 10px;
@@ -749,24 +749,16 @@
         transform: translateY(-50%);
         opacity: 0;
         visibility: hidden;
-        transition: opacity 0.2s ease, visibility 0.2s ease;
+        transition: opacity 0.2s ease;
+        filter: brightness(0) invert(1) !important; /*  Force white color */
     }
 
     .chat-list-item:hover .trash-icon {
         opacity: 0.7;
         visibility: visible;
     }
-
-    @keyframes gentleWobble {
-        0% { transform: translateY(-50%) rotate(0deg); }
-        25% { transform: translateY(-50%) rotate(-8deg); }
-        75% { transform: translateY(-50%) rotate(8deg); }
-        100% { transform: translateY(-50%) rotate(0deg); }
-    }
-
-    .trash-icon:hover {
+    .chat-list-item:hover .trash-icon:hover {
         opacity: 1;
-        animation: gentleWobble 0.5s ease-in-out;
     }
 
     @keyframes shakeError {
@@ -817,8 +809,8 @@
     }
 
     .trash-icon {
-        width: 20px;
-        height: 20px;
+        width: 16px;
+        height: 16px;
         cursor: pointer;
         position: absolute;
         right: 10px;
@@ -826,7 +818,8 @@
         transform: translateY(-50%);
         opacity: 0;
         visibility: hidden;
-        transition: opacity 0.2s ease, visibility 0.2s ease;
+        transition: opacity 0.2s ease;
+        filter: brightness(0) invert(1); /* Make icon white */
     }
 
     .chat-list-item:hover .trash-icon {
@@ -834,21 +827,10 @@
         visibility: visible;
     }
 
-    @keyframes gentleWobble {
-        0% { transform: translateY(-50%) rotate(0deg); }
-        25% { transform: translateY(-50%) rotate(-8deg); }
-        75% { transform: translateY(-50%) rotate(8deg); }
-        100% { transform: translateY(-50%) rotate(0deg); }
-    }
-
-    .trash-icon:hover {
-        opacity: 1;
-        animation: gentleWobble 0.5s ease-in-out;
-    }
-
     .trash-icon:hover {
         opacity: 1;
     }
+
     .welcome-message {
         color: #ffffff;
         font-size: 34px;
@@ -1440,28 +1422,206 @@
     .dropdown-item:last-child {
         border-bottom: none;
     }
-    </style>
+    /* Add these new styles for the enhanced sidebar */
+    .sidebar {
+        width: 280px;
+        height: 100vh;
+        background: linear-gradient(180deg, #0f1012 0%, #151618 100%);
+        position: fixed;
+        left: 0;
+        top: 0;
+        padding: 24px;
+        z-index: 1000;
+        box-sizing: border-box;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar-header {
+        margin-bottom: 32px;
+        padding: 0;
+    }
+
+    .sidebar-header a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        padding: 8px;
+        border-radius: 12px;
+        transition: background-color 0.3s ease;
+    }
+
+    .sidebar-header a:hover {
+        background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    .sidebar-header img {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        margin-right: 12px;
+        filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.2));
+    }
+
+    .sidebar-header h1 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 22px;
+        background: linear-gradient(135deg, #00e5ff 0%, #2196f3 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin: 0;
+        letter-spacing: 0.5px;
+    }
+
+    .circle-button {
+        background: linear-gradient(135deg, rgba(0, 229, 255, 0.1) 0%, rgba(33, 150, 243, 0.1) 100%);
+        border: 1px solid rgba(0, 229, 255, 0.1);
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 8px auto 24px;
+    }
+
+    .circle-button:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, rgba(0, 229, 255, 0.15) 0%, rgba(33, 150, 243, 0.15) 100%);
+        border-color: rgba(0, 229, 255, 0.2);
+        box-shadow: 0 4px 12px rgba(0, 229, 255, 0.1);
+    }
+
+    .circle-button img {
+        width: 20px;
+        height: 20px;
+        filter: brightness(0) invert(1);
+        opacity: 0.9;
+    }
+
+    .chat-list {
+        flex: 1;
+        overflow-y: auto;
+        margin: 0;
+        padding: 0 4px;
+    }
+
+    .chat-list::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .chat-list::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .chat-list::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+
+    .chat-list-item {
+        padding: 12px 16px;
+        border-radius: 12px;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.8);
+        transition: all 0.3s ease;
+        margin-bottom: 4px;
+        position: relative;
+        border: 1px solid transparent;
+        backdrop-filter: blur(8px);
+    }
+
+    .chat-list-item:hover {
+        background: rgba(255, 255, 255, 0.03);
+        transform: translateX(2px);
+        border-color: rgba(0, 229, 255, 0.1);
+    }
+
+    .chat-list-item.active {
+        background: linear-gradient(135deg, rgba(0, 229, 255, 0.1) 0%, rgba(33, 150, 243, 0.1) 100%);
+        border-color: rgba(0, 229, 255, 0.2);
+        color: #fff;
+    }
+
+    .chat-list-item .trash-icon {
+        opacity: 0;
+        transition: all 0.3s ease;
+        filter: invert(1);
+        width: 16px;
+        height: 16px;
+    }
+
+    .chat-list-item:hover .trash-icon {
+        opacity: 0.5;
+    }
+
+    .chat-list-item:hover .trash-icon:hover {
+        opacity: 1;
+    }
+
+    .auth-buttons {
+        margin-top: auto;
+        padding-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .auth-button {
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        margin-bottom: 8px;
+    }
+
+    .auth-button:first-child {
+        background: linear-gradient(135deg, #00e5ff 0%, #2196f3 100%);
+        color: #000;
+    }
+
+    .auth-button:last-child {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .auth-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 229, 255, 0.1);
+    }
+</style>
+
+<!-- Update the sidebar HTML structure -->
+<div class="sidebar">
+    <div class="sidebar-header">
+        <a href="javascript:void(0)" onclick="window.location.reload(true);">
+            <img src="https://i.ibb.co/4p1JTsg/image-1.png" alt="Logo">
+            <h1>PascalAI</h1>
+        </a>
+    </div>
+    <button class="circle-button" onclick="createNewChat()">
+        <img src="https://i.ibb.co/2qJKqp8/image-4.png" alt="New Chat">
+    </button>
+    <ul class="chat-list" id="chat-list">
+        <!-- Chat items will be dynamically added here -->
+    </ul>
+    <div class="auth-buttons">
+        <button class="auth-button">Login</button>
+        <button class="auth-button">Sign Up</button>
+    </div>
+</div>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <a href="javascript:void(0)" onclick="window.location.reload(true);" style="display: flex; align-items: center; text-decoration: none;">
-                <img src="https://i.ibb.co/4p1JTsg/image-1.png" alt="Logo">
-                <h1>PascalAI</h1>
-            </a>
-        </div>
-        <button class="circle-button" onclick="createNewChat()">
-            <img src="https://i.ibb.co/2qJKqp8/image-4.png" alt="Icon">
-        </button>
-        <ul class="chat-list" id="chat-list">
-            <!-- Chat items will be dynamically added here -->
-        </ul>
-        <div class="auth-buttons">
-            <button class="auth-button">Login</button>
-            <button class="auth-button">Sign Up</button>
-        </div>
-        <!-- Sidebar content -->
-    </div>
     <div class="main-content">
         <button class="info-button" id="info-button" data-dropdown-trigger>
             <span>PascalAI</span>
@@ -1835,13 +1995,17 @@ function createNewChat(isAutoCreated = false) {
                 actionButton.innerHTML = '<img src="https://cdn1.iconfinder.com/data/icons/wayfinding-signage/100/Arrow_Up-512.png" alt="Send">';
                 actionButton.classList.remove('disabled');
                 actionButton.onclick = sendMessage;
+                
+                // Add memory indicator after text content
                 if (memoryUpdated) {
                     const memoryUpdatedDiv = document.createElement('div');
                     memoryUpdatedDiv.classList.add('memory-updated');
                     memoryUpdatedDiv.textContent = '*Memory Updated*';
-                    element.parentElement.appendChild(memoryUpdatedDiv);
                     memoryUpdatedDiv.style.display = 'block';
+                    memoryUpdatedDiv.style.marginTop = '8px'; // Add spacing between text and memory indicator
+                    element.appendChild(memoryUpdatedDiv); // Append directly to element instead of parent
                 }
+                
                 inputField.disabled = false;
                 isRegenerating = false;
                 isGenerating = false;
