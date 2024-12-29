@@ -1667,10 +1667,6 @@
             <div class="action-button">
                 <img src="https://cdn1.iconfinder.com/data/icons/wayfinding-signage/100/Arrow_Up-512.png" alt="Send">
             </div>
-            <input type="file" id="image-upload" accept="image/*" style="display: none;" onchange="uploadImage(event)">
-            <button class="cool-button" onclick="document.getElementById('image-upload').click();">
-                <img src="https://cdn-icons-png.flaticon.com/512/61/61449.png" alt="Upload">
-            </button>
         </div>
     </div>
     </div>
@@ -2578,27 +2574,6 @@ function showModelNotification(modelName) {
     setTimeout(() => {
         notification.remove();
     }, 2000);
-}
-
-function uploadImage(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        fetch('/upload_image', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            displayAiMessage(data.response, data.memory_updated);
-        })
-        .catch(error => {
-            console.error('Error uploading image:', error);
-            displayAiMessage("Error uploading image. Please try again.", false);
-        });
-    }
 }
 </script>
 </body>

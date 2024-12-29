@@ -66,6 +66,52 @@ def get_interaction_history(device_id: str, chat_id: str):
         return interaction_histories['chats'][device_id][chat_id]
     return []
 
+# Define custom parameters for each model
+MODEL_PARAMS = {
+    'llava-llama3:8b': {
+        "max_new_tokens": 512,
+        "temperature": 0.7,
+        "top_k": 40,
+        "top_p": 0.9,
+        "num_ctx": 4096,
+        "num_thread": 4,
+        "repeat_penalty": 1.1,
+        "num_gpu": 1,
+        "seed": 42,
+        "batch_size": 8,
+        "mirostat": 0,
+        "stop": ["Human:", "Assistant:", "\n\nHuman:", "\n\nAssistant:"]
+    },
+    'llama3.2:1b': {
+        "max_new_tokens": 256,
+        "temperature": 0.7,
+        "top_k": 40,
+        "top_p": 0.9,
+        "num_ctx": 4096,
+        "num_thread": 4,
+        "repeat_penalty": 1.1,
+        "num_gpu": 1,
+        "seed": 42,
+        "batch_size": 8,
+        "mirostat": 0,
+        "stop": ["Human:", "Assistant:", "\n\nHuman:", "\n\nAssistant:"]
+    },
+    'gemma2:2b': {
+        "max_new_tokens": 256,
+        "temperature": 0.7,
+        "top_k": 40,
+        "top_p": 0.9,
+        "num_ctx": 4096,
+        "num_thread": 4,
+        "repeat_penalty": 1.1,
+        "num_gpu": 1,
+        "seed": 42,
+        "batch_size": 8,
+        "mirostat": 0,
+        "stop": ["Human:", "Assistant:", "\n\nHuman:", "\n\nAssistant:"]
+    }
+}
+
 # Function to interact with Ollama's AI model
 def get_ai_response(prompt: str, device_id: str, chat_id: str = None):
     try:
@@ -149,7 +195,7 @@ def get_ai_response(prompt: str, device_id: str, chat_id: str = None):
             messages.append({"role": "system", "content": f"Reference information: {knowledge_base}"})
 
         # Only include last 5 interactions to reduce context
-        for interaction in interaction_history[-5:]:
+        for interaction in interaction_history[-50:]:
             messages.append({"role": "user", "content": interaction["user"]})
             messages.append({"role": "assistant", "content": interaction["ai"]})
 
@@ -171,24 +217,14 @@ def get_ai_response(prompt: str, device_id: str, chat_id: str = None):
             
         print(f"Using AI Model: {selected_model}")  # Log the model being used
         
+        # Get model parameters
+        model_params = MODEL_PARAMS.get(selected_model, MODEL_PARAMS['gemma2:2b'])
+
         # Performance optimization settings
         response = ollama.chat(
             model=selected_model,
             messages=messages,
-            options={
-                "num_predict": 512 if is_complex_query else 256,  # Increased from 30/75
-                "temperature": 0.7,
-                "top_k": 40,  # Increased from 20
-                "top_p": 0.9,  # Increased from 0.7
-                "num_ctx": 4096,  # Increased context window
-                "num_thread": 4,
-                "repeat_penalty": 1.1,
-                "num_gpu": 1,
-                "seed": 42,
-                "batch_size": 8,
-                "mirostat": 0,  # Disabled adaptive sampling for more consistent completions
-                "stop": ["Human:", "Assistant:", "\n\nHuman:", "\n\nAssistant:"]  # Updated stop tokens
-            }
+            options=model_params
         )
 
         # Measure end time
