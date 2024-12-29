@@ -4,10 +4,9 @@ import uuid
 import os
 from ollama_ai import get_ai_response
 
-# Initialize Flask app
 app = Flask(__name__, 
-    template_folder='C:/Users/baboo/Documents/GitHub/pascalai', 
-    static_folder='C:/Users/baboo/Documents/GitHub/pascalai/static'
+    template_folder='C:/Users/z/Documents/GitHub/pascalai', 
+    static_folder='C:/Users/z/Documents/GitHub/pascalai/static'
 )
 
 # Configure upload settings

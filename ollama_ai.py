@@ -7,13 +7,11 @@ from flask import request
 from datetime import datetime
 import pytz
 
-# Modify the interaction histories structure to include memory
 interaction_histories = {
     'chats': {},
     'memories': {}
 }
 
-# Load external knowledge base from a text file
 def load_knowledge_base(file_path: str):
     try:
         with open(file_path, "r", encoding="utf-8") as file:
@@ -22,12 +20,9 @@ def load_knowledge_base(file_path: str):
         print(f"Knowledge base file '{file_path}' not found.")
         return ""
 
-# Initialize knowledge base
 knowledge_base = load_knowledge_base("knowledge_base.txt")
 
-# Remove YouTube API configuration and related functions
 
-# Function to verify AI response using an external API (e.g., Wikipedia API)
 def verify_response(response: str):
     try:
         search_url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{response}"
@@ -40,13 +35,11 @@ def verify_response(response: str):
         print(f"Verification error: {e}")
         return response
 
-# Function to get the current date and time based on the user's timezone
 def get_current_datetime():
-    user_timezone = pytz.timezone('America/New_York')  # You can adjust the timezone as needed
+    user_timezone = pytz.timezone('America/New_York') 
     now = datetime.now(user_timezone)
     return now.strftime("%A, %B %d, %Y %I:%M:%S %p")
 
-# Function to check for easter eggs
 def check_easter_eggs(prompt: str):
     easter_eggs = {
         "what day is it": f"Today is {get_current_datetime().split(',')[0]}.",
@@ -56,7 +49,7 @@ def check_easter_eggs(prompt: str):
     }
     for key, value in easter_eggs.items():
         if key.lower() in prompt.lower():
-            return value, False, None  # Return tuple of (response, memory_updated, chat_id)
+            return value, False, None  
     return None
 
 # Function to get or create a new chat ID
